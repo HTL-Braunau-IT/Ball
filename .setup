@@ -1,0 +1,9 @@
+# local docker postgres
+docker run -d --name local-postgres -e POSTGRES_USER=username -e POSTGRES_PASSWORD=password -e POSTGRES_DB=mydb -p 5432:5432 postgres
+
+# install dependencies
+npm install
+
+# install next-auth and nodemailer
+npm install next-auth@latest
+npm install nodemailer

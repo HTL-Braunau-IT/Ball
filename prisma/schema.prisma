@@ -10,14 +10,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([name])
-}
 
 // Z - created models for basic functionality
 //
@@ -25,7 +17,7 @@ model Post {
 // Z - all ticket quotas applicable for buying 
 model ticketReserves {                                  
     id        Int      @id @default(autoincrement())    
-    type      buyerGroups []                            // Z - type of ticket (eg. student, alumni, public, etc...)
+    type      buyerGroups[]                            // Z - type of ticket (eg. student, alumni, public, etc...)
     amount    Int                                       // Z - amount of tickets available
     price     Int                                       // Z - price of the ticket
     updatedAt DateTime @updatedAt                       // Z - timestamp of last update - to track backend changes
@@ -38,8 +30,8 @@ model soldTickets {
     id        Int      @id @default(autoincrement())
     delivery  String                                   // Z - delivery method of the ticket
     code      String   @unique                         // Z - code need when using pickup as delivery method (randomly generate?)
-    paid      Boolean
-    sent      Boolean                                  // Z - has the ticket been sent? (only relevant if the delivery is not a reservation)
+    paid      Boolean?
+    sent      Boolean?                                // Z - has the ticket been sent? (only relevant if the delivery is not a reservation)
     transref  String                                   // Z - placeholder for a transaction reference from stripe 
     timestamp DateTime @default(now()) 
     buyerId   Int
@@ -50,7 +42,7 @@ model soldTickets {
 model deliveryMethods {
     id        Int      @id @default(autoincrement())
     name      String
-    surcharge Int
+    surcharge Int?
     ticketReserves  ticketReserves[]
 }
 
@@ -62,8 +54,9 @@ model Buyers {
     address   String
     postal    Int                                      // Z - maybe restrict to austrian postal codes
     province  String
+    country   String
     verified  Boolean                                  // Z - did the buyer already pass email verification? 
-    maxTickets  Int
+    maxTickets  Int // --> zu groups!
     tickets   soldTickets[]
     groupId   Int
     group     buyerGroups @relation(fields: [groupId], references: [id])
@@ -91,4 +84,50 @@ model backendGroups {
     name      String
     users     Int
     user      backendUsers   @relation(fields: [users], references: [id])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }

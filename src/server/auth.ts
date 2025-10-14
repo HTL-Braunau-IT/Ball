@@ -1,5 +1,5 @@
 import { type NextAuthOptions } from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import EmailProvider from "next-auth/providers/email";
 import { db } from "~/server/db";
 
@@ -14,6 +14,12 @@ declare module "next-auth" {
   }
 }
 
+// Z - Debug
+// console.log("🔧 Email config check:");
+// console.log("  EMAIL_SERVER_USER:", process.env.EMAIL_SERVER_USER ? "✅ Set" : "❌ Missing");
+// console.log("  EMAIL_SERVER_PASSWORD:", process.env.EMAIL_SERVER_PASSWORD ? "✅ Set" : "❌ Missing");
+// console.log("  EMAIL_FROM:", process.env.EMAIL_FROM ? "✅ Set" : "❌ Missing");
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
   providers: [
@@ -21,15 +27,21 @@ export const authOptions: NextAuthOptions = {
       server: {
         host: "smtp.office365.com",
         port: 587,
+        // secure: false,
         auth: {
           user: process.env.EMAIL_SERVER_USER,
           pass: process.env.EMAIL_SERVER_PASSWORD,
         },
       },
       from: process.env.EMAIL_FROM,
-      sendVerificationRequest({url}) {
-        console.log("Login Link:", url);
-      }
+      // Z - Debug
+      // sendVerificationRequest({url, identifier, provider}) {
+      //   console.log("📧 Attempting to send email:");
+      //   console.log("  To:", identifier);
+      //   console.log("  From:", provider.from);
+      //   console.log("  Server:", provider.server);
+      //   console.log("  URL:", url);
+      // },
     }),
   ],
   pages: {
