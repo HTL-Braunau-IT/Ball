@@ -117,7 +117,7 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  * the session is valid and guarantees `ctx.session.user` is not null.
  */
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
+  if (!ctx.session?.user) {
     throw new Error("Unauthorized");
   }
   return next({

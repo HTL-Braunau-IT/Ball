@@ -66,7 +66,7 @@ export default function BuyerPage() {
         </button>
       </form>
       <p className="mt-4 text-sm text-gray-600">
-        We'll send you a magic link to sign in.
+        We&apos;ll send you a magic link to sign in.
       </p>
     </div>
   );

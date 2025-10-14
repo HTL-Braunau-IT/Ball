@@ -1,6 +1,4 @@
-import { z } from "zod";
-
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const ticketRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
@@ -10,6 +8,5 @@ export const ticketRouter = createTRPCRouter({
       },
     });
     return tickets.map(({ id, delivery, code, paid, sent, timestamp }) => ({ id, delivery, code, paid, sent, timestamp }));
-    return 'Test message from protected procedure'
   })
 });

@@ -3,10 +3,10 @@ export default function VerifyRequest() {
     <div className="p-8 max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-4">Check Your Email</h1>
       <p className="text-gray-600 mb-4">
-        We've sent you a magic link to sign in. Please check your email and click the link.
+        We&apos;ve sent you a magic link to sign in. Please check your email and click the link.
       </p>
       <p className="text-sm text-gray-500">
-        If you don't see the email, check your spam folder.
+        If you don&apos;t see the email, check your spam folder.
       </p>
       <a 
         href="/buyer" 
