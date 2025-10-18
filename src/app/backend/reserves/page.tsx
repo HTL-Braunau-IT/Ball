@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import TicketReserves from "~/components/reserves";
+import CreateReserve from "~/components/createReserve";
 import { api } from "~/utils/api"
 
 export default function ticketReservesPage() {
@@ -33,6 +34,7 @@ export default function ticketReservesPage() {
         <h1 className="text-2xl font-bold mb-4">Ticket Kontingente</h1>
         <p className="mb-4">Eingeloggt als: {session.user?.email}</p>
         <TicketReserves />
+        <CreateReserve />
         <button
           onClick={() => signOut()}
           className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
@@ -40,6 +42,7 @@ export default function ticketReservesPage() {
           Sign Out
         </button>
       </div>
+      
     );
   }
 
