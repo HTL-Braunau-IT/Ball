@@ -24,23 +24,66 @@ export default function TicketReserves() {
     }
 
     return (
-        <div className="space-y-3">
-            {data.map((reserve, idx) => {
-                const typeValue: unknown = (reserve as any).type;
-                const typeLabel = Array.isArray(typeValue)
-                    ? (typeValue as any[]).map((t: any) => t?.name ?? "").filter(Boolean).join(", ") || "Unbekannter Typ"
-                    : (typeValue as any)?.name ?? "Unbekannter Typ";
+        <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+                <thead className="bg-gray-50">
+                    <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Typ
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Menge
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Preis
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Liefermethoden
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Geändert am
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Geändert von
+                        </th>
+                    </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                    {data.map((reserve, idx) => {
+                        const typeValue: unknown = (reserve as any).type;
+                        const typeLabel = Array.isArray(typeValue)
+                            ? (typeValue as any[]).map((t: any) => t?.name ?? "").filter(Boolean).join(", ") || "Unbekannter Typ"
+                            : (typeValue as any)?.name ?? "Unbekannter Typ";
 
-                return (
-                    <div key={idx} className="rounded border p-3">
-                        <div className="font-semibold">{typeLabel}</div>
-                        <div>Menge: {reserve.amount}</div>
-                        <div>Preis: {reserve.price}</div>
-                        <div>Geändert am: {reserve.updatedAt ? new Date(reserve.updatedAt).toLocaleString() : "-"}</div>
-                        <div>Geändert von: {reserve.updatedBy ?? "-"}</div>
-                    </div>
-                );
-            })}
+                        const deliveryMethods = Array.isArray(reserve.deliveryMethods)
+                            ? reserve.deliveryMethods.map((dm: any) => dm?.name ?? "").filter(Boolean).join(", ") || "-"
+                            : "-";
+
+                        return (
+                            <tr key={idx} className="hover:bg-gray-50">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {typeLabel}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {reserve.amount}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {reserve.price}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {deliveryMethods}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {reserve.updatedAt ? new Date(reserve.updatedAt).toLocaleString() : "-"}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {reserve.updatedBy ?? "-"}
+                                </td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
         </div>
     );
 }

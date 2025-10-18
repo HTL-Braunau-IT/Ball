@@ -83,7 +83,7 @@ export default function ticketReservesPage() {
           {isLoading ? "Übertrage..." : "Einloggen"}
         </button>
       </form>
-      <p className="mt-4 text-sm text-gray-600">Bitte mit Email und Passwort anmelden.</p>
+        {/* <p className="mt-4 text-sm text-gray-600">Bitte mit Email und Passwort anmelden.</p> */}
     </div>
   );
 }
