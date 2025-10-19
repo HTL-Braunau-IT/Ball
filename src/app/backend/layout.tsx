@@ -1,8 +1,9 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signOut, signIn } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function BackendLayout({
   children,
@@ -11,6 +12,7 @@ export default function BackendLayout({
 }) {
   const { data: session } = useSession();
   const pathname = usePathname();
+  const router = useRouter();
 
   const navigationItems = [
     { name: "Dashboard", href: "/backend" },
@@ -54,15 +56,15 @@ export default function BackendLayout({
                 {session?.user?.email}
               </span>
               <button
-                onClick={() => signOut()}
+                onClick={session ? () => signOut() : () => router.push("/backend/login")}
                 className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors"
               >
-                Abmelden
+                {session ? "Abmelden": "Anmelden"}
               </button>
             </div>
           </div>
         </div>
-      </nav>
+      </nav>    
 
       {/* Main content */}
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
