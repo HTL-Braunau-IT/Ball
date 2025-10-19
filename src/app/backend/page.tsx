@@ -1,6 +1,10 @@
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "~/server/auth";
 
-export default function BackendDashboard() {
+export default async function BackendDashboard() {
+    const session = await getServerSession(authOptions);
+    const displayName = session?.user?.name ?? session?.user?.email ?? "im Backend";
   const sections = [
     {
       title: "Ticket Kontingente",
@@ -32,7 +36,7 @@ export default function BackendDashboard() {
     <div className="px-4 py-6 sm:px-0">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">
-          Willkommen im Backend
+          Willkommen {displayName}
         </h1>
         <p className="mt-2 text-lg text-gray-600">
           Wählen Sie einen Bereich aus, um mit der Verwaltung zu beginnen.
