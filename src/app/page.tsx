@@ -3,9 +3,10 @@ import Image from "next/image";
 import { HydrateClient } from "~/trpc/server";
 import Countdown from "~/components/Countdown";
 import CollapsibleSection from "~/components/CollapsibleSection";
+import { env } from "~/env";
 
-// Configurable countdown target date
-const TICKET_SALE_DATE = "2025-10-21T14:00:00";
+// Get ticket sale date from environment variable
+const TICKET_SALE_DATE = env.NEXT_PUBLIC_TICKET_SALE_DATE;
 
 // Format date for display
 const formatDateForDisplay = (dateString: string) => {
@@ -20,6 +21,11 @@ const formatDateForDisplay = (dateString: string) => {
 };
 
 export default async function Home() {
+  // Check if ticket sale has started
+  const ticketSaleDate = new Date(TICKET_SALE_DATE);
+  const now = new Date();
+  const hasTicketSaleStarted = now >= ticketSaleDate;
+
   return (
     <HydrateClient>
       <main className="min-h-screen" style={{ background: 'var(--color-bg-primary)' }}>
@@ -42,14 +48,14 @@ export default async function Home() {
               href="/buyer"
               className="btn btn-primary"
               id="ticket-button"
-              style={{ 
+              style={hasTicketSaleStarted ? {} : { 
                 opacity: 0.4, 
                 cursor: 'not-allowed',
                 pointerEvents: 'none'
               }}
-              title={`Ticketverkauf startet am ${formatDateForDisplay(TICKET_SALE_DATE)}`}
+              title={hasTicketSaleStarted ? "Jetzt Tickets kaufen" : `Ticketverkauf startet am ${formatDateForDisplay(TICKET_SALE_DATE)}`}
             >
-              Ticketverkauf
+              {hasTicketSaleStarted ? "Jetzt Tickets kaufen" : "Ticketverkauf"}
             </Link>
           </div>
         </header>
@@ -132,11 +138,25 @@ export default async function Home() {
               </p>
             </div>
             
-            {/* Countdown */}
+            {/* Countdown or Sale Active */}
             <div className="w-full max-w-2xl">
-              <Countdown 
-                targetDate={TICKET_SALE_DATE}
-              />
+              {hasTicketSaleStarted ? (
+                <div className="countdown-box text-center">
+                  <h3 className="countdown-title" style={{ color: 'var(--color-gold-light)' }}>
+                    Ticketverkauf ist gestartet!
+                  </h3>
+                  <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
+                    Sichern Sie sich jetzt Ihre Tickets für den HTL Ball 2026
+                  </p>
+                  <Link href="/buyer" className="btn btn-primary text-lg px-8 py-4">
+                    Jetzt Tickets kaufen
+                  </Link>
+                </div>
+              ) : (
+                <Countdown 
+                  targetDate={TICKET_SALE_DATE}
+                />
+              )}
             </div>
           </div>
         </section>
