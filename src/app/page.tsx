@@ -5,7 +5,7 @@ import Countdown from "~/components/Countdown";
 import CollapsibleSection from "~/components/CollapsibleSection";
 
 // Configurable countdown target date
-const TICKET_SALE_DATE = "2025-10-21T12:00:00";
+const TICKET_SALE_DATE = "2025-10-21T14:00:00";
 
 // Format date for display
 const formatDateForDisplay = (dateString: string) => {

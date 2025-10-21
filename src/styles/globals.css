@@ -200,11 +200,10 @@ h4 {
 .btn-primary {
   background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold-dark));
   color: var(--color-text-light);
-  box-shadow: 0 6px 20px rgba(193, 122, 58, 0.3);
+  box-shadow: none;
   border: 1px solid var(--color-gold-dark);
   position: relative;
   overflow: hidden;
-  animation: glow 3s ease-in-out infinite;
 }
 
 .btn-primary::before {
@@ -224,15 +223,15 @@ h4 {
 }
 
 .btn-primary:hover:not(:disabled) {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 10px 30px rgba(193, 122, 58, 0.4);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .btn-primary:disabled {
   opacity: 0.4;
   cursor: not-allowed;
   transform: none;
-  box-shadow: 0 2px 8px rgba(193, 122, 58, 0.1);
+  box-shadow: none;
 }
 
 .btn-secondary {
@@ -355,6 +354,29 @@ h4 {
 .collapsible-body {
   padding: var(--spacing-xl);
   color: var(--color-text-primary);
+  line-height: 1.8;
+}
+
+.collapsible-body h4 {
+  margin-bottom: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.collapsible-body h5 {
+  margin-bottom: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.collapsible-body p {
+  margin-bottom: var(--spacing-lg);
+}
+
+.collapsible-body ul {
+  margin-bottom: var(--spacing-lg);
+}
+
+.collapsible-body li {
+  margin-bottom: var(--spacing-sm);
 }
 
 /* Countdown Styles */
@@ -369,13 +391,12 @@ h4 {
   border: 2px solid var(--color-accent-warm);
   border-radius: 1rem;
   padding: var(--spacing-2xl);
-  box-shadow: 0 8px 32px rgba(193, 122, 58, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   transition: all var(--transition-normal);
   min-width: 400px;
   text-align: center;
   position: relative;
   overflow: hidden;
-  animation: glow 4s ease-in-out infinite;
 }
 
 .countdown-box::before {
@@ -396,8 +417,8 @@ h4 {
 
 .countdown-box:hover {
   border-color: var(--color-bronze);
-  box-shadow: 0 12px 40px rgba(193, 122, 58, 0.25);
-  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px) scale(1.01);
 }
 
 .countdown-grid {
@@ -525,5 +546,24 @@ h4 {
   
   .collapsible-body {
     padding: var(--spacing-md);
+    line-height: 1.6;
+  }
+  
+  .collapsible-body h4 {
+    margin-bottom: var(--spacing-md);
+    margin-top: var(--spacing-md);
+  }
+  
+  .collapsible-body h5 {
+    margin-bottom: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+  }
+  
+  .collapsible-body p {
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .collapsible-body ul {
+    margin-bottom: var(--spacing-md);
   }
 }
