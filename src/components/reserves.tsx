@@ -50,13 +50,13 @@ export default function TicketReserves() {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                     {data.map((reserve, idx) => {
-                        const typeValue: unknown = (reserve as any).type;
+                        const typeValue = reserve.type;
                         const typeLabel = Array.isArray(typeValue)
-                            ? (typeValue as any[]).map((t: any) => t?.name ?? "").filter(Boolean).join(", ") || "Unbekannter Typ"
-                            : (typeValue as any)?.name ?? "Unbekannter Typ";
+                            ? typeValue.map((t: { name?: string }) => t?.name ?? "").filter(Boolean).join(", ") || "Unbekannter Typ"
+                            : (typeValue as { name?: string })?.name ?? "Unbekannter Typ";
 
                         const deliveryMethods = Array.isArray(reserve.deliveryMethods)
-                            ? reserve.deliveryMethods.map((dm: any) => dm?.name ?? "").filter(Boolean).join(", ") || "-"
+                            ? reserve.deliveryMethods.map((dm: { name?: string }) => dm?.name ?? "").filter(Boolean).join(", ") || "-"
                             : "-";
 
                         return (

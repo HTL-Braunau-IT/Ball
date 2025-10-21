@@ -1,13 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
-import TicketReserves from "~/components/reserves";
-import CreateReserve from "~/components/createReserve";
-import { api } from "~/utils/api"
+import { signIn, useSession } from "next-auth/react";
 
-export default function ticketReservesPage() {
-  const { data: session, status } = useSession();
+export default function TicketReservesPage() {
+  const { status } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);

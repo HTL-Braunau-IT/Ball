@@ -33,10 +33,10 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
-        const backendUser = (await db.backendUsers.findUnique({
+        const backendUser = await db.backendUsers.findUnique({
           where: { email: credentials.email },
-        })) as unknown as { id: number; name: string; email: string; passwordHash?: string } | null;
-        if (!backendUser || !backendUser.passwordHash) return null;
+        });
+        if (!backendUser?.passwordHash) return null;
         const passwordOk = await bcrypt.compare(
           credentials.password,
           backendUser.passwordHash,
@@ -46,7 +46,7 @@ export const authOptions: NextAuthOptions = {
           id: String(backendUser.id),
           name: backendUser.name,
           email: backendUser.email,
-        } as unknown as any;
+        };
       },
     }),
     EmailProvider({

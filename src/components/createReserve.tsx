@@ -92,7 +92,7 @@ export default function CreateReserve() {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Typ auswählen</option>
-            {types?.map((type: any) => (
+            {types?.map((type) => (
               <option key={type.id} value={type.id}>
                 {type.name}
               </option>
@@ -103,7 +103,7 @@ export default function CreateReserve() {
         <div>
           <label className="block text-sm font-medium mb-1">Liefermethoden</label>
           <div className="space-y-2">
-            {deliveryMethods?.map((method: any) => (
+            {deliveryMethods?.map((method) => (
               <label key={method.id} className="flex items-center">
                 <input
                   type="checkbox"
