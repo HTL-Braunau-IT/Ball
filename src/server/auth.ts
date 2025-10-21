@@ -35,7 +35,6 @@ export const authOptions: NextAuthOptions = {
       },
       from: process.env.EMAIL_FROM,
       async sendVerificationRequest({ url, identifier, provider }) {
-        const { host } = new URL(url);
         
         // Professional email with nice button and elaborate text
         const html = `
@@ -133,7 +132,7 @@ Ihr HTL Braunau Team
 
           const failed = result.rejected.concat(result.pending).filter(Boolean);
           if (failed.length) {
-            throw new Error(`Email(s) (${failed.join(", ")}) could not be sent`);
+            throw new Error(`Email(s) could not be sent: ${failed.length} failed`);
           }
         } catch (error) {
           console.error("❌ Email sending failed:", error);

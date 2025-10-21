@@ -19,7 +19,7 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    NEXT_PUBLIC_TICKET_SALE_DATE: z.string(),
+    NEXT_PUBLIC_TICKET_SALE_DATE: z.string().default("2025-12-25T18:00:00"),
   },
 
   /**

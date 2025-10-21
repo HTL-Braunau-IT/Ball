@@ -42,7 +42,7 @@ export default function BuyerPage() {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !isLoading) {
-      handleSignIn(e as any);
+      void handleSignIn(e as React.FormEvent);
     }
   };
 
