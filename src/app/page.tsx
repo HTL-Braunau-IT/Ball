@@ -55,22 +55,89 @@ export default async function Home() {
         </header>
 
         {/* Hero Section */}
-        <section className="text-center py-16 px-6" style={{ background: 'var(--color-bg-secondary)' }}>
-          <h1 className="text-6xl font-bold mb-4 gradient-text">
-            HTL BRAUNAU
-          </h1>
-          <h2 className="text-4xl font-semibold mb-8" style={{ color: 'var(--color-text-primary)' }}>
-            BALL DER AUSERWÄHLTEN
-          </h2>
-          <p className="text-xl mb-12" style={{ color: 'var(--color-text-secondary)' }}>
-            Ein eleganter Abend im Zeichen von DUNE
-          </p>
+        <section className="text-center px-6 relative overflow-hidden" style={{ 
+          background: 'linear-gradient(135deg, var(--color-bg-secondary), var(--color-bg-accent))',
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          {/* DUNE-themed background elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            {/* Sand dunes */}
+            <div className="absolute top-1/4 left-0 w-96 h-32 rounded-full opacity-5" style={{ 
+              background: 'var(--color-gold-light)',
+              animation: 'dune-drift 20s linear infinite',
+              clipPath: 'polygon(0% 100%, 20% 60%, 40% 80%, 60% 40%, 80% 70%, 100% 50%, 100% 100%)'
+            }}></div>
+            <div className="absolute top-1/2 right-0 w-80 h-24 rounded-full opacity-5" style={{ 
+              background: 'var(--color-bronze)',
+              animation: 'dune-drift 25s linear infinite reverse',
+              clipPath: 'polygon(0% 100%, 15% 70%, 35% 50%, 55% 80%, 75% 60%, 100% 40%, 100% 100%)'
+            }}></div>
+            <div className="absolute bottom-1/4 left-1/4 w-64 h-20 rounded-full opacity-5" style={{ 
+              background: 'var(--color-gold-dark)',
+              animation: 'dune-drift 30s linear infinite',
+              clipPath: 'polygon(0% 100%, 25% 50%, 50% 70%, 75% 40%, 100% 60%, 100% 100%)'
+            }}></div>
+            
+            {/* Spice particles */}
+            <div className="absolute top-1/3 left-1/3 w-2 h-2 rounded-full opacity-20" style={{ 
+              background: 'var(--color-accent-gold)',
+              animation: 'sand-particle 4s ease-in-out infinite'
+            }}></div>
+            <div className="absolute top-2/3 right-1/3 w-1 h-1 rounded-full opacity-20" style={{ 
+              background: 'var(--color-accent-bronze)',
+              animation: 'sand-particle 5s ease-in-out infinite',
+              animationDelay: '1s'
+            }}></div>
+            <div className="absolute top-1/2 left-1/2 w-1.5 h-1.5 rounded-full opacity-20" style={{ 
+              background: 'var(--color-gold-light)',
+              animation: 'sand-particle 3s ease-in-out infinite',
+              animationDelay: '2s'
+            }}></div>
+            <div className="absolute bottom-1/3 left-1/5 w-1 h-1 rounded-full opacity-20" style={{ 
+              background: 'var(--color-bronze)',
+              animation: 'sand-particle 6s ease-in-out infinite',
+              animationDelay: '3s'
+            }}></div>
+            
+            {/* Spice glow orbs */}
+            <div className="absolute top-1/4 right-1/4 w-16 h-16 rounded-full opacity-10" style={{ 
+              background: 'radial-gradient(circle, var(--color-accent-gold), transparent)',
+              animation: 'spice-glow 8s ease-in-out infinite'
+            }}></div>
+            <div className="absolute bottom-1/4 left-1/3 w-12 h-12 rounded-full opacity-10" style={{ 
+              background: 'radial-gradient(circle, var(--color-accent-bronze), transparent)',
+              animation: 'spice-glow 10s ease-in-out infinite',
+              animationDelay: '2s'
+            }}></div>
+            <div className="absolute top-3/4 right-1/3 w-8 h-8 rounded-full opacity-10" style={{ 
+              background: 'radial-gradient(circle, var(--color-gold-light), transparent)',
+              animation: 'spice-glow 12s ease-in-out infinite',
+              animationDelay: '4s'
+            }}></div>
+          </div>
           
-          {/* Countdown */}
-          <div className="mb-16">
-            <Countdown 
-              targetDate={TICKET_SALE_DATE}
-            />
+          <div className="relative z-10 flex flex-col items-center justify-center w-full">
+            <div className="mb-12">
+              <h1 className="text-7xl font-bold mb-6 gradient-text">
+                HTL BRAUNAU
+              </h1>
+              <h2 className="text-5xl font-semibold mb-8" style={{ color: 'var(--color-text-primary)' }}>
+                BALL DER AUSERWÄHLTEN
+              </h2>
+              <p className="text-2xl mb-16" style={{ color: 'var(--color-text-secondary)' }}>
+                Ein eleganter Abend im Zeichen von DUNE
+              </p>
+            </div>
+            
+            {/* Countdown */}
+            <div className="w-full max-w-2xl">
+              <Countdown 
+                targetDate={TICKET_SALE_DATE}
+              />
+            </div>
           </div>
         </section>
 
@@ -263,8 +330,8 @@ export default async function Home() {
                   </h5>
                   <p>Stornierungen sind bis 7 Tage vor der Veranstaltung möglich. Details finden Sie in den AGB.</p>
                 </div>
-              </div>
-            </div>
+          </div>
+        </div>
           </CollapsibleSection>
         </section>
       </main>
