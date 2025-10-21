@@ -467,17 +467,26 @@ h4 {
   }
   
   .countdown-number {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
   
   .countdown-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
   }
   
   .countdown-box {
-    min-width: 300px;
-    padding: var(--spacing-lg);
+    min-width: 280px;
+    padding: var(--spacing-md);
+  }
+  
+  .countdown-title {
+    font-size: 1rem;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .countdown-label {
+    font-size: 0.75rem;
   }
   
   .btn {
@@ -488,13 +497,26 @@ h4 {
 
 @media (max-width: 480px) {
   .countdown-grid {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-sm);
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-xs);
   }
   
   .countdown-box {
-    min-width: 250px;
-    padding: var(--spacing-md);
+    min-width: 240px;
+    padding: var(--spacing-sm);
+  }
+  
+  .countdown-number {
+    font-size: 1.25rem;
+  }
+  
+  .countdown-title {
+    font-size: 0.875rem;
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .countdown-label {
+    font-size: 0.625rem;
   }
   
   .collapsible-header {
