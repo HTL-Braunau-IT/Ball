@@ -17,7 +17,7 @@ export default function BackendLayout({
   const navigationItems = [
     { name: "Dashboard", href: "/backend" },
     { name: "Kontingente", href: "/backend/reserves" },
-    { name: "Tickets", href: "/backend/tickets" },
+    { name: "Karten", href: "/backend/tickets" },
     { name: "Benutzer", href: "/backend/users" },
   ];
 
