@@ -4,15 +4,50 @@ import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function BackendLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const pathname = usePathname();
   const router = useRouter();
+  const [isChecking, setIsChecking] = useState(true);
+
+  useEffect(() => {
+    const checkAccess = async () => {
+      if (status === "loading") return;
+      
+      if (!session) {
+        router.push("/auth/signin");
+        return;
+      }
+
+      // Check if user is backend user
+      try {
+        const response = await fetch("/api/check-backend-user");
+        const data = await response.json();
+        
+        if (!data.isBackendUser) {
+          console.log("🔍 User is not a backend user, redirecting to buyer");
+          router.push("/buyer");
+          return;
+        }
+        
+        console.log("🔍 User is a backend user, allowing access");
+      } catch (error) {
+        console.error("Error checking backend user:", error);
+        router.push("/buyer");
+        return;
+      }
+      
+      setIsChecking(false);
+    };
+
+    checkAccess();
+  }, [session, status, router]);
 
   const navigationItems = [
     { name: "Dashboard", href: "/backend" },
@@ -20,6 +55,17 @@ export default function BackendLayout({
     { name: "Karten", href: "/backend/tickets" },
     { name: "Benutzer", href: "/backend/buyers" },
   ];
+
+  if (status === "loading" || isChecking) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mx-auto mb-4"></div>
+          <p className="text-gray-600">Checking access...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
