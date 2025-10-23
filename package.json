@@ -34,7 +34,7 @@
     "dotenv": "^17.2.3",
     "next": "^15.2.3",
     "next-auth": "^4.24.11",
-    "nodemailer": "^6.10.1",
+    "nodemailer": "^7.0.10",
     "react": "^19.0.0",
     "react-dom": "^19.2.0",
     "server-only": "^0.0.1",
