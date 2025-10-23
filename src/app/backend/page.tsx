@@ -48,12 +48,6 @@ export default async function BackendDashboard() {
           Wählen Sie einen Bereich aus, um mit der Verwaltung zu beginnen.
         </p>
       </div>
-
-      {/* Reserves Overview */}
-      <div className="mb-8">
-        <ReservesOverview />
-      </div>
-
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {sections.map((section) => (
           <Link
@@ -103,7 +97,12 @@ export default async function BackendDashboard() {
               </svg>
             </span>
           </Link>
+          
         ))}
+      </div>      
+      {/* Reserves Overview */}
+      <div className="py-8">
+        <ReservesOverview />
       </div>
     </div>
   );
