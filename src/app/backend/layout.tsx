@@ -28,7 +28,7 @@ export default function BackendLayout({
       // Check if user is backend user
       try {
         const response = await fetch("/api/check-backend-user");
-        const data = await response.json();
+        const data = await response.json() as { isBackendUser: boolean };
         
         if (!data.isBackendUser) {
           router.push("/buyer");
@@ -43,7 +43,7 @@ export default function BackendLayout({
       setIsChecking(false);
     };
 
-    checkAccess();
+    void checkAccess();
   }, [session, status, router]);
 
   const navigationItems = [

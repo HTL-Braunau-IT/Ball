@@ -44,7 +44,7 @@ export const authOptions: NextAuthOptions = {
         if (!passwordOk) return null;
         return {
           id: String(backendUser.id),
-          name: backendUser.name,
+          name: backendUser.firstName + " " + backendUser.surName,
           email: backendUser.email,
         };
       },
