@@ -1,6 +1,7 @@
 "use client";
 
 import { api } from "~/utils/api";
+import TicketProgressBar from "./TicketProgressBar";
 
 export default function TicketReserves() {
     const { data, isLoading, isError, error } = api.reserves.all.useQuery();
@@ -44,10 +45,7 @@ export default function TicketReserves() {
                             Geändert am
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Verkauft
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Verbleibend
+                            Status
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Geändert von
@@ -85,11 +83,12 @@ export default function TicketReserves() {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {reserve.updatedAt ? new Date(reserve.updatedAt).toLocaleString() : "-"}
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <span className="text-orange-600 font-medium">{soldCount}</span>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <span className="text-purple-600 font-medium">{remainingCount}</span>
+                                <td className="px-6 py-4 text-sm text-gray-500">
+                                    <TicketProgressBar 
+                                        total={reserve.amount}
+                                        sold={soldCount}
+                                        remaining={remainingCount}
+                                    />
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {reserve.updatedBy ?? "-"}
