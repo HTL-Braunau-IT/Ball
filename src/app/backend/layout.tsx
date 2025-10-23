@@ -31,12 +31,9 @@ export default function BackendLayout({
         const data = await response.json();
         
         if (!data.isBackendUser) {
-          console.log("🔍 User is not a backend user, redirecting to buyer");
           router.push("/buyer");
           return;
         }
-        
-        console.log("🔍 User is a backend user, allowing access");
       } catch (error) {
         console.error("Error checking backend user:", error);
         router.push("/buyer");
