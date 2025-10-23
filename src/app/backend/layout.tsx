@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signOut, signIn } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -15,13 +15,31 @@ export default function BackendLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [isChecking, setIsChecking] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setErrorMessage("");
+    try {
+      await signIn("credentials", { email, password, callbackUrl: "/backend" });
+    } catch (error) {
+      console.error("Sign in error:", error);
+      setErrorMessage("Login failed. Please check your credentials.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     const checkAccess = async () => {
       if (status === "loading") return;
       
       if (!session) {
-        router.push("/auth/signin");
+        setIsChecking(false);
         return;
       }
 
@@ -31,20 +49,18 @@ export default function BackendLayout({
         const data = await response.json() as { isBackendUser: boolean };
         
         if (!data.isBackendUser) {
-          router.push("/buyer");
-          return;
+          setErrorMessage("You are not authorized. Please login with backend credentials.");
         }
       } catch (error) {
         console.error("Error checking backend user:", error);
-        router.push("/buyer");
-        return;
+        setErrorMessage("Error checking authorization. Please try again.");
       }
       
       setIsChecking(false);
     };
 
     void checkAccess();
-  }, [session, status, router]);
+  }, [session, status]);
 
   const navigationItems = [
     { name: "Dashboard", href: "/backend" },
@@ -59,6 +75,61 @@ export default function BackendLayout({
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mx-auto mb-4"></div>
           <p className="text-gray-600">Checking access...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login form if no session or if session exists but user is not backend user
+  if (!session || (session && errorMessage)) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="max-w-md w-full mx-auto p-8">
+          <h1 className="text-2xl font-bold mb-6 text-center">Backend Login</h1>
+          
+          {errorMessage && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {errorMessage}
+            </div>
+          )}
+          
+          <form onSubmit={handleSignIn} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium mb-2">
+                Email Adresse
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Email Adresse"
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium mb-2">
+                Passwort
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Passwort"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:opacity-50"
+            >
+              {isLoading ? "Übertrage..." : "Einloggen"}
+            </button>
+          </form>
         </div>
       </div>
     );
