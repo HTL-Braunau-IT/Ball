@@ -12,7 +12,7 @@ export default async function BackendDashboard() {
       title: "Kontingente",
       description: "Verwalte Karten-Kontingente",
       href: "/backend/reserves",
-      color: "bg-blue-500 hover:bg-blue-600",
+      color: "blue",
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -23,7 +23,7 @@ export default async function BackendDashboard() {
       title: "Verkaufte Karten",
       description: "Übersicht über verkaufte Karten",
       href: "/backend/tickets",
-      color: "bg-green-500 hover:bg-green-600",
+      color: "orange",
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
@@ -34,7 +34,7 @@ export default async function BackendDashboard() {
       title: "Käufer Übersicht",
       description: "Übersicht über alle registrierten Käufer",
       href: "/backend/buyers",
-      color: "bg-purple-500 hover:bg-purple-600",
+      color: "purple",
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -75,15 +75,15 @@ export default async function BackendDashboard() {
           <Link
             key={section.title}
             href={section.href}
-            className="group relative bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+            className={`group relative bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:bg-${section.color}-50 transition-all duration-200`}
           >
             <div>
-              <span className={`inline-flex p-3 rounded-lg ${section.color} text-white`}>
+              <span className={`inline-flex p-3 rounded-lg bg-${section.color}-500 hover:bg-${section.color}-600 text-white`}>
                 {section.icon}
               </span>
             </div>
             <div className="mt-4">
-              <h3 className="text-lg font-medium text-gray-900 group-hover:text-blue-600">
+              <h3 className={`text-lg font-medium text-gray-900 group-hover:text-${section.color}-600`}>
                 {section.title}
               </h3>
               <p className="mt-2 text-sm text-gray-500">
