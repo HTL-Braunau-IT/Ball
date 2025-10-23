@@ -5,7 +5,8 @@ import ReservesOverview from "~/components/ReservesOverview";
 
 export default async function BackendDashboard() {
     const session = await getServerSession(authOptions);
-    const displayName = session?.user?.name ?? session?.user?.email ?? "im Backend";
+    const fullName = session?.user?.name ?? session?.user?.email ?? "im Backend";
+    const displayName = fullName.includes(' ') ? fullName.split(' ')[0] : fullName;
   const sections = [
     {
       title: "Ticket Kontingente",
