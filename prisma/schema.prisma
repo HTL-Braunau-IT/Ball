@@ -14,6 +14,7 @@ datasource db {
 // Z - created models for basic functionality
 //
 
+
 // Z - all ticket quotas applicable for buying 
 model ticketReserves {                                  
     id        Int      @id @default(autoincrement())    
@@ -73,10 +74,12 @@ model buyerGroups {
 // Z - users that should later be able to login into the backend
 model backendUsers {
     id        Int      @id @default(autoincrement())
-    name      String   
+    firstName String   
+    surName   String   
     email     String   @unique
     passwordHash String
-    group     backendGroups[]
+    groupId   Int?
+    group     backendGroups? @relation(fields: [groupId], references: [id])
 }
 
 model backendGroups {
