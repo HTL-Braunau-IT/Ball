@@ -24,6 +24,7 @@ model ticketReserves {
     updatedAt DateTime @updatedAt                       // Z - timestamp of last update - to track backend changes
     updatedBy String                                    // Z - user who updated the entry - to track backend changes
     deliveryMethods deliveryMethods[]
+    soldTickets soldTickets[]
 }
 
 // Z - all tickets sold 
@@ -37,6 +38,9 @@ model soldTickets {
     timestamp DateTime @default(now()) 
     buyerId   Int
     buyer     Buyers   @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+    reserveId Int
+    reserve   ticketReserves @relation(fields: [reserveId], references: [id])
+    soldPrice Int
 }
 
 // Z - all available delivery methods

@@ -25,7 +25,7 @@ export default function TicketReserves() {
 
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+                <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
                 <thead className="bg-gray-50">
                     <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -44,6 +44,12 @@ export default function TicketReserves() {
                             Geändert am
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Verkauft
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Verbleibend
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Geändert von
                         </th>
                     </tr>
@@ -59,6 +65,9 @@ export default function TicketReserves() {
                             ? reserve.deliveryMethods.map((dm: { name?: string }) => dm?.name ?? "").filter(Boolean).join(", ") || "-"
                             : "-";
 
+                        const soldCount = reserve.soldTickets?.length || 0;
+                        const remainingCount = reserve.amount - soldCount;
+
                         return (
                             <tr key={idx} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -68,13 +77,19 @@ export default function TicketReserves() {
                                     {reserve.amount}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {reserve.price}
+                                    €{reserve.price}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {deliveryMethods}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {reserve.updatedAt ? new Date(reserve.updatedAt).toLocaleString() : "-"}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span className="text-orange-600 font-medium">{soldCount}</span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span className="text-purple-600 font-medium">{remainingCount}</span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {reserve.updatedBy ?? "-"}

@@ -4,9 +4,21 @@ import { reservesInput } from "~/types";
 export const reservesRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
     const reserves = await ctx.db.ticketReserves.findMany({
-      include: { type: true, deliveryMethods: true }
+      include: { 
+        type: true, 
+        deliveryMethods: true,
+        soldTickets: true
+      }
     });
-    return reserves.map(({ type, amount, price, updatedAt, updatedBy, deliveryMethods }) => ({ type, amount, price, updatedAt, updatedBy, deliveryMethods }));
+    return reserves.map(({ type, amount, price, updatedAt, updatedBy, deliveryMethods, soldTickets }) => ({ 
+      type, 
+      amount, 
+      price, 
+      updatedAt, 
+      updatedBy, 
+      deliveryMethods,
+      soldTickets
+    }));
   }),
   
   getTypes: protectedProcedure.query(async ({ ctx }) => {
