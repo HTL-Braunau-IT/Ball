@@ -14,7 +14,7 @@
     "db:seed-groups": "node scripts/seed-backend-groups.mjs",
     "db:seed-buyer-groups": "node scripts/seed-buyer-groups.mjs",
     "db:seed-delivery-methods": "node scripts/seed-delivery-methods.mjs",
-    "db:seed-all": "npm run db:seed-backend-user && npm run db:seed-buyer-groups && npm run db:seed-delivery-methods && npm run db:seed-groups",
+    "db:seed-all": "npm run db:seed-backend-user",
     "dev": "next dev",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
