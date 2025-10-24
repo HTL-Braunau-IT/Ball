@@ -7,7 +7,12 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    
+    DATABASE_URL: z.string(),
+    NEXTAUTH_URL: z.string(),
+    NEXTAUTH_SECRET: z.string(),
+    EMAIL_SERVER_USER: z.string(),
+    EMAIL_SERVER_PASSWORD: z.string(),
+    EMAIL_FROM: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -19,7 +24,7 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    NEXT_PUBLIC_TICKET_SALE_DATE: z.string().default("2025-12-25T18:00:00"),
+    NEXT_PUBLIC_TICKET_SALE_DATE: z.string().optional(),
   },
 
   /**
@@ -27,7 +32,12 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    
+    DATABASE_URL: process.env.DATABASE_URL,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    EMAIL_SERVER_USER: process.env.EMAIL_SERVER_USER,
+    EMAIL_SERVER_PASSWORD: process.env.EMAIL_SERVER_PASSWORD,
+    EMAIL_FROM: process.env.EMAIL_FROM,
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_TICKET_SALE_DATE: process.env.NEXT_PUBLIC_TICKET_SALE_DATE,
   },
