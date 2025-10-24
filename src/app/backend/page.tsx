@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "~/server/auth";
+import ReservesOverview from "~/components/ReservesOverview";
 
 export default async function BackendDashboard() {
     const session = await getServerSession(authOptions);
@@ -45,6 +46,11 @@ export default async function BackendDashboard() {
         <p className="mt-2 text-lg text-gray-600">
           Wählen Sie einen Bereich aus, um mit der Verwaltung zu beginnen.
         </p>
+      </div>
+
+      {/* Reserves Overview */}
+      <div className="mb-8">
+        <ReservesOverview />
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
