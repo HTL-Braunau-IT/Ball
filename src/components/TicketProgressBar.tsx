@@ -58,8 +58,8 @@ export default function TicketProgressBar({
       </div>
       
       <div className="flex justify-between text-xs text-gray-500 mt-1">
-        <span>Verkauft: {sold}</span>
-        <span>Verbleibend: {remaining}</span>
+        <span className="text-left">Verkauft: {sold}</span>
+        <span className="text-right">Verbleibend: {remaining}</span>
       </div>
     </div>
   );

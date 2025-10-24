@@ -1,5 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { reservesInput } from "~/types";
+import { z } from "zod";
 
 export const reservesRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
@@ -10,7 +11,8 @@ export const reservesRouter = createTRPCRouter({
         soldTickets: true
       }
     });
-    return reserves.map(({ type, amount, price, updatedAt, updatedBy, deliveryMethods, soldTickets }) => ({ 
+    return reserves.map(({ id, type, amount, price, updatedAt, updatedBy, deliveryMethods, soldTickets }) => ({ 
+      id,
       type, 
       amount, 
       price, 
@@ -40,6 +42,29 @@ export const reservesRouter = createTRPCRouter({
         deliveryMethods: {
           connect: input.deliveryMethodIds.map(id => ({ id}))
         }, 
+        updatedBy: ctx.session.user.name ?? "Unbekannt"
+      }
+    });
+  }),
+
+  update: protectedProcedure.input(
+    reservesInput.extend({
+      id: z.number()
+    })
+  ).mutation(async ({ ctx, input }) => {
+    return ctx.db.ticketReserves.update({
+      where: { id: input.id },
+      data: {
+        amount: input.amount,
+        price: input.price,
+        type: {
+          set: [],
+          connect: { id: input.typeId }
+        },
+        deliveryMethods: {
+          set: [],
+          connect: input.deliveryMethodIds.map(id => ({ id }))
+        },
         updatedBy: ctx.session.user.name ?? "Unbekannt"
       }
     });

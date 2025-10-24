@@ -1,54 +1,128 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import { api } from "~/utils/api";
 import TicketProgressBar from "./TicketProgressBar";
 
+interface EditableReserve {
+  id: number;
+  amount: number;
+  price: number;
+  deliveryMethodIds: number[];
+}
+
 export default function TicketReserves() {
-    const { data, isLoading, isError, error } = api.reserves.all.useQuery();
+    const { data, isLoading, isError, error, refetch } = api.reserves.all.useQuery();
+    const { data: deliveryMethods } = api.reserves.getDeliveryMethods.useQuery();
+    const updateMutation = api.reserves.update.useMutation({
+        onSuccess: () => {
+            setEditingId(null);
+            setEditData(null);
+            void refetch();
+        },
+        onError: (error) => {
+            console.error("Update failed:", error);
+            // Reset to original data on error
+            setEditData(null);
+        }
+    });
+
+    const [editingId, setEditingId] = useState<number | null>(null);
+    const [editData, setEditData] = useState<EditableReserve | null>(null);
+    const [originalTypeId, setOriginalTypeId] = useState<number | null>(null);
+
+    const handleEdit = useCallback((reserve: any) => {
+        const deliveryMethodIds = Array.isArray(reserve.deliveryMethods) 
+            ? reserve.deliveryMethods.map((dm: any) => dm.id)
+            : [];
+        const typeId = Array.isArray(reserve.type) ? reserve.type[0]?.id : reserve.type?.id;
+
+        setEditData({
+            id: reserve.id,
+            amount: reserve.amount,
+            price: reserve.price,
+            deliveryMethodIds
+        });
+        setOriginalTypeId(typeId || 1);
+        setEditingId(reserve.id);
+    }, []);
+
+    const handleSave = useCallback(() => {
+        if (!editData) return;
+        
+        updateMutation.mutate({
+            id: editData.id,
+            amount: editData.amount,
+            price: editData.price,
+            typeId: originalTypeId || 1, // Keep existing type, don't allow editing
+            deliveryMethodIds: editData.deliveryMethodIds
+        });
+    }, [editData, updateMutation]);
+
+    const handleCancel = useCallback(() => {
+        setEditingId(null);
+        setEditData(null);
+        setOriginalTypeId(null);
+    }, []);
+
+    const handleFieldChange = useCallback((field: keyof EditableReserve, value: any) => {
+        if (!editData) return;
+        
+        setEditData(prev => prev ? { ...prev, [field]: value } : null);
+    }, [editData]);
 
     if (isLoading) {
         return (
-            <div>Lade Kontingente...</div>
+            <div className="flex items-center justify-center py-8">
+                <div className="text-gray-600">Lade Kontingente...</div>
+            </div>
         );
     }
 
     if (isError) {
         return (
-            <div>Fehler beim Laden: {error.message}</div>
+            <div className="flex items-center justify-center py-8">
+                <div className="text-red-600">Fehler beim Laden: {error.message}</div>
+            </div>
         );
     }
 
     if (!data || data.length === 0) {
         return (
-            <div>Keine Kontingente gefunden.</div>
+            <div className="flex items-center justify-center py-8">
+                <div className="text-gray-600">Keine Kontingente gefunden.</div>
+            </div>
         );
     }
 
     return (
-        <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+        <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
+            <table className="min-w-full">
                 <thead className="bg-gray-50">
                     <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
                             Typ
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
                             Menge
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
                             Preis
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-40">
                             Liefermethoden
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
                             Geändert am
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
                             Status
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
                             Geändert von
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
+                            Aktionen
                         </th>
                     </tr>
                 </thead>
@@ -59,39 +133,152 @@ export default function TicketReserves() {
                             ? typeValue.map((t: { name?: string }) => t?.name ?? "").filter(Boolean).join(", ") || "Unbekannter Typ"
                             : (typeValue as { name?: string })?.name ?? "Unbekannter Typ";
 
-                        const deliveryMethods = Array.isArray(reserve.deliveryMethods)
+                        const deliveryMethodsText = Array.isArray(reserve.deliveryMethods)
                             ? reserve.deliveryMethods.map((dm: { name?: string }) => dm?.name ?? "").filter(Boolean).join(", ") || "-"
                             : "-";
 
                         const soldCount = reserve.soldTickets?.length || 0;
                         const remainingCount = reserve.amount - soldCount;
+                        const isEditing = editingId === reserve.id;
 
                         return (
-                            <tr key={idx} className="hover:bg-gray-50">
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    {typeLabel}
+                            <tr key={idx} className={`hover:bg-gray-50 ${isEditing ? 'bg-blue-50 border-l-4 border-blue-400' : ''}`}>
+                                {/* Typ */}
+                                <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                                    <div className="truncate" title={typeLabel}>
+                                        {typeLabel}
+                                    </div>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {reserve.amount}
+
+                                {/* Menge */}
+                                <td className="px-4 py-3 text-sm text-gray-500">
+                                    {isEditing ? (
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            value={editData?.amount || 0}
+                                            onChange={(e) => handleFieldChange('amount', parseInt(e.target.value) || 0)}
+                                            className="w-18 px-3 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                        />
+                                    ) : (
+                                        reserve.amount
+                                    )}
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    €{reserve.price}
+
+                                {/* Preis */}
+                                <td className="px-4 py-3 text-sm text-gray-500">
+                                    {isEditing ? (
+                                        <div className="flex items-center">
+                                            <span className="text-gray-500 mr-1 text-xs">€</span>
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                step="0.5"
+                                                value={editData?.price || 0}
+                                                onChange={(e) => handleFieldChange('price', parseFloat(e.target.value) || 0)}
+                                                className="w-20 px-3 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                            />
+                                        </div>
+                                    ) : (
+                                        `€${reserve.price}`
+                                    )}
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {deliveryMethods}
+
+                                {/* Liefermethoden */}
+                                <td className="px-4 py-3 text-sm text-gray-500">
+                                    {isEditing ? (
+                                        <div className="space-y-1 max-h-20 overflow-y-auto">
+                                            {deliveryMethods?.map((method: any) => (
+                                                <label key={method.id} className="flex items-center text-xs">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={editData?.deliveryMethodIds.includes(method.id) || false}
+                                                        onChange={(e) => {
+                                                            const currentIds = editData?.deliveryMethodIds || [];
+                                                            const newIds = e.target.checked
+                                                                ? [...currentIds, method.id]
+                                                                : currentIds.filter(id => id !== method.id);
+                                                            handleFieldChange('deliveryMethodIds', newIds);
+                                                        }}
+                                                        className="mr-1"
+                                                    />
+                                                    <span className="truncate">{method.name}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="truncate" title={deliveryMethodsText}>
+                                            {deliveryMethodsText}
+                                        </div>
+                                    )}
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {reserve.updatedAt ? new Date(reserve.updatedAt).toLocaleString() : "-"}
+
+                                {/* Geändert am */}
+                                <td className="px-4 py-3 text-sm text-gray-500">
+                                    <div className="truncate" title={reserve.updatedAt ? new Date(reserve.updatedAt).toLocaleString() : "-"}>
+                                        {reserve.updatedAt ? new Date(reserve.updatedAt).toLocaleDateString() : "-"}
+                                    </div>
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-500">
+
+                                {/* Status */}
+                                <td className="px-4 py-3 text-sm text-gray-500">
                                     <TicketProgressBar 
                                         total={reserve.amount}
                                         sold={soldCount}
                                         remaining={remainingCount}
                                     />
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {reserve.updatedBy ?? "-"}
+
+                                {/* Geändert von */}
+                                <td className="px-4 py-3 text-sm text-gray-500">
+                                    <div className="truncate" title={reserve.updatedBy ?? "-"}>
+                                        {reserve.updatedBy ?? "-"}
+                                    </div>
+                                </td>
+
+                                {/* Aktionen */}
+                                <td className="px-4 py-3 text-sm text-gray-500">
+                                    {isEditing ? (
+                                        <div className="flex space-x-1">
+                                            <button
+                                                onClick={handleSave}
+                                                disabled={updateMutation.isPending}
+                                                className="p-1.5 text-white bg-green-600 hover:bg-green-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                                title="Speichern"
+                                            >
+                                                {updateMutation.isPending ? (
+                                                    <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                    </svg>
+                                                ) : (
+                                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                )}
+                                            </button>
+                                            <button
+                                                onClick={handleCancel}
+                                                disabled={updateMutation.isPending}
+                                                className="p-1.5 text-white bg-gray-600 hover:bg-gray-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                                title="Abbrechen"
+                                            >
+                                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <button
+                                            onClick={() => handleEdit(reserve)}
+                                            className="p-1.5 text-white bg-blue-600 hover:bg-blue-700 rounded-md"
+                                            title="Bearbeiten"
+                                        >
+                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                        </button>
+                                    )}
                                 </td>
                             </tr>
                         );
