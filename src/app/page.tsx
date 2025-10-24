@@ -22,7 +22,7 @@ const formatDateForDisplay = (dateString: string) => {
 
 export default async function Home() {
   // Check if ticket sale has started
-  const ticketSaleDate = new Date(TICKET_SALE_DATE);
+  const ticketSaleDate = TICKET_SALE_DATE ? new Date(TICKET_SALE_DATE) : new Date();
   const now = new Date();
   const hasTicketSaleStarted = now >= ticketSaleDate;
 
@@ -53,7 +53,7 @@ export default async function Home() {
                 cursor: 'not-allowed',
                 pointerEvents: 'none'
               }}
-              title={hasTicketSaleStarted ? "Jetzt Tickets kaufen" : `Ticketverkauf startet am ${formatDateForDisplay(TICKET_SALE_DATE)}`}
+              title={hasTicketSaleStarted ? "Jetzt Tickets kaufen" : `Ticketverkauf startet am ${TICKET_SALE_DATE ? formatDateForDisplay(TICKET_SALE_DATE) : 'bald'}`}
             >
               {hasTicketSaleStarted ? "Jetzt Tickets kaufen" : "Ticketverkauf"}
             </Link>
@@ -154,7 +154,7 @@ export default async function Home() {
                 </div>
               ) : (
                 <Countdown 
-                  targetDate={TICKET_SALE_DATE}
+                  targetDate={TICKET_SALE_DATE ?? new Date().toISOString()}
                 />
               )}
             </div>
