@@ -41,21 +41,6 @@ model deliveryMethods {
 }
 
 model Buyers {
-<<<<<<< HEAD
-    id        Int      @id @default(autoincrement())
-    name      String   
-    email     String   @unique
-    phone     String
-    address   String
-    postal    Int                                      // Z - maybe restrict to austrian postal codes
-    province  String
-    country   String
-    verified  Boolean                                  // Z - did the buyer already pass email verification? 
-    maxTickets  Int // --> zu groups!
-    tickets   soldTickets[]
-    groupId   Int
-    group     buyerGroups @relation(fields: [groupId], references: [id])
-=======
   id         Int           @id @default(autoincrement())
   name       String
   email      String        @unique
@@ -69,7 +54,6 @@ model Buyers {
   groupId    Int
   group      buyerGroups   @relation(fields: [groupId], references: [id])
   tickets    soldTickets[]
->>>>>>> 84d5bcf (Fix database schema and reserves router - resolve soldTickets relationship issue)
 }
 
 model buyerGroups {
