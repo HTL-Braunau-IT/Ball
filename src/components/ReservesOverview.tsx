@@ -1,6 +1,6 @@
 "use client";
 
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 
 export default function ReservesOverview() {
     const { data, isLoading, isError, error } = api.reserves.all.useQuery();
@@ -36,7 +36,9 @@ export default function ReservesOverview() {
     const totalRemaining = totalAvailable - totalSold;
     const totalPotentialRevenue = data.reduce((sum, reserve) => sum + (reserve.amount * reserve.price), 0);
     const totalActualRevenue = data.reduce((sum, reserve) => {
-        const soldRevenue = reserve.soldTickets?.reduce((ticketSum, ticket) => ticketSum + ticket.soldPrice, 0) || 0;
+        const soldRevenue = reserve.soldTickets?.reduce((ticketSum, ticket) => {
+            return ticketSum + (ticket.soldPrice || reserve.price);
+        }, 0) || 0;
         return sum + soldRevenue;
     }, 0);
 

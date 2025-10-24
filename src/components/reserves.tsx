@@ -1,6 +1,6 @@
 "use client";
 
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 
 export default function TicketReserves() {
     const { data, isLoading, isError, error } = api.reserves.all.useQuery();
