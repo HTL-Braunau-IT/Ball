@@ -33,7 +33,7 @@ export default function TicketReserves() {
 
     const handleEdit = useCallback((reserve: any) => {
         const deliveryMethodIds = Array.isArray(reserve.deliveryMethods) 
-            ? reserve.deliveryMethods.map((dm: any) => dm.id)
+            ? reserve.deliveryMethods.map((dm: any) => dm.id as number)
             : [];
         const typeId = Array.isArray(reserve.type) ? reserve.type[0]?.id : reserve.type?.id;
 
@@ -57,7 +57,7 @@ export default function TicketReserves() {
             typeId: originalTypeId || 1, // Keep existing type, don't allow editing
             deliveryMethodIds: editData.deliveryMethodIds
         });
-    }, [editData, updateMutation]);
+    }, [editData, originalTypeId, updateMutation]);
 
     const handleCancel = useCallback(() => {
         setEditingId(null);

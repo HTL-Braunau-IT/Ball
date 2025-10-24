@@ -254,6 +254,8 @@ export const ticketRouter = createTRPCRouter({
           sent: false,
           transref: "", // Will be updated after payment
           buyerId: buyer.id,
+          reserveId: ticketReserve.id,
+          soldPrice: ticketReserve.price + shippingFee,
         },
       });
 
