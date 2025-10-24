@@ -27,7 +27,7 @@ export default function BuyerPage() {
   const [showPurchaseFlow, setShowPurchaseFlow] = useState(false);
 
   // Fetch user's purchased tickets
-  const { data: userTickets, isLoading: ticketsLoading } = api.ticket.getUserTickets.useQuery(
+  const { data: userTickets  } = api.ticket.getUserTickets.useQuery(
     undefined,
     { enabled: !!session }
   );

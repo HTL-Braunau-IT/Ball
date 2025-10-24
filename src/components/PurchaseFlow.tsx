@@ -12,7 +12,7 @@ interface PurchaseFlowProps {
   onCancel: () => void;
 }
 
-export default function PurchaseFlow({ onComplete, onCancel }: PurchaseFlowProps) {
+export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: PurchaseFlowProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod | null>(null);
   const [contactInfo, setContactInfo] = useState<ShippingAddress | SelfPickupInfo | null>(null);
@@ -22,7 +22,7 @@ export default function PurchaseFlow({ onComplete, onCancel }: PurchaseFlowProps
 
   // API calls
   const { data: availableTickets, isLoading: ticketsLoading } = api.ticket.getAvailableTickets.useQuery();
-  const { data: deliveryMethods, isLoading: deliveryLoading } = api.ticket.getDeliveryMethods.useQuery();
+  const { data: deliveryMethods } = api.ticket.getDeliveryMethods.useQuery();
   const createPurchase = api.ticket.createPurchase.useMutation();
 
   const totalSteps = 4;
@@ -115,7 +115,7 @@ export default function PurchaseFlow({ onComplete, onCancel }: PurchaseFlowProps
           maxQuantity={maxQuantity}
           onTicketSelect={handleTicketSelect}
           onQuantityChange={handleQuantityChange}
-          onBack={() => setCurrentStep(0)}
+          onBack={onCancel}
           onNext={() => setCurrentStep(2)}
         />
       )}
@@ -137,7 +137,7 @@ export default function PurchaseFlow({ onComplete, onCancel }: PurchaseFlowProps
             </p>
           </div>
           <button
-            onClick={() => setCurrentStep(0)}
+            onClick={onCancel}
             className="btn btn-primary"
           >
             Zurück zur Übersicht

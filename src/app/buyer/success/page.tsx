@@ -32,7 +32,7 @@ function SuccessPageContent() {
         }
       );
     }
-  }, [sessionId, paymentConfirmed]);
+  }, [sessionId, paymentConfirmed, confirmPayment]);
 
   if (!sessionId) {
     return (

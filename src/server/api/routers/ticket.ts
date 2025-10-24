@@ -3,7 +3,7 @@ import { z } from "zod";
 import Stripe from "stripe";
 import { env } from "~/env";
 import { generatePickupCode } from "~/utils/generatePickupCode";
-import { shippingAddressSchema, selfPickupSchema, type ShippingAddress, type SelfPickupInfo } from "~/utils/validateAddress";
+import { shippingAddressSchema, selfPickupSchema, type ShippingAddress } from "~/utils/validateAddress";
 import { sendConfirmationEmail, sendShippingNotificationEmail } from "~/utils/email";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
@@ -166,10 +166,8 @@ export const ticketRouter = createTRPCRouter({
         throw new Error("Delivery method not found");
       }
 
-      // Calculate total
-      const ticketTotal = ticketReserve.price * quantity;
+      // Calculate shipping fee
       const shippingFee = deliveryMethod === "shipping" ? (deliveryMethodInfo.surcharge ?? 0) : 0;
-      const total = ticketTotal + shippingFee;
 
       // Check if buyer already has tickets (prevent multiple purchases)
       const existingBuyer = await ctx.db.buyers.findUnique({
