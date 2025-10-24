@@ -36,7 +36,7 @@ model soldTickets {
     transref  String                                   // Z - placeholder for a transaction reference from stripe 
     timestamp DateTime @default(now()) 
     buyerId   Int
-    buyer     Buyers   @relation(fields: [buyerId], references: [id])
+    buyer     Buyers   @relation(fields: [buyerId], references: [id], onDelete: Cascade)
 }
 
 // Z - all available delivery methods
@@ -52,6 +52,7 @@ model Buyers {
     id        Int      @id @default(autoincrement())
     name      String   
     email     String   @unique
+    phone     String
     address   String
     postal    Int                                      // Z - maybe restrict to austrian postal codes
     province  String

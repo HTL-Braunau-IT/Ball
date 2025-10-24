@@ -1,9 +1,27 @@
 "use client";
 
 import { api } from "~/utils/api";
+import { useState } from "react";
 
 export default function Tickets() {
-    const { data, isLoading, isError, error } = api.ticket.all.useQuery();
+    const { data, isLoading, isError, error, refetch } = api.ticket.all.useQuery();
+    const [processingTicket, setProcessingTicket] = useState<number | null>(null);
+    
+    const markAsSentMutation = api.ticket.markAsSent.useMutation({
+        onSuccess: () => {
+            void refetch();
+            setProcessingTicket(null);
+        },
+        onError: (error) => {
+            console.error("Error marking ticket as sent:", error);
+            setProcessingTicket(null);
+        },
+    });
+
+    const handleMarkAsSent = (ticketId: number) => {
+        setProcessingTicket(ticketId);
+        markAsSentMutation.mutate({ ticketId });
+    };
 
     if (isLoading) {
         return (
@@ -46,6 +64,9 @@ export default function Tickets() {
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Zeitstempel
                         </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Aktionen
+                        </th>
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -68,6 +89,25 @@ export default function Tickets() {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {ticket.timestamp ? new Date(ticket.timestamp).toLocaleString() : "-"}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {ticket.paid && 
+                                 !ticket.sent && 
+                                 (ticket.delivery.toLowerCase().includes('versand') || 
+                                  ticket.delivery.toLowerCase().includes('shipping')) && (
+                                    <button
+                                        onClick={() => handleMarkAsSent(ticket.id)}
+                                        disabled={processingTicket === ticket.id}
+                                        className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {processingTicket === ticket.id ? "Wird verarbeitet..." : "Als versendet markieren"}
+                                    </button>
+                                )}
+                                {ticket.sent && (
+                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        ✓ Versendet
+                                    </span>
+                                )}
                             </td>
                         </tr>
                     ))}
