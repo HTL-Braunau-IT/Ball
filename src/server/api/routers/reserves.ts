@@ -7,19 +7,17 @@ export const reservesRouter = createTRPCRouter({
     const reserves = await ctx.db.ticketReserves.findMany({
       include: { 
         type: true, 
-        deliveryMethods: true,
-        soldTickets: true
+        deliveryMethods: true
       }
     });
-    return reserves.map(({ id, type, amount, price, updatedAt, updatedBy, deliveryMethods, soldTickets }) => ({ 
+    return reserves.map(({ id, type, amount, price, updatedAt, updatedBy, deliveryMethods }) => ({ 
       id,
       type, 
       amount, 
       price, 
       updatedAt, 
       updatedBy, 
-      deliveryMethods,
-      soldTickets
+      deliveryMethods
     }));
   }),
   
