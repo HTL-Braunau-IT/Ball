@@ -115,6 +115,9 @@ export default function TicketReserves() {
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
                             Geändert am
                         </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
+                            Status
+                        </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Verkauft
                         </th>
@@ -221,6 +224,15 @@ export default function TicketReserves() {
                                     <div className="truncate" title={reserve.updatedAt ? new Date(reserve.updatedAt).toLocaleString() : "-"}>
                                         {reserve.updatedAt ? new Date(reserve.updatedAt).toLocaleDateString() : "-"}
                                     </div>
+                                </td>
+
+                                {/* Status */}
+                                <td className="px-4 py-3 text-sm text-gray-500">
+                                    <TicketProgressBar 
+                                        total={reserve.amount}
+                                        sold={soldCount}
+                                        remaining={remainingCount}
+                                    />
                                 </td>
 
                                 {/* Verkauft */}
