@@ -96,8 +96,8 @@ export default function TicketReserves() {
     }
 
     return (
-        <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
-            <table className="min-w-full">
+        <div className="overflow-x-auto">
+                <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
                 <thead className="bg-gray-50">
                     <tr>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
@@ -115,10 +115,13 @@ export default function TicketReserves() {
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
                             Geändert am
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
-                            Status
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Verkauft
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Verbleibend
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Geändert von
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
@@ -220,20 +223,19 @@ export default function TicketReserves() {
                                     </div>
                                 </td>
 
-                                {/* Status */}
-                                <td className="px-4 py-3 text-sm text-gray-500">
-                                    <TicketProgressBar 
-                                        total={reserve.amount}
-                                        sold={soldCount}
-                                        remaining={remainingCount}
-                                    />
+                                {/* Verkauft */}
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span className="text-orange-600 font-medium">{soldCount}</span>
+                                </td>
+
+                                {/* Verbleibend */}
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span className="text-purple-600 font-medium">{remainingCount}</span>
                                 </td>
 
                                 {/* Geändert von */}
-                                <td className="px-4 py-3 text-sm text-gray-500">
-                                    <div className="truncate" title={reserve.updatedBy ?? "-"}>
-                                        {reserve.updatedBy ?? "-"}
-                                    </div>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {reserve.updatedBy ?? "-"}
                                 </td>
 
                                 {/* Aktionen */}

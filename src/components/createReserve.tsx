@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 
 export default function CreateReserve() {
   const [amount, setAmount] = useState("");

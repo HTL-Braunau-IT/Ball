@@ -7,37 +7,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model ticketReserves {
-  id              Int               @id @default(autoincrement())
-  amount          Int
-  price           Int
-  updatedAt       DateTime          @updatedAt
-  updatedBy       String
-  type            buyerGroups[]     @relation("buyerGroupsToticketReserves")
-  deliveryMethods deliveryMethods[] @relation("deliveryMethodsToticketReserves")
-  soldTickets     soldTickets[]
+// Z - created models for basic functionality
+//
+
+
+
+// Z - all ticket quotas applicable for buying 
+model ticketReserves {                                  
+    id        Int      @id @default(autoincrement())    
+    type      buyerGroups[]                            // Z - type of ticket (eg. student, alumni, public, etc...)
+    amount    Int                                       // Z - amount of tickets available
+    price     Int                                       // Z - price of the ticket
+    updatedAt DateTime @updatedAt                       // Z - timestamp of last update - to track backend changes
+    updatedBy String                                    // Z - user who updated the entry - to track backend changes
+    deliveryMethods deliveryMethods[]
+    soldTickets soldTickets[]
 }
 
-model soldTickets {
-  id        Int      @id @default(autoincrement())
-  delivery  String
-  code      String   @unique
-  paid      Boolean?
-  sent      Boolean?
-  transref  String
-  timestamp DateTime @default(now())
-  buyerId   Int
-  buyer     Buyers   @relation(fields: [buyerId], references: [id], onDelete: Cascade)
-  reserveId Int
-  reserve   ticketReserves @relation(fields: [reserveId], references: [id])
-  soldPrice Int
+// Z - all tickets sold 
+model soldTickets {                                    
+    id        Int      @id @default(autoincrement())
+    delivery  String                                   // Z - delivery method of the ticket
+    code      String   @unique                         // Z - code need when using pickup as delivery method (randomly generate?)
+    paid      Boolean?
+    sent      Boolean?                                // Z - has the ticket been sent? (only relevant if the delivery is not a reservation)
+    transref  String                                   // Z - placeholder for a transaction reference from stripe 
+    timestamp DateTime @default(now()) 
+    buyerId   Int
+    buyer     Buyers   @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+    reserveId Int
+    reserve   ticketReserves @relation(fields: [reserveId], references: [id])
+    soldPrice Int
 }
 
 model deliveryMethods {
   id             Int              @id @default(autoincrement())
   name           String
   surcharge      Int?
-  ticketReserves ticketReserves[] @relation("deliveryMethodsToticketReserves")
+  ticketReserves ticketReserves[]
 }
 
 model Buyers {
@@ -60,7 +67,7 @@ model buyerGroups {
   id             Int              @id @default(autoincrement())
   name           String
   buyers         Buyers[]
-  ticketReserves ticketReserves[] @relation("buyerGroupsToticketReserves")
+  ticketReserves ticketReserves[]
 }
 
 model backendUsers {

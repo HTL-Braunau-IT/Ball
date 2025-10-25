@@ -1,6 +1,6 @@
 "use client";
 
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 
 export default function Buyers() {
     const { data, isLoading, isError, error } = api.buyers.all.useQuery();
