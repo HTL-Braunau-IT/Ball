@@ -567,3 +567,95 @@ h4 {
     margin-bottom: var(--spacing-md);
   }
 }
+
+/* Backend-specific styles */
+
+.backend-layout h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.00em;
+  text-transform: capitalize;
+}
+.backend-layout h2,
+.backend-layout h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.00em;
+  text-transform: capitalize;
+}
+.backend-layout h4,
+.backend-layout h5,
+.backend-layout h6 {
+  font-family: var(--font-heading);
+  font-weight: 600; /* Make backend headings bolder */
+  color: var(--color-text-primary);
+}
+
+.backend-layout .btn {
+  /* Backend-specific button styles */
+  font-weight: 500;
+}
+
+.backend-layout .card {
+  /* Backend-specific card styles */
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.backend-layout .card:hover {
+  /* Less dramatic hover effect for backend */
+  transform: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Backend navigation specific styles */
+.backend-layout nav {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.backend-layout nav a {
+  color: #374151;
+  font-weight: 500;
+}
+
+.backend-layout nav a:hover {
+  color: #1f2937;
+}
+
+/* Backend form styles */
+.backend-layout input,
+.backend-layout select,
+.backend-layout textarea {
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.backend-layout input:focus,
+.backend-layout select:focus,
+.backend-layout textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Backend table styles */
+.backend-layout table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.backend-layout th,
+.backend-layout td {
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.backend-layout th {
+  background-color: #f0f0f0;
+  font-weight: 600;
+  color: #374151;
+}

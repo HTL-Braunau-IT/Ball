@@ -1,18 +1,15 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
-
 
 // Z - created models for basic functionality
 //
+
 
 
 // Z - all ticket quotas applicable for buying 
@@ -24,6 +21,7 @@ model ticketReserves {
     updatedAt DateTime @updatedAt                       // Z - timestamp of last update - to track backend changes
     updatedBy String                                    // Z - user who updated the entry - to track backend changes
     deliveryMethods deliveryMethods[]
+    soldTickets soldTickets[]
 }
 
 // Z - all tickets sold 
@@ -37,58 +35,56 @@ model soldTickets {
     timestamp DateTime @default(now()) 
     buyerId   Int
     buyer     Buyers   @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+    reserveId Int
+    reserve   ticketReserves @relation(fields: [reserveId], references: [id])
+    soldPrice Int
 }
 
-// Z - all available delivery methods
 model deliveryMethods {
-    id        Int      @id @default(autoincrement())
-    name      String
-    surcharge Int?
-    ticketReserves  ticketReserves[]
+  id             Int              @id @default(autoincrement())
+  name           String
+  surcharge      Int?
+  ticketReserves ticketReserves[]
 }
 
-// Z - database of buyers
 model Buyers {
-    id        Int      @id @default(autoincrement())
-    name      String   
-    email     String   @unique
-    phone     String
-    address   String
-    postal    Int                                      // Z - maybe restrict to austrian postal codes
-    province  String
-    country   String
-    verified  Boolean                                  // Z - did the buyer already pass email verification? 
-    maxTickets  Int // --> zu groups!
-    tickets   soldTickets[]
-    groupId   Int
-    group     buyerGroups @relation(fields: [groupId], references: [id])
+  id         Int           @id @default(autoincrement())
+  name       String
+  email      String        @unique
+  phone      String
+  address    String
+  postal     Int
+  province   String
+  country    String
+  verified   Boolean
+  maxTickets Int
+  groupId    Int
+  group      buyerGroups   @relation(fields: [groupId], references: [id])
+  tickets    soldTickets[]
 }
 
-// Z - groups for the buyers, to determine which types of tickets are available to buy
 model buyerGroups {
-    id        Int      @id @default(autoincrement())
-    name      String
-    buyers    Buyers[]
-    ticketReserves ticketReserves[]
+  id             Int              @id @default(autoincrement())
+  name           String
+  buyers         Buyers[]
+  ticketReserves ticketReserves[]
 }
 
-// Z - users that should later be able to login into the backend
 model backendUsers {
-    id        Int      @id @default(autoincrement())
-    firstName String   
-    surName   String   
-    email     String   @unique
-    passwordHash String
-    groupId   Int?
-    group     backendGroups? @relation(fields: [groupId], references: [id])
+  id           Int            @id @default(autoincrement())
+  firstName    String
+  surName      String
+  email        String         @unique
+  passwordHash String
+  groupId      Int?
+  group        backendGroups? @relation(fields: [groupId], references: [id])
 }
 
 model backendGroups {
-    id   Int    @id @default(autoincrement())
-    name String
-    users backendUsers[]
+  id    Int            @id @default(autoincrement())
+  name  String
+  users backendUsers[]
 }
-
 
 model User {
   id            String    @id @default(cuid())
@@ -106,15 +102,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -124,8 +119,7 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
