@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import FloatingCSVExport from "~/components/FloatingCSVExport";
 
 export default function BackendLayout({
   children,
@@ -184,6 +185,9 @@ export default function BackendLayout({
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {children}
       </main>
+
+      {/* Floating CSV Export */}
+      <FloatingCSVExport />
     </div>
   );
 }
