@@ -51,7 +51,9 @@ export default async function BackendDashboard() {
       title: "Absolventen Import",
       description: "Importieren Sie Alumni-E-Mails für exklusive Ticket-Zugriffe",
       href: "/backend/import-alumni",
-      color: "bg-orange-500 hover:bg-orange-600",
+      hoverBg: "hover:bg-green-50",
+      iconBg: "bg-green-500 hover:bg-green-600",
+      titleHover: "group-hover:text-green-600",
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
@@ -70,13 +72,7 @@ export default async function BackendDashboard() {
           Wählen Sie einen Bereich aus, um mit der Verwaltung zu beginnen.
         </p>
       </div>
-
-      {/* Reserves Overview */}
-      <div className="mb-8">
-        <ReservesOverview />
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {sections.map((section) => (
           <Link
             key={section.title}
@@ -115,6 +111,10 @@ export default async function BackendDashboard() {
           </Link>
         ))}
       </div>
+      {/* Reserves Overview */}
+      <div className="py-8">
+        <ReservesOverview />
+      </div>      
     </div>
   );
 }
