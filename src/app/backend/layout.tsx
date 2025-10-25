@@ -168,7 +168,7 @@ export default function BackendLayout({
             {/* User info and logout */}
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-700">
-                {session?.user?.email}
+                {session?.user?.name ?? session?.user?.email}
               </span>
               <button
                 onClick={session ? () => signOut() : () => router.push("/backend/login")}
