@@ -22,7 +22,7 @@ export default function FloatingCSVExport() {
 
   const exportToCSV = useCallback(() => {
     let csvHeaders: string[] = [];
-    let csvData: any[] = [];
+    let csvData: unknown[][] = [];
     let filename = "";
 
     // Determine data and headers based on current page
@@ -123,7 +123,7 @@ export default function FloatingCSVExport() {
     // Generate CSV content
     const csvContent = [
       csvHeaders.join(','),
-      ...csvData.map(row => row.map((cell: any) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      ...csvData.map(row => row.map((cell: unknown) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
     ].join('\n');
 
     // Download file
