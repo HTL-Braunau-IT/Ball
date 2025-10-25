@@ -69,7 +69,7 @@ export default async function BackendDashboard() {
           Willkommen {displayName}
         </h1>
         <p className="mt-2 text-lg text-gray-600">
-          Wählen Sie einen Bereich aus, um mit der Verwaltung zu beginnen.
+          Wähle einen Bereich aus, um mit der Verwaltung zu beginnen.
         </p>
       </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

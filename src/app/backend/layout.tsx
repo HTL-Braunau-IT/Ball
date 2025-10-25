@@ -137,16 +137,15 @@ export default function BackendLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 backend-layout">
       {/* Top Navigation Bar */}
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-semibold text-gray-900">
-                  Backend Ball Website
-                </h1>
+              <div className="flex-shrink-0 flex flex-col justify-center items-center text-gray-500">
+                <span className="text-lg font-light tracking-wider text-gray-500">HTL Ball 2026</span>
+                <span className="text-xs font-bold tracking-widest uppercase" style={{color: '#8B4513'}}>Backend</span>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                 {navigationItems.map((item) => (
