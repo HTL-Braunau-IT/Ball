@@ -237,45 +237,24 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
 
     return (
         <div className="space-y-4">
-            {/* Search bar */}
-            <div className="mb-2 px-4">
-                <div className="flex items-center border border-gray-200 bg-white rounded-lg overflow-hidden">
-                    {/* Search bar - full width */}
-                    <div className="flex-1 flex items-center">
-                        <input
-                            type="text"
-                            placeholder="Name oder Code..."
-                            value={searchText}
-                            onChange={(e) => setSearchText(e.target.value)}
-                            className="flex-1 border-0 outline-none focus:outline-none focus:ring-0 text-sm px-4 py-2.5 text-gray-700 placeholder-gray-400"
-                            style={{ boxShadow: 'none', border: 'none', outline: 'none' }}
-                        />
-                    </div>
-                    {/* Results counter */}
-                    <div className="px-4">
-                        {filteredAndSortedData.length === 0 && hasActiveFilters ? (
-                            <p className="text-sm text-red-600 font-medium">
-                                Nichts gefunden mit eingegebenen Filtern
-                            </p>
-                        ) : filteredAndSortedData.length === data.length && !hasActiveFilters ? (
-                            <p className="text-sm text-gray-600">
-                                <span className="font-semibold text-gray-900">{data.length}</span> Karten insgesamt
-                            </p>
-                        ) : (
-                            <p className="text-sm text-gray-600">
-                                <span className="font-semibold text-gray-900">{filteredAndSortedData.length}</span> von <span className="font-semibold">{data.length}</span> Karten{hasActiveFilters ? " (gefiltert)" : ""}
-                            </p>
-                        )}
-                    </div>
-                </div>
-            </div>
-
             {/* Filter panel - always visible */}
             <div className="mb-2 px-4">
                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
                     <div className="flex items-center">
+                        {/* Search bar */}
+                        <div className="flex items-center border-r border-gray-200 px-3 py-2 flex-1">
+                            <input
+                                type="text"
+                                placeholder="Name oder Code..."
+                                value={searchText}
+                                onChange={(e) => setSearchText(e.target.value)}
+                                className="w-full border-0 outline-none focus:outline-none focus:ring-0 text-sm px-3 py-1.5 text-gray-700 placeholder-gray-400 bg-gray-50 rounded"
+                                style={{ boxShadow: 'none', border: 'none', outline: 'none' }}
+                            />
+                        </div>
+                        
                         {/* Lieferung filter */}
-                        <div className="flex items-center justify-center border-r border-gray-200 flex-1">
+                        <div className="flex items-center justify-center border-r border-gray-200">
                             <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Lieferung
                             </div>
@@ -288,7 +267,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                         </div>
                         
                         {/* Bezahlt filter */}
-                        <div className="flex items-center justify-center border-r border-gray-200 flex-1">
+                        <div className="flex items-center justify-center border-r border-gray-200">
                             <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Bezahlt
                             </div>
@@ -300,7 +279,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                         </div>
                         
                         {/* Gesendet filter */}
-                        <div className="flex items-center justify-center flex-1">
+                        <div className="flex items-center justify-center">
                             <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Gesendet
                             </div>
@@ -311,6 +290,25 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            {/* Results counter */}
+            <div className="mb-2 px-4">
+                <div className="bg-white border border-gray-200 rounded-lg px-4 py-2">
+                    {filteredAndSortedData.length === 0 && hasActiveFilters ? (
+                        <p className="text-sm text-red-600 font-medium">
+                            Nichts gefunden mit eingegebenen Filtern
+                        </p>
+                    ) : filteredAndSortedData.length === data.length && !hasActiveFilters ? (
+                        <p className="text-sm text-gray-600">
+                            <span className="font-semibold text-gray-900">{data.length}</span> Karten insgesamt
+                        </p>
+                    ) : (
+                        <p className="text-sm text-gray-600">
+                            <span className="font-semibold text-gray-900">{filteredAndSortedData.length}</span> von <span className="font-semibold">{data.length}</span> Karten{hasActiveFilters ? " (gefiltert)" : ""}
+                        </p>
+                    )}
                 </div>
             </div>
 
