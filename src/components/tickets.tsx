@@ -242,15 +242,26 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
                     <div className="flex items-center">
                         {/* Search bar */}
-                        <div className="flex items-center border-r border-gray-200 px-3 py-2 flex-1">
+                        <div className="flex items-center border-r border-gray-200 px-3 py-2 flex-1 relative">
                             <input
                                 type="text"
                                 placeholder="Name oder Code..."
                                 value={searchText}
                                 onChange={(e) => setSearchText(e.target.value)}
-                                className="w-full border-0 outline-none focus:outline-none focus:ring-0 text-sm px-3 py-1.5 text-gray-700 placeholder-gray-400 bg-gray-50 rounded"
+                                className="w-full border-0 outline-none focus:outline-none focus:ring-0 text-sm px-3 py-1.5 pr-8 text-gray-700 placeholder-gray-400 bg-gray-50 rounded"
                                 style={{ boxShadow: 'none', border: 'none', outline: 'none' }}
                             />
+                            {searchText && (
+                                <button
+                                    onClick={() => setSearchText("")}
+                                    className="absolute right-5 text-gray-400 hover:text-gray-600 transition-colors"
+                                    type="button"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            )}
                         </div>
                         
                         {/* Lieferung filter */}
@@ -294,7 +305,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
             </div>
 
             {/* Results counter */}
-            <div className="px-4">
+            <div className="-mt-2 px-4">
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-lg px-4 py-2.5 shadow-sm">
                     <div className="flex items-center gap-2">
                         {filteredAndSortedData.length === 0 && hasActiveFilters ? (
