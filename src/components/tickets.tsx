@@ -364,8 +364,16 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                 <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
                 <thead className="bg-gray-50">
                     <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            ID
+                        <th 
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => handleSort('id')}
+                        >
+                            <div className="flex items-center gap-2">
+                                ID
+                                {sortColumn === 'id' && (
+                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                                )}
+                            </div>
                         </th>
                         <th 
                             className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
