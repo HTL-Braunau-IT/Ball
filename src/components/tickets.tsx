@@ -226,9 +226,14 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
 
     if (!data || data.length === 0) {
         return (
-            <div>Keine Karten gefunden.</div>
+            <div className="text-center py-8">
+                <div className="text-gray-500 text-sm">Keine Karten gefunden.</div>
+            </div>
         );
     }
+
+    // Check if any filters are active
+    const hasActiveFilters = debouncedSearchText !== "" || filterDelivery !== "" || filterPaid !== "" || filterSent !== "";
 
     return (
         <div className="space-y-4">
@@ -247,9 +252,21 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                         />
                     </div>
                     {/* Results counter */}
-                    <p className="text-sm text-gray-600 px-4">
-                        <span className="font-semibold text-gray-900">{filteredAndSortedData.length}</span> von <span className="font-semibold">{data.length}</span> Karten
-                    </p>
+                    <div className="px-4">
+                        {filteredAndSortedData.length === 0 && hasActiveFilters ? (
+                            <p className="text-sm text-red-600 font-medium">
+                                Nichts gefunden mit eingegebenen Filtern
+                            </p>
+                        ) : filteredAndSortedData.length === data.length && !hasActiveFilters ? (
+                            <p className="text-sm text-gray-600">
+                                <span className="font-semibold text-gray-900">{data.length}</span> Karten insgesamt
+                            </p>
+                        ) : (
+                            <p className="text-sm text-gray-600">
+                                <span className="font-semibold text-gray-900">{filteredAndSortedData.length}</span> von <span className="font-semibold">{data.length}</span> Karten{hasActiveFilters ? " (gefiltert)" : ""}
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -454,8 +471,32 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {paginatedData.map((ticket) => (
-                        <tr key={ticket.id} className="hover:bg-gray-50">
+                    {paginatedData.length === 0 ? (
+                        <tr>
+                            <td colSpan={8} className="px-4 py-8 text-center text-sm text-gray-500">
+                                {hasActiveFilters ? (
+                                    <div className="flex flex-col items-center gap-2">
+                                        <span className="text-gray-400">Nichts gefunden mit eingegebenen Filtern</span>
+                                        <button
+                                            onClick={() => {
+                                                setSearchText("");
+                                                setFilterDelivery("");
+                                                setFilterPaid("");
+                                                setFilterSent("");
+                                            }}
+                                            className="mt-2 text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                                        >
+                                            Filter zurücksetzen
+                                        </button>
+                                    </div>
+                                ) : (
+                                    "Keine Karten zum Anzeigen"
+                                )}
+                            </td>
+                        </tr>
+                    ) : (
+                        paginatedData.map((ticket) => (
+                            <tr key={ticket.id} className="hover:bg-gray-50">
                             <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900" style={{ height: '45px', verticalAlign: 'middle', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {ticket.id}
                             </td>
@@ -502,7 +543,8 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                                 )}
                             </td>
                         </tr>
-                    ))}
+                        ))
+                    )}
                 </tbody>
             </table>
             </div>
