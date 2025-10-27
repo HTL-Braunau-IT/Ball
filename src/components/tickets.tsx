@@ -85,7 +85,7 @@ export default function Tickets() {
                                 {ticket.delivery}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {ticket.code}
+                                {ticket.delivery.toLowerCase().includes('abholung') ? ticket.code : '-'}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {ticket.paid ? "Ja" : "Nein"}
