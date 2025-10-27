@@ -7,8 +7,39 @@ import Link from "next/link";
 type SortColumn = 'id' | 'name' | 'delivery' | 'code' | 'paid' | 'sent' | 'timestamp' | null;
 type SortDirection = 'asc' | 'desc' | null;
 
-export default function Tickets() {
-    const { data, isLoading, isError, error, refetch } = api.ticket.all.useQuery();
+type TicketData = {
+  id: number;
+  delivery: string;
+  code: string;
+  paid: boolean | null;
+  sent: boolean | null;
+  timestamp: Date;
+  buyer: {
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    postal: number;
+    province: string;
+    country: string;
+    verified: boolean;
+    maxTickets: number;
+    groupId: number;
+  };
+};
+
+type TicketsProps = {
+  initialData?: TicketData[];
+};
+
+export default function Tickets({ initialData }: TicketsProps = {}) {
+    const { data, isLoading, isError, error, refetch } = api.ticket.all.useQuery(undefined, {
+        ...(initialData && { initialData }),
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+    });
     const [processingTicket, setProcessingTicket] = useState<number | null>(null);
     
     // Search and filter states
