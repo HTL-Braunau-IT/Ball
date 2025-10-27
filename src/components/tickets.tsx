@@ -2,6 +2,7 @@
 
 import { api } from "~/trpc/react";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Tickets() {
     const { data, isLoading, isError, error, refetch } = api.ticket.all.useQuery();
@@ -79,7 +80,12 @@ export default function Tickets() {
                                 {ticket.id}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {ticket.buyer.name}
+                                <Link 
+                                    href={`/backend/buyers#buyer-${ticket.buyer.id}`}
+                                    className="text-blue-600 hover:text-blue-800 hover:underline"
+                                >
+                                    {ticket.buyer.name}
+                                </Link>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {ticket.delivery}

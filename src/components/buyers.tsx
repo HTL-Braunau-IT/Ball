@@ -1,9 +1,40 @@
 "use client";
 
 import { api } from "~/trpc/react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Buyers() {
     const { data, isLoading, isError, error } = api.buyers.all.useQuery();
+    const router = useRouter();
+
+    useEffect(() => {
+        // Check for hash in URL
+        if (typeof window !== 'undefined') {
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#buyer-')) {
+                const buyerId = hash.replace('#buyer-', '');
+                const element = document.getElementById(`buyer-${buyerId}`);
+                
+                if (element) {
+                    // Scroll to the element
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Highlight the row
+                    element.classList.add('highlighted-row');
+                    
+                    // Remove highlight after 3 seconds
+                    const timer = setTimeout(() => {
+                        element.classList.remove('highlighted-row');
+                        // Clear the hash from URL without scrolling
+                        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+                    }, 3000);
+                    
+                    return () => clearTimeout(timer);
+                }
+            }
+        }
+    }, [data]);
 
     if (isLoading) {
         return (
@@ -62,7 +93,7 @@ export default function Buyers() {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                     {data.map((buyer) => (
-                        <tr key={buyer.id} className="hover:bg-gray-50">
+                        <tr key={buyer.id} id={`buyer-${buyer.id}`} className="hover:bg-gray-50 transition-all duration-1000">
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                 {buyer.id}
                             </td>
