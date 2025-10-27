@@ -233,7 +233,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
     return (
         <div className="space-y-4">
             {/* Search bar */}
-            <div className="mb-3 px-4">
+            <div className="mb-2 px-4">
                 <div className="flex items-center border border-gray-200 bg-white rounded-lg overflow-hidden">
                     {/* Search bar - full width */}
                     <div className="flex-1 flex items-center">
@@ -298,7 +298,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
             </div>
 
             {/* Compact pagination control under filters */}
-            <div className="mb-2 px-4">
+            <div className="mb-1 px-4">
                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
                     <div className="flex items-center justify-between px-3 py-2">
                         <div className="flex items-center gap-2">
