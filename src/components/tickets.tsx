@@ -238,7 +238,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
     return (
         <div className="space-y-4">
             {/* Filter panel - always visible */}
-            <div className="mb-2 px-4">
+            <div className="px-4">
                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
                     <div className="flex items-center">
                         {/* Search bar */}
@@ -294,7 +294,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
             </div>
 
             {/* Results counter */}
-            <div className="mb-2 px-4">
+            <div className="px-4">
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-lg px-4 py-2.5 shadow-sm">
                     <div className="flex items-center gap-2">
                         {filteredAndSortedData.length === 0 && hasActiveFilters ? (
@@ -334,70 +334,8 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                 </div>
             </div>
 
-            {/* Compact pagination control under filters */}
-            <div className="mb-1 px-4">
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                    <div className="flex items-center justify-between px-3 py-2">
-                        <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">Anzeigen:</span>
-                            <div className="flex gap-1">
-                                {[20, 50, 100, 500].map((num) => (
-                                    <button
-                                        key={num}
-                                        onClick={() => setItemsPerPage(num)}
-                                        className={`px-2 py-0.5 text-xs rounded-md border ${
-                                            itemsPerPage === num
-                                                ? 'bg-blue-600 text-white border-blue-600'
-                                                : 'border-gray-300 hover:bg-gray-200'
-                                        }`}
-                                    >
-                                        {num}
-                                    </button>
-                                ))}
-                                <button
-                                    onClick={() => setItemsPerPage(10000)}
-                                    className={`px-2 py-0.5 text-xs rounded-md border ${
-                                        itemsPerPage >= filteredAndSortedData.length
-                                            ? 'bg-blue-600 text-white border-blue-600'
-                                            : 'border-gray-300 hover:bg-gray-200'
-                                    }`}
-                                >
-                                    Alle
-                                </button>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <div className="text-xs text-gray-600">
-                                {totalPages > 1 ? (
-                                    <>Seite {currentPage} von {totalPages}</>
-                                ) : (
-                                    <>{filteredAndSortedData.length} Ergebnisse</>
-                                )}
-                            </div>
-                            {totalPages > 1 && (
-                                <div className="flex gap-1">
-                                    <button
-                                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                                        disabled={currentPage === 1}
-                                        className="px-2 py-0.5 text-xs border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
-                                    >
-                                        ‹
-                                    </button>
-                                    <button
-                                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                                        disabled={currentPage === totalPages}
-                                        className="px-2 py-0.5 text-xs border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
-                                    >
-                                        ›
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="overflow-x-auto">
+            {/* Table */}
+            <div className="px-4 overflow-x-auto">
                 <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm" style={{ tableLayout: 'fixed', width: '100%' }}>
                 <thead className="bg-gray-50">
                     <tr>
@@ -570,7 +508,8 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
             </div>
             
             {/* Pagination controls */}
-            <div className="flex items-center justify-between px-3 py-2 bg-white border border-gray-200 rounded-lg">
+            <div className="px-4">
+                <div className="flex items-center justify-between px-3 py-2 bg-white border border-gray-200 rounded-lg">
                 <div className="flex items-center gap-2">
                     <span className="text-xs text-gray-500">Anzeigen:</span>
                     <div className="flex gap-1">
@@ -625,6 +564,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                             </button>
                         </div>
                     )}
+                </div>
                 </div>
             </div>
         </div>
