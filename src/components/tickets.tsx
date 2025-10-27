@@ -295,20 +295,42 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
 
             {/* Results counter */}
             <div className="mb-2 px-4">
-                <div className="bg-white border border-gray-200 rounded-lg px-4 py-2">
-                    {filteredAndSortedData.length === 0 && hasActiveFilters ? (
-                        <p className="text-sm text-red-600 font-medium">
-                            Nichts gefunden mit eingegebenen Filtern
-                        </p>
-                    ) : filteredAndSortedData.length === data.length && !hasActiveFilters ? (
-                        <p className="text-sm text-gray-600">
-                            <span className="font-semibold text-gray-900">{data.length}</span> Karten insgesamt
-                        </p>
-                    ) : (
-                        <p className="text-sm text-gray-600">
-                            <span className="font-semibold text-gray-900">{filteredAndSortedData.length}</span> von <span className="font-semibold">{data.length}</span> Karten{hasActiveFilters ? " (gefiltert)" : ""}
-                        </p>
-                    )}
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-lg px-4 py-2.5 shadow-sm">
+                    <div className="flex items-center gap-2">
+                        {filteredAndSortedData.length === 0 && hasActiveFilters ? (
+                            <>
+                                <svg className="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                <p className="text-sm text-red-600 font-medium">
+                                    Nichts gefunden mit eingegebenen Filtern
+                                </p>
+                            </>
+                        ) : filteredAndSortedData.length === data.length && !hasActiveFilters ? (
+                            <>
+                                <svg className="w-5 h-5 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <p className="text-sm text-gray-700">
+                                    <span className="font-bold text-gray-900">{data.length}</span> <span className="text-gray-600">Karten insgesamt</span>
+                                </p>
+                            </>
+                        ) : (
+                            <>
+                                <svg className="w-5 h-5 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                                </svg>
+                                <p className="text-sm text-gray-700">
+                                    <span className="font-bold text-gray-900">{filteredAndSortedData.length}</span> von <span className="font-semibold text-gray-700">{data.length}</span> <span className="text-gray-600">Karten{hasActiveFilters ? "" : ""}</span>
+                                </p>
+                                {hasActiveFilters && (
+                                    <span className="ml-2 px-2 py-0.5 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">
+                                        Gefiltert
+                                    </span>
+                                )}
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
 
