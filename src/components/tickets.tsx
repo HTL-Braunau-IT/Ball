@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "~/trpc/react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 
 type SortColumn = 'id' | 'name' | 'delivery' | 'code' | 'paid' | 'sent' | 'timestamp' | null;
@@ -44,11 +44,28 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
     
     // Search and filter states
     const [searchText, setSearchText] = useState("");
+    const [debouncedSearchText, setDebouncedSearchText] = useState("");
     const [sortColumn, setSortColumn] = useState<SortColumn>(null);
     const [sortDirection, setSortDirection] = useState<SortDirection>(null);
     const [filterDelivery, setFilterDelivery] = useState("");
     const [filterPaid, setFilterPaid] = useState("");
     const [filterSent, setFilterSent] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(20);
+    
+    // Debounce search input to improve performance
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchText(searchText);
+        }, 300);
+        
+        return () => clearTimeout(timer);
+    }, [searchText]);
+    
+    // Reset to page 1 when filters change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [debouncedSearchText, filterDelivery, filterPaid, filterSent, sortColumn, sortDirection, itemsPerPage]);
     
     const markAsSentMutation = api.ticket.markAsSent.useMutation({
         onSuccess: () => {
@@ -83,10 +100,10 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
 
         // Filter data
         let filtered = data.filter((ticket) => {
-            // Search filter (name and code)
-            const matchesSearch = searchText === "" || 
-                ticket.buyer.name.toLowerCase().includes(searchText.toLowerCase()) ||
-                ticket.code.toLowerCase().includes(searchText.toLowerCase());
+            // Search filter (name and code) - use debounced search
+            const matchesSearch = debouncedSearchText === "" || 
+                ticket.buyer.name.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
+                ticket.code.toLowerCase().includes(debouncedSearchText.toLowerCase());
             
             // Delivery filter
             const matchesDelivery = filterDelivery === "" || 
@@ -157,7 +174,22 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
         }
 
         return filtered;
-    }, [data, searchText, filterDelivery, filterPaid, filterSent, sortColumn, sortDirection]);
+    }, [data, debouncedSearchText, filterDelivery, filterPaid, filterSent, sortColumn, sortDirection]);
+
+    // Pagination logic
+    const paginatedData = useMemo(() => {
+        // If showing all items, return everything
+        if (itemsPerPage >= filteredAndSortedData.length) {
+            return filteredAndSortedData;
+        }
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        return filteredAndSortedData.slice(startIndex, endIndex);
+    }, [filteredAndSortedData, currentPage, itemsPerPage]);
+
+    const totalPages = itemsPerPage >= filteredAndSortedData.length 
+        ? 1 
+        : Math.ceil(filteredAndSortedData.length / itemsPerPage);
 
     // Get unique delivery options for filter
     const uniqueDeliveries = useMemo(() => {
@@ -344,7 +376,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredAndSortedData.map((ticket) => (
+                    {paginatedData.map((ticket) => (
                         <tr key={ticket.id} className="hover:bg-gray-50">
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                 {ticket.id}
@@ -395,6 +427,65 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                     ))}
                 </tbody>
             </table>
+            </div>
+            
+            {/* Pagination controls */}
+            <div className="flex items-center justify-between px-4 py-4 bg-white border border-gray-200 rounded-lg">
+                <div className="flex items-center gap-4">
+                    <div className="text-sm text-gray-600">
+                        {totalPages > 1 ? (
+                            <>Seite {currentPage} von {totalPages} ({filteredAndSortedData.length} Ergebnisse)</>
+                        ) : (
+                            <>{filteredAndSortedData.length} Ergebnisse</>
+                        )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-500">Anzeigen:</span>
+                        <div className="flex gap-1">
+                            {[20, 50, 100, 500].map((num) => (
+                                <button
+                                    key={num}
+                                    onClick={() => setItemsPerPage(num)}
+                                    className={`px-2 py-1 text-xs border rounded-md ${
+                                        itemsPerPage === num
+                                            ? 'bg-blue-600 text-white border-blue-600'
+                                            : 'border-gray-300 hover:bg-gray-50'
+                                    }`}
+                                >
+                                    {num}
+                                </button>
+                            ))}
+                            <button
+                                onClick={() => setItemsPerPage(10000)}
+                                className={`px-2 py-1 text-xs border rounded-md ${
+                                    itemsPerPage >= filteredAndSortedData.length
+                                        ? 'bg-blue-600 text-white border-blue-600'
+                                        : 'border-gray-300 hover:bg-gray-50'
+                                }`}
+                            >
+                                Alle
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {totalPages > 1 && (
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            className="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                        >
+                            Zurück
+                        </button>
+                        <button
+                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                            disabled={currentPage === totalPages}
+                            className="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                        >
+                            Weiter
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
