@@ -165,6 +165,21 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
         return Array.from(new Set(data.map(t => t.delivery)));
     }, [data]);
 
+    // Helper function to render filter button
+    const renderFilterButton = (label: string, isActive: boolean, onClick: () => void, key?: string) => (
+        <button
+            key={key}
+            onClick={onClick}
+            className={`px-2 py-1 text-xs rounded-md transition-colors ${
+                isActive
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+        >
+            {label}
+        </button>
+    );
+
     if (isLoading) {
         return (
             <div>Lade Karten...</div>
@@ -216,68 +231,22 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                                 Lieferung
                             </div>
                             <div className="flex flex-wrap gap-2 px-3 py-2 justify-center">
-                                <button
-                                    onClick={() => setFilterDelivery("")}
-                                    className={`px-2 py-1 text-xs rounded-md transition-colors ${
-                                        filterDelivery === ""
-                                            ? 'bg-blue-600 text-white'
-                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                                >
-                                    Alle
-                                </button>
-                                {uniqueDeliveries.map(d => (
-                                    <button
-                                        key={d}
-                                        onClick={() => setFilterDelivery(d)}
-                                        className={`px-2 py-1 text-xs rounded-md transition-colors ${
-                                            filterDelivery === d
-                                                ? 'bg-blue-600 text-white'
-                                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                        }`}
-                                    >
-                                        {d}
-                                    </button>
-                                ))}
+                                {renderFilterButton("Alle", filterDelivery === "", () => setFilterDelivery(""))}
+                                {uniqueDeliveries.map(d => 
+                                    renderFilterButton(d, filterDelivery === d, () => setFilterDelivery(d), d)
+                                )}
+                            </div>
                         </div>
-                    </div>
-                    
+                        
                         {/* Bezahlt filter */}
                         <div className="flex items-center justify-center border-r border-gray-200 flex-1">
                             <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Bezahlt
                             </div>
                             <div className="flex flex-wrap gap-2 px-3 py-2 justify-center">
-                                <button
-                                    onClick={() => setFilterPaid("")}
-                                    className={`px-2 py-1 text-xs rounded-md transition-colors ${
-                                        filterPaid === ""
-                                            ? 'bg-blue-600 text-white'
-                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                                >
-                                    Alle
-                                </button>
-                                <button
-                                    onClick={() => setFilterPaid("ja")}
-                                    className={`px-2 py-1 text-xs rounded-md transition-colors ${
-                                        filterPaid === "ja"
-                                            ? 'bg-blue-600 text-white'
-                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                                >
-                                    Ja
-                                </button>
-                                <button
-                                    onClick={() => setFilterPaid("nein")}
-                                    className={`px-2 py-1 text-xs rounded-md transition-colors ${
-                                        filterPaid === "nein"
-                                            ? 'bg-blue-600 text-white'
-                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                                >
-                                    Nein
-                                </button>
+                                {renderFilterButton("Alle", filterPaid === "", () => setFilterPaid(""))}
+                                {renderFilterButton("Ja", filterPaid === "ja", () => setFilterPaid("ja"))}
+                                {renderFilterButton("Nein", filterPaid === "nein", () => setFilterPaid("nein"))}
                             </div>
                         </div>
                         
@@ -287,36 +256,9 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                                 Gesendet
                             </div>
                             <div className="flex flex-wrap gap-2 px-3 py-2 justify-center">
-                                <button
-                                    onClick={() => setFilterSent("")}
-                                    className={`px-2 py-1 text-xs rounded-md transition-colors ${
-                                        filterSent === ""
-                                            ? 'bg-blue-600 text-white'
-                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                                >
-                                    Alle
-                                </button>
-                                <button
-                                    onClick={() => setFilterSent("ja")}
-                                    className={`px-2 py-1 text-xs rounded-md transition-colors ${
-                                        filterSent === "ja"
-                                            ? 'bg-blue-600 text-white'
-                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                                >
-                                    Ja
-                                </button>
-                                <button
-                                    onClick={() => setFilterSent("nein")}
-                                    className={`px-2 py-1 text-xs rounded-md transition-colors ${
-                                        filterSent === "nein"
-                                            ? 'bg-blue-600 text-white'
-                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                                >
-                                    Nein
-                                </button>
+                                {renderFilterButton("Alle", filterSent === "", () => setFilterSent(""))}
+                                {renderFilterButton("Ja", filterSent === "ja", () => setFilterSent("ja"))}
+                                {renderFilterButton("Nein", filterSent === "nein", () => setFilterSent("nein"))}
                             </div>
                         </div>
                     </div>
