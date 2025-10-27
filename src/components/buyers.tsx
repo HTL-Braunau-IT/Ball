@@ -2,17 +2,15 @@
 
 import { api } from "~/trpc/react";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 export default function Buyers() {
     const { data, isLoading, isError, error } = api.buyers.all.useQuery();
-    const router = useRouter();
 
     useEffect(() => {
         // Check for hash in URL
         if (typeof window !== 'undefined') {
             const hash = window.location.hash;
-            if (hash && hash.startsWith('#buyer-')) {
+            if (hash?.startsWith('#buyer-')) {
                 const buyerId = hash.replace('#buyer-', '');
                 const element = document.getElementById(`buyer-${buyerId}`);
                 
