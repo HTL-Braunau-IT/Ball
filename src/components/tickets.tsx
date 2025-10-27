@@ -361,14 +361,15 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
             </div>
 
             <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+                <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm" style={{ tableLayout: 'fixed', width: '100%' }}>
                 <thead className="bg-gray-50">
                     <tr>
                         <th 
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-4 py-2.5 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            style={{ width: '8%' }}
                             onClick={() => handleSort('id')}
                         >
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-center gap-2">
                                 ID
                                 {sortColumn === 'id' && (
                                     <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
@@ -376,10 +377,11 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                             </div>
                         </th>
                         <th 
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-4 py-2.5 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            style={{ width: '20%' }}
                             onClick={() => handleSort('name')}
                         >
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-center gap-2">
                                 Käufer
                                 {sortColumn === 'name' && (
                                     <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
@@ -387,10 +389,11 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                             </div>
                         </th>
                         <th 
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-4 py-2.5 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            style={{ width: '15%' }}
                             onClick={() => handleSort('delivery')}
                         >
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-center gap-2">
                                 Lieferung
                                 {sortColumn === 'delivery' && (
                                     <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
@@ -398,10 +401,11 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                             </div>
                         </th>
                         <th 
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-4 py-2.5 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            style={{ width: '10%' }}
                             onClick={() => handleSort('code')}
                         >
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-center gap-2">
                                 Code
                                 {sortColumn === 'code' && (
                                     <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
@@ -409,10 +413,11 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                             </div>
                         </th>
                         <th 
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-4 py-2.5 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            style={{ width: '8%' }}
                             onClick={() => handleSort('paid')}
                         >
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-center gap-2">
                                 Bezahlt
                                 {sortColumn === 'paid' && (
                                     <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
@@ -420,10 +425,11 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                             </div>
                         </th>
                         <th 
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-4 py-2.5 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            style={{ width: '10%' }}
                             onClick={() => handleSort('sent')}
                         >
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-center gap-2">
                                 Gesendet
                                 {sortColumn === 'sent' && (
                                     <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
@@ -431,17 +437,18 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                             </div>
                         </th>
                         <th 
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-4 py-2.5 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            style={{ width: '15%' }}
                             onClick={() => handleSort('timestamp')}
                         >
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-center gap-2">
                                 Letzte Aktivität
                                 {sortColumn === 'timestamp' && (
                                     <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
                                 )}
                             </div>
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-4 py-2.5 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ width: '14%' }}>
                             Aktionen
                         </th>
                     </tr>
@@ -449,10 +456,10 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                 <tbody className="bg-white divide-y divide-gray-200">
                     {paginatedData.map((ticket) => (
                         <tr key={ticket.id} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900" style={{ height: '45px', verticalAlign: 'middle', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {ticket.id}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500" style={{ height: '45px', verticalAlign: 'middle', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 <Link 
                                     href={`/backend/buyers#buyer-${ticket.buyer.id}`}
                                     className="text-blue-600 hover:text-blue-800 hover:underline"
@@ -460,36 +467,36 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                                     {ticket.buyer.name}
                                 </Link>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500" style={{ height: '45px', verticalAlign: 'middle', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {ticket.delivery}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500" style={{ height: '45px', verticalAlign: 'middle', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {ticket.delivery.toLowerCase().includes('abholung') ? ticket.code : '-'}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500" style={{ height: '45px', verticalAlign: 'middle', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {ticket.paid ? "Ja" : "Nein"}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500" style={{ height: '45px', verticalAlign: 'middle', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {ticket.sent ? "Ja" : "Nein"}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500" style={{ height: '45px', verticalAlign: 'middle', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {ticket.timestamp ? new Date(ticket.timestamp).toLocaleString() : "-"}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500" style={{ height: '45px', verticalAlign: 'middle' }}>
                                 {ticket.paid && 
                                  !ticket.sent && 
                                  (ticket.delivery.toLowerCase().includes('versand') || 
-                                  ticket.delivery.toLowerCase().includes('shipping')) && (
+                                  ticket.delivery.toLowerCase().includes('shipping')) ? (
                                     <button
                                         onClick={() => handleMarkAsSent(ticket.id)}
                                         disabled={processingTicket === ticket.id}
-                                        className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="inline-flex items-center justify-center px-2 border border-transparent text-xs font-medium rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        style={{ minWidth: '70px', height: '22px' }}
                                     >
-                                        {processingTicket === ticket.id ? "Wird verarbeitet..." : "Als versendet markieren"}
+                                        {processingTicket === ticket.id ? "..." : "Versendet"}
                                     </button>
-                                )}
-                                {ticket.sent && (
-                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                ) : ticket.sent && (
+                                    <span className="inline-flex items-center justify-center px-2 rounded-full text-xs font-medium bg-green-100 text-green-800" style={{ minWidth: '70px', height: '22px' }}>
                                         ✓ Versendet
                                     </span>
                                 )}
