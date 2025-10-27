@@ -13,12 +13,13 @@ const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
 export const ticketRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
     const tickets = await ctx.db.soldTickets.findMany({
+      include: { buyer: true },
       // Z - Uncomment or use in another router to only return owned tickets
       // where: {
       //   buyerId: parseInt(ctx.session.user.id),
       // },
     });
-    return tickets.map(({ id, delivery, code, paid, sent, timestamp }) => ({ id, delivery, code, paid, sent, timestamp }));
+    return tickets.map(({ id, delivery, code, paid, sent, timestamp, buyer }) => ({ id, delivery, code, paid, sent, timestamp, buyer }));
   }),
 
   // Get available ticket types for the user's group
