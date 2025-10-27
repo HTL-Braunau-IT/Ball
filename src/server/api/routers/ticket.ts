@@ -449,6 +449,11 @@ export const ticketRouter = createTRPCRouter({
         throw new Error("Ticket already marked as sent");
       }
 
+      // Only paid tickets can be sent
+      if (!ticket.paid) {
+        throw new Error("Only paid tickets can be marked as sent");
+      }
+
       // Only send notification for shipping delivery methods
       const isShippingDelivery = ticket.delivery.toLowerCase().includes('versand') || 
                                 ticket.delivery.toLowerCase().includes('shipping');
