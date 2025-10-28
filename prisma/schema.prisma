@@ -57,7 +57,6 @@ model Buyers {
   province   String
   country    String
   verified   Boolean
-  maxTickets Int
   groupId    Int
   group      buyerGroups   @relation(fields: [groupId], references: [id])
   tickets    soldTickets[]

@@ -160,7 +160,6 @@ export default function FloatingActionButtons() {
         'Bundesland',
         'Land',
         'Verifiziert',
-        'Max Tickets',
         'Gruppe'
       ];
 
@@ -173,7 +172,6 @@ export default function FloatingActionButtons() {
         buyer.province,
         buyer.country,
         buyer.verified ? "Ja" : "Nein",
-        buyer.maxTickets,
         buyer.group?.name ?? "-"
       ]);
 

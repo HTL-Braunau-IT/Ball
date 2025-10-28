@@ -24,7 +24,6 @@ type TicketData = {
     province: string;
     country: string;
     verified: boolean;
-    maxTickets: number;
     groupId: number;
   };
 };

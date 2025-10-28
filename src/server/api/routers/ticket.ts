@@ -19,7 +19,26 @@ export const ticketRouter = createTRPCRouter({
       //   buyerId: parseInt(ctx.session.user.id),
       // },
     });
-    return tickets.map(({ id, delivery, code, paid, sent, timestamp, buyer }) => ({ id, delivery, code, paid, sent, timestamp, buyer }));
+    return tickets.map(({ id, delivery, code, paid, sent, timestamp, buyer }) => ({ 
+      id, 
+      delivery, 
+      code, 
+      paid, 
+      sent, 
+      timestamp, 
+      buyer: {
+        id: buyer.id,
+        name: buyer.name,
+        email: buyer.email,
+        phone: buyer.phone,
+        address: buyer.address,
+        postal: buyer.postal,
+        province: buyer.province,
+        country: buyer.country,
+        verified: buyer.verified,
+        groupId: buyer.groupId,
+      }
+    }));
   }),
 
   // Get available ticket types for the user's group
@@ -65,7 +84,6 @@ export const ticketRouter = createTRPCRouter({
       price,
       type: type[0]?.name || "Unknown",
       groupId: type[0]?.id || 0,
-      maxTickets: buyer?.maxTickets || 10, // Include user's max ticket limit
       deliveryMethods: deliveryMethods.map(({ id, name, surcharge }) => ({
         id,
         name,
@@ -205,7 +223,6 @@ export const ticketRouter = createTRPCRouter({
             province: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).province : "",
             country: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).country : "",
             verified: true,
-            maxTickets: 10, // Default max tickets
             groupId: publicGroup.id,
           },
         });

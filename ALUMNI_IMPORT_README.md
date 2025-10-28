@@ -86,7 +86,6 @@ Buyers Table:
 - phone
 - address, postal, province, country
 - verified (boolean)
-- maxTickets (default: 10)
 - groupId (references buyerGroups)
 
 buyerGroups Table:
