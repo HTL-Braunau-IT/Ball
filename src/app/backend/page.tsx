@@ -48,6 +48,19 @@ export default async function BackendDashboard() {
       ),
     },
     {
+      title: "Liefermethoden",
+      description: "Verwalte Versandmethoden und Zuschläge",
+      href: "/backend/delivery-methods",
+      hoverBg: "hover:bg-teal-50",
+      iconBg: "bg-teal-500 hover:bg-teal-600",
+      titleHover: "group-hover:text-teal-600",
+      icon: (
+        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+        </svg>
+      ),
+    },
+    {
       title: "Absolventen Import",
       description: "Importieren Sie Alumni-E-Mails für exklusive Ticket-Zugriffe",
       href: "/backend/import-alumni",
