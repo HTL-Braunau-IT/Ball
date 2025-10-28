@@ -100,11 +100,14 @@ export default function TicketReserves() {
                 <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
                 <thead className="bg-gray-50">
                     <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-32">
                             Typ
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-20">
                             Menge
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-24">
                             Preis
@@ -114,9 +117,6 @@ export default function TicketReserves() {
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-28">
                             Geändert am
-                        </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Status
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-28">
                             Geändert von
@@ -163,6 +163,15 @@ export default function TicketReserves() {
                                     ) : (
                                         reserve.amount
                                     )}
+                                </td>
+
+                                {/* Status */}
+                                <td className="px-4 py-3 text-sm text-gray-500">
+                                    <TicketProgressBar 
+                                        total={reserve.amount}
+                                        sold={soldCount}
+                                        remaining={remainingCount}
+                                    />
                                 </td>
 
                                 {/* Preis */}
@@ -221,15 +230,6 @@ export default function TicketReserves() {
                                     <div className="truncate" title={reserve.updatedAt ? new Date(reserve.updatedAt).toLocaleString() : "-"}>
                                         {reserve.updatedAt ? new Date(reserve.updatedAt).toLocaleDateString() : "-"}
                                     </div>
-                                </td>
-
-                                {/* Status */}
-                                <td className="px-4 py-3 text-sm text-gray-500">
-                                    <TicketProgressBar 
-                                        total={reserve.amount}
-                                        sold={soldCount}
-                                        remaining={remainingCount}
-                                    />
                                 </td>
 
                                 {/* Geändert von */}
