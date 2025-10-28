@@ -2,6 +2,7 @@
 
 import { api } from "~/trpc/react";
 import { useEffect, useState, useMemo } from "react";
+import Link from "next/link";
 
 type SortColumn = 'id' | 'name' | 'email' | 'address' | 'postal' | 'province' | 'country' | 'verified' | 'group' | null;
 type SortDirection = 'asc' | 'desc' | null;
@@ -575,7 +576,17 @@ export default function Buyers() {
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                                 {showAddressDetails ? '...' : (buyer.tickets && buyer.tickets.length > 0 
-                                    ? buyer.tickets.map(t => t.id).join(',') 
+                                    ? buyer.tickets.map((t, idx) => (
+                                        <span key={t.id}>
+                                            <Link 
+                                                href={`/backend/tickets#ticket-${t.id}`}
+                                                className="text-blue-600 hover:text-blue-800 hover:underline"
+                                            >
+                                                {t.id}
+                                            </Link>
+                                            {idx < buyer.tickets.length - 1 && ', '}
+                                        </span>
+                                    ))
                                     : '-')}
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">

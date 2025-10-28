@@ -52,6 +52,49 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(20);
     
+    // Filter by ticket ID for hash navigation
+    const [filterTicketId, setFilterTicketId] = useState<string | null>(null);
+
+    // Hash navigation effect for tickets
+    useEffect(() => {
+        // Check for hash in URL
+        if (typeof window !== 'undefined') {
+            const hash = window.location.hash;
+            if (hash?.startsWith('#ticket-')) {
+                const ticketId = hash.replace('#ticket-', '');
+                
+                // Find the ticket in the data
+                const ticket = data?.find(t => t.id.toString() === ticketId);
+                
+                if (ticket) {
+                    // Set items per page to "All" to show all tickets
+                    setItemsPerPage(10000);
+                    
+                    // Set the ticket ID filter to show only this ticket
+                    setFilterTicketId(ticketId);
+                    
+                    // Use setTimeout to wait for the DOM to update with the filtered results
+                    const timer = setTimeout(() => {
+                        const element = document.getElementById(`ticket-${ticketId}`);
+                        
+                        if (element) {
+                            // Scroll to the element
+                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            
+                            // Clear the hash from URL without scrolling
+                            window.history.replaceState(null, '', window.location.pathname + window.location.search);
+                        }
+                    }, 500);
+                    
+                    return () => clearTimeout(timer);
+                }
+            } else {
+                // Clear the filter when there's no hash
+                setFilterTicketId(null);
+            }
+        }
+    }, [data]);
+    
     // Debounce search input to improve performance
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -64,7 +107,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
     // Reset to page 1 when filters change
     useEffect(() => {
         setCurrentPage(1);
-    }, [debouncedSearchText, filterDelivery, filterPaid, filterSent, sortColumn, sortDirection, itemsPerPage]);
+    }, [debouncedSearchText, filterDelivery, filterPaid, filterSent, filterTicketId, sortColumn, sortDirection, itemsPerPage]);
     
     const markAsSentMutation = api.ticket.markAsSent.useMutation({
         onSuccess: () => {
@@ -118,7 +161,11 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                 (filterSent === "ja" && ticket.sent) ||
                 (filterSent === "nein" && !ticket.sent);
             
-            return matchesSearch && matchesDelivery && matchesPaid && matchesSent;
+            // Ticket ID filter (for hash navigation)
+            const matchesTicketId = filterTicketId === null || 
+                ticket.id.toString() === filterTicketId;
+            
+            return matchesSearch && matchesDelivery && matchesPaid && matchesSent && matchesTicketId;
         });
 
         // Sort data
@@ -173,7 +220,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
         }
 
         return filtered;
-    }, [data, debouncedSearchText, filterDelivery, filterPaid, filterSent, sortColumn, sortDirection]);
+    }, [data, debouncedSearchText, filterDelivery, filterPaid, filterSent, filterTicketId, sortColumn, sortDirection]);
 
     // Pagination logic
     const paginatedData = useMemo(() => {
@@ -246,7 +293,10 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                                 type="text"
                                 placeholder="Name oder Code..."
                                 value={searchText}
-                                onChange={(e) => setSearchText(e.target.value)}
+                                onChange={(e) => {
+                                    setSearchText(e.target.value);
+                                    setFilterTicketId(null); // Clear ticket ID filter when user starts typing
+                                }}
                                 className="w-full border-0 outline-none focus:outline-none focus:ring-0 text-sm px-3 py-1.5 pr-8 text-gray-700 placeholder-gray-400 bg-gray-50 rounded"
                                 style={{ boxShadow: 'none', border: 'none', outline: 'none' }}
                             />
@@ -464,7 +514,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                         </tr>
                     ) : (
                         paginatedData.map((ticket) => (
-                            <tr key={ticket.id} className="hover:bg-gray-50">
+                            <tr key={ticket.id} id={`ticket-${ticket.id}`} className="hover:bg-gray-50">
                             <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900" style={{ height: '45px', verticalAlign: 'middle', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {ticket.id}
                             </td>
