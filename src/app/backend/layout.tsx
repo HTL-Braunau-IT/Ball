@@ -68,6 +68,7 @@ export default function BackendLayout({
     { name: "Kontingente", href: "/backend/reserves" },
     { name: "Karten", href: "/backend/tickets" },
     { name: "Benutzer", href: "/backend/buyers" },
+    { name: "Liefermethoden", href: "/backend/delivery-methods" },
     { name: "Absolventen Import", href: "/backend/import-alumni" },
   ];
 
