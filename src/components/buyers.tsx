@@ -21,30 +21,51 @@ export default function Buyers() {
     const [filterGroup, setFilterGroup] = useState("");
     const [showAddressDetails, setShowAddressDetails] = useState(false);
 
+    // Filter by buyer ID for hash navigation
+    const [filterBuyerId, setFilterBuyerId] = useState<string | null>(null);
+
     useEffect(() => {
         // Check for hash in URL
         if (typeof window !== 'undefined') {
             const hash = window.location.hash;
             if (hash?.startsWith('#buyer-')) {
                 const buyerId = hash.replace('#buyer-', '');
-                const element = document.getElementById(`buyer-${buyerId}`);
                 
-                if (element) {
-                    // Scroll to the element
-                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Find the buyer in the data
+                const buyer = data?.find(b => b.id.toString() === buyerId);
+                
+                if (buyer) {
+                    // Set items per page to "All" to show all buyers
+                    setItemsPerPage(10000);
                     
-                    // Highlight the row
-                    element.classList.add('highlighted-row');
+                    // Set the buyer ID filter to show only this buyer
+                    setFilterBuyerId(buyerId);
                     
-                    // Remove highlight after 3 seconds
+                    // Use setTimeout to wait for the DOM to update with the filtered results
                     const timer = setTimeout(() => {
-                        element.classList.remove('highlighted-row');
-                        // Clear the hash from URL without scrolling
-                        window.history.replaceState(null, '', window.location.pathname + window.location.search);
-                    }, 3000);
+                        const element = document.getElementById(`buyer-${buyerId}`);
+                        
+                        if (element) {
+                            // Scroll to the element
+                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            
+                            // Highlight the row
+                            element.classList.add('highlighted-row');
+                            
+                            // Remove highlight after 3 seconds
+                            setTimeout(() => {
+                                element.classList.remove('highlighted-row');
+                                // Clear the hash and filter from URL without scrolling
+                                window.history.replaceState(null, '', window.location.pathname + window.location.search);
+                            }, 3000);
+                        }
+                    }, 500);
                     
                     return () => clearTimeout(timer);
                 }
+            } else {
+                // Clear the filter when there's no hash
+                setFilterBuyerId(null);
             }
         }
     }, [data]);
@@ -80,6 +101,10 @@ export default function Buyers() {
 
         // Filter data
         let filtered = data.filter((buyer) => {
+            // Buyer ID filter (for hash navigation)
+            const matchesBuyerId = filterBuyerId === null || 
+                buyer.id.toString() === filterBuyerId;
+            
             // Search filter (name, email, address, province, postal) - use debounced search
             const matchesSearch = debouncedSearchText === "" || 
                 buyer.name.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
@@ -101,7 +126,7 @@ export default function Buyers() {
             const matchesGroup = filterGroup === "" || 
                 (buyer.group?.name ?? "").toLowerCase().includes(filterGroup.toLowerCase());
             
-            return matchesSearch && matchesCountry && matchesVerified && matchesGroup;
+            return matchesBuyerId && matchesSearch && matchesCountry && matchesVerified && matchesGroup;
         });
 
     // Sort data
@@ -164,7 +189,7 @@ export default function Buyers() {
         }
 
         return filtered;
-    }, [data, debouncedSearchText, filterCountry, filterVerified, filterGroup, sortColumn, sortDirection]);
+    }, [data, debouncedSearchText, filterCountry, filterVerified, filterGroup, filterBuyerId, sortColumn, sortDirection]);
 
     // Pagination logic
     const paginatedData = useMemo(() => {
@@ -227,7 +252,7 @@ export default function Buyers() {
     }
 
     // Check if any filters are active
-    const hasActiveFilters = debouncedSearchText !== "" || filterCountry !== "" || filterVerified !== "" || filterGroup !== "";
+    const hasActiveFilters = debouncedSearchText !== "" || filterCountry !== "" || filterVerified !== "" || filterGroup !== "" || filterBuyerId !== null;
 
     return (
         <div className="space-y-4">
@@ -502,6 +527,7 @@ export default function Buyers() {
                                                 setFilterCountry("");
                                                 setFilterVerified("");
                                                 setFilterGroup("");
+                                                setFilterBuyerId(null);
                                             }}
                                             className="mt-2 text-xs text-blue-600 hover:text-blue-800 hover:underline"
                                         >
@@ -563,7 +589,7 @@ export default function Buyers() {
             </div>
             
             {/* Pagination controls */}
-            <div className="px-4">
+            <div className="-mt-6 px-4">
                 <div className="flex items-center justify-between px-3 py-2 bg-white border border-gray-200 rounded-lg">
                     <div className="flex items-center gap-2">
                         <span className="text-xs text-gray-500">Anzeigen:</span>
