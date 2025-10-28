@@ -387,7 +387,7 @@ export default function Buyers() {
                 <thead className="bg-gray-50">
                     <tr>
                         <th 
-                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                             style={{ width: showAddressDetails ? '6%' : '6%' }}
                             onClick={() => handleSort('id')}
                         >
@@ -399,8 +399,8 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
-                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '10%' : '18%' }}
+                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            style={{ width: showAddressDetails ? '10%' : '20%' }}
                             onClick={() => handleSort('name')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -411,16 +411,16 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
-                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none"
+                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none"
                             style={{ width: showAddressDetails ? '10%' : '12%' }}
                         >
                             <div className="flex items-center justify-center gap-2">
-                                Tickets
+                                Karten
                             </div>
                         </th>
                         <th 
-                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap"
-                            style={{ width: showAddressDetails ? '10%' : '18%' }}
+                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap"
+                            style={{ width: showAddressDetails ? '10%' : '26%' }}
                             onClick={() => handleSort('email')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -433,7 +433,7 @@ export default function Buyers() {
                         {showAddressDetails ? (
                             <>
                                 <th 
-                                    className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none relative"
+                                    className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none relative"
                                     style={{ width: '15%' }}
                                 >
                                     <div className="flex items-center justify-center gap-2">
@@ -458,7 +458,7 @@ export default function Buyers() {
                                     </div>
                                 </th>
                                 <th 
-                                    className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                                    className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                                     style={{ width: '8%' }}
                                     onClick={() => handleSort('postal')}
                                 >
@@ -470,7 +470,7 @@ export default function Buyers() {
                                     </div>
                                 </th>
                                 <th 
-                                    className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                                    className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                                     style={{ width: '12%' }}
                                     onClick={() => handleSort('province')}
                                 >
@@ -482,7 +482,7 @@ export default function Buyers() {
                                     </div>
                                 </th>
                                 <th 
-                                    className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                                    className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                                     style={{ width: '8%' }}
                                     onClick={() => handleSort('country')}
                                 >
@@ -495,7 +495,7 @@ export default function Buyers() {
                                 </th>
                             </>
                         ) : (
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none" style={{ width: '26%' }}>
+                            <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none" style={{ width: '10%' }}>
                                 <div className="flex items-center justify-center gap-2">
                                     <span>Adresse</span>
                                     <button
@@ -514,7 +514,7 @@ export default function Buyers() {
                             </th>
                         )}
                         <th 
-                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                             style={{ width: showAddressDetails ? '8%' : '8%' }}
                             onClick={() => handleSort('verified')}
                         >
@@ -526,8 +526,8 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
-                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '10%' : '8%' }}
+                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            style={{ width: showAddressDetails ? '10%' : '10%' }}
                             onClick={() => handleSort('group')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -567,44 +567,44 @@ export default function Buyers() {
                     ) : (
                         paginatedData.map((buyer) => (
                         <tr key={buyer.id} id={`buyer-${buyer.id}`} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                 {buyer.id}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {buyer.name}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                                 {buyer.tickets && buyer.tickets.length > 0 
                                     ? buyer.tickets.map(t => t.id).join(',') 
                                     : '-'}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {showAddressDetails ? '...' : buyer.email}
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {buyer.email}
                             </td>
                             {showAddressDetails ? (
                                 <>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {buyer.address}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {buyer.postal}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {buyer.province}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {buyer.country}
                                     </td>
                                 </>
                             ) : (
-                                <td className="px-6 py-4 text-sm text-gray-500 text-center whitespace-nowrap">
+                                <td className="px-4 py-4 text-sm text-gray-500 text-center whitespace-nowrap">
                                     ...
                                 </td>
                             )}
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {buyer.verified ? "Ja" : "Nein"}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {buyer.group?.name ?? "-"}
                             </td>
                         </tr>
