@@ -3,7 +3,7 @@
 import { api } from "~/trpc/react";
 import { useEffect, useState, useMemo } from "react";
 
-type SortColumn = 'id' | 'name' | 'email' | 'address' | 'postal' | 'province' | 'country' | 'verified' | 'maxTickets' | 'group' | null;
+type SortColumn = 'id' | 'name' | 'email' | 'address' | 'postal' | 'province' | 'country' | 'verified' | 'group' | null;
 type SortDirection = 'asc' | 'desc' | null;
 
 export default function Buyers() {
@@ -142,10 +142,6 @@ export default function Buyers() {
                 case 'verified':
                     aValue = a.verified ? 1 : 0;
                     bValue = b.verified ? 1 : 0;
-                    break;
-                case 'maxTickets':
-                    aValue = a.maxTickets;
-                    bValue = b.maxTickets;
                     break;
                 case 'group':
                     aValue = a.group?.name ?? "";
@@ -350,6 +346,7 @@ export default function Buyers() {
                     <tr>
                         <th 
                             className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            style={{ width: showAddressDetails ? '7%' : '6%' }}
                             onClick={() => handleSort('id')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -361,6 +358,7 @@ export default function Buyers() {
                         </th>
                         <th 
                             className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            style={{ width: showAddressDetails ? '15%' : '23%' }}
                             onClick={() => handleSort('name')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -372,6 +370,7 @@ export default function Buyers() {
                         </th>
                         <th 
                             className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            style={{ width: showAddressDetails ? '17%' : '21%' }}
                             onClick={() => handleSort('email')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -385,6 +384,7 @@ export default function Buyers() {
                             <>
                                 <th 
                                     className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none relative"
+                                    style={{ width: '13%' }}
                                 >
                                     <div className="flex items-center justify-center gap-2">
                                         <span onClick={() => handleSort('address')}>
@@ -409,6 +409,7 @@ export default function Buyers() {
                                 </th>
                                 <th 
                                     className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                                    style={{ width: '8%' }}
                                     onClick={() => handleSort('postal')}
                                 >
                                     <div className="flex items-center justify-center gap-2">
@@ -420,6 +421,7 @@ export default function Buyers() {
                                 </th>
                                 <th 
                                     className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                                    style={{ width: '10%' }}
                                     onClick={() => handleSort('province')}
                                 >
                                     <div className="flex items-center justify-center gap-2">
@@ -431,6 +433,7 @@ export default function Buyers() {
                                 </th>
                                 <th 
                                     className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                                    style={{ width: '8%' }}
                                     onClick={() => handleSort('country')}
                                 >
                                     <div className="flex items-center justify-center gap-2">
@@ -442,7 +445,7 @@ export default function Buyers() {
                                 </th>
                             </>
                         ) : (
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none">
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none" style={{ width: '29%' }}>
                                 <div className="flex items-center justify-center gap-2">
                                     <span>Adresse</span>
                                     <button
@@ -462,6 +465,7 @@ export default function Buyers() {
                         )}
                         <th 
                             className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            style={{ width: showAddressDetails ? '9%' : '10%' }}
                             onClick={() => handleSort('verified')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -472,18 +476,8 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
-                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap"
-                            onClick={() => handleSort('maxTickets')}
-                        >
-                            <div className="flex items-center justify-center gap-2">
-                                Max. Karten
-                                {sortColumn === 'maxTickets' && (
-                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                )}
-                            </div>
-                        </th>
-                        <th 
                             className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            style={{ width: showAddressDetails ? '11%' : '10%' }}
                             onClick={() => handleSort('group')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -498,7 +492,7 @@ export default function Buyers() {
                 <tbody className="bg-white divide-y divide-gray-200">
                     {paginatedData.length === 0 ? (
                         <tr>
-                            <td colSpan={showAddressDetails ? 10 : 7} className="px-6 py-8 text-center text-sm text-gray-500">
+                            <td colSpan={showAddressDetails ? 9 : 6} className="px-6 py-8 text-center text-sm text-gray-500">
                                 {hasActiveFilters ? (
                                     <div className="flex flex-col items-center gap-2">
                                         <span className="text-gray-400">Nichts gefunden mit eingegebenen Filtern</span>
@@ -557,9 +551,6 @@ export default function Buyers() {
                             )}
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {buyer.verified ? "Ja" : "Nein"}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {buyer.maxTickets}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {buyer.group?.name ?? "-"}
