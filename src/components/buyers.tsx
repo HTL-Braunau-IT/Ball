@@ -266,7 +266,10 @@ export default function Buyers() {
                                 type="text"
                                 placeholder="Name, E-Mail, Adresse, PLZ oder Bundesland..."
                                 value={searchText}
-                                onChange={(e) => setSearchText(e.target.value)}
+                                onChange={(e) => {
+                                    setSearchText(e.target.value);
+                                    setFilterBuyerId(null); // Clear buyer ID filter when user starts typing
+                                }}
                                 className="w-full border-0 outline-none focus:outline-none focus:ring-0 text-sm px-3 py-1.5 pr-8 text-gray-700 placeholder-gray-400 bg-gray-50 rounded"
                                 style={{ boxShadow: 'none', border: 'none', outline: 'none' }}
                             />
@@ -289,9 +292,15 @@ export default function Buyers() {
                                 Land
                             </div>
                             <div className="flex flex-wrap gap-2 px-3 py-2 justify-center">
-                                {renderFilterButton("Alle", filterCountry === "", () => setFilterCountry(""))}
+                                {renderFilterButton("Alle", filterCountry === "", () => {
+                                    setFilterCountry("");
+                                    setFilterBuyerId(null);
+                                })}
                                 {uniqueCountries.map(c => 
-                                    renderFilterButton(c, filterCountry === c, () => setFilterCountry(c), c)
+                                    renderFilterButton(c, filterCountry === c, () => {
+                                        setFilterCountry(c);
+                                        setFilterBuyerId(null);
+                                    }, c)
                                 )}
                             </div>
                         </div>
@@ -302,9 +311,18 @@ export default function Buyers() {
                                 Verifiziert
                             </div>
                             <div className="flex flex-wrap gap-2 px-3 py-2 justify-center">
-                                {renderFilterButton("Alle", filterVerified === "", () => setFilterVerified(""))}
-                                {renderFilterButton("Ja", filterVerified === "ja", () => setFilterVerified("ja"))}
-                                {renderFilterButton("Nein", filterVerified === "nein", () => setFilterVerified("nein"))}
+                                {renderFilterButton("Alle", filterVerified === "", () => {
+                                    setFilterVerified("");
+                                    setFilterBuyerId(null);
+                                })}
+                                {renderFilterButton("Ja", filterVerified === "ja", () => {
+                                    setFilterVerified("ja");
+                                    setFilterBuyerId(null);
+                                })}
+                                {renderFilterButton("Nein", filterVerified === "nein", () => {
+                                    setFilterVerified("nein");
+                                    setFilterBuyerId(null);
+                                })}
                             </div>
                         </div>
                         
@@ -314,9 +332,15 @@ export default function Buyers() {
                                 Gruppe
                             </div>
                             <div className="flex flex-wrap gap-2 px-3 py-2 justify-center">
-                                {renderFilterButton("Alle", filterGroup === "", () => setFilterGroup(""))}
+                                {renderFilterButton("Alle", filterGroup === "", () => {
+                                    setFilterGroup("");
+                                    setFilterBuyerId(null);
+                                })}
                                 {uniqueGroups.map(g => 
-                                    renderFilterButton(g, filterGroup === g, () => setFilterGroup(g), g)
+                                    renderFilterButton(g, filterGroup === g, () => {
+                                        setFilterGroup(g);
+                                        setFilterBuyerId(null);
+                                    }, g)
                                 )}
                             </div>
                         </div>
