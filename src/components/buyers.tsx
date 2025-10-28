@@ -344,8 +344,8 @@ export default function Buyers() {
                 </div>
             </div>
 
-            <div className="-mt-1.5 px-4">
-                <table className="w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+            <div className="-mt-5.5 px-4 overflow-x-auto">
+                <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm" style={{ tableLayout: 'fixed', width: '100%' }}>
                 <thead className="bg-gray-50">
                     <tr>
                         <th 
