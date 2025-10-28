@@ -3,12 +3,11 @@ import { z } from "zod";
 
 export const deliveryMethodsRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
-    const methods = await ctx.db.deliveryMethods.findMany({
+    return ctx.db.deliveryMethods.findMany({
       orderBy: {
         id: 'asc'
       }
     });
-    return methods;
   }),
 
   update: protectedProcedure
@@ -23,6 +22,7 @@ export const deliveryMethodsRouter = createTRPCRouter({
         where: { id: input.id },
         data: {
           surcharge: input.surcharge,
+          updatedBy: ctx.session.user.name ?? "Unbekannt"
         },
       });
     }),

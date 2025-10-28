@@ -82,13 +82,19 @@ export default function DeliveryMethods() {
             <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
                 <thead className="bg-gray-50">
                     <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/3">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
                             Name
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
                             Zuschlag
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/3">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
+                            Geändert am
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
+                            Geändert von
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
                             Aktionen
                         </th>
                     </tr>
@@ -115,7 +121,7 @@ export default function DeliveryMethods() {
                                                 type="number"
                                                 min="0"
                                                 step="0.01"
-                                                value={editData?.surcharge !== null ? (editData.surcharge / 100).toFixed(2) : ''}
+                                                value={editData?.surcharge !== null && editData?.surcharge !== undefined ? (editData.surcharge / 100).toFixed(2) : ''}
                                                 onChange={(e) => handleFieldChange('surcharge', Math.round(parseFloat(e.target.value) * 100) || 0)}
                                                 className="w-24 px-3 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                             />
@@ -123,6 +129,18 @@ export default function DeliveryMethods() {
                                     ) : (
                                         method.surcharge !== null ? `€${(method.surcharge / 100).toFixed(2)}` : '-'
                                     )}
+                                </td>
+
+                                {/* Geändert am */}
+                                <td className="px-4 py-3 text-sm text-gray-500">
+                                    <div className="truncate" title={method.updatedAt ? new Date(method.updatedAt).toLocaleString() : "-"}>
+                                        {method.updatedAt ? new Date(method.updatedAt).toLocaleDateString() : "-"}
+                                    </div>
+                                </td>
+
+                                {/* Geändert von */}
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {method.updatedBy ?? "-"}
                                 </td>
 
                                 {/* Actions */}
