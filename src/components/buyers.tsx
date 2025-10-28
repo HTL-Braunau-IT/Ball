@@ -400,7 +400,7 @@ export default function Buyers() {
                         </th>
                         <th 
                             className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '15%' : '24%' }}
+                            style={{ width: showAddressDetails ? '10%' : '18%' }}
                             onClick={() => handleSort('name')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -411,8 +411,16 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
+                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none"
+                            style={{ width: showAddressDetails ? '10%' : '12%' }}
+                        >
+                            <div className="flex items-center justify-center gap-2">
+                                Tickets
+                            </div>
+                        </th>
+                        <th 
                             className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap"
-                            style={{ width: showAddressDetails ? '6%' : '20%' }}
+                            style={{ width: showAddressDetails ? '10%' : '18%' }}
                             onClick={() => handleSort('email')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -426,7 +434,7 @@ export default function Buyers() {
                             <>
                                 <th 
                                     className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none relative"
-                                    style={{ width: '18%' }}
+                                    style={{ width: '15%' }}
                                 >
                                     <div className="flex items-center justify-center gap-2">
                                         <span onClick={() => handleSort('address')}>
@@ -463,7 +471,7 @@ export default function Buyers() {
                                 </th>
                                 <th 
                                     className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                                    style={{ width: '13%' }}
+                                    style={{ width: '12%' }}
                                     onClick={() => handleSort('province')}
                                 >
                                     <div className="flex items-center justify-center gap-2">
@@ -487,7 +495,7 @@ export default function Buyers() {
                                 </th>
                             </>
                         ) : (
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none" style={{ width: '30%' }}>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none" style={{ width: '26%' }}>
                                 <div className="flex items-center justify-center gap-2">
                                     <span>Adresse</span>
                                     <button
@@ -507,7 +515,7 @@ export default function Buyers() {
                         )}
                         <th 
                             className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '10%' : '10%' }}
+                            style={{ width: showAddressDetails ? '8%' : '8%' }}
                             onClick={() => handleSort('verified')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -519,7 +527,7 @@ export default function Buyers() {
                         </th>
                         <th 
                             className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '12%' : '10%' }}
+                            style={{ width: showAddressDetails ? '10%' : '8%' }}
                             onClick={() => handleSort('group')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -534,7 +542,7 @@ export default function Buyers() {
                 <tbody className="bg-white divide-y divide-gray-200">
                     {paginatedData.length === 0 ? (
                         <tr>
-                            <td colSpan={showAddressDetails ? 9 : 6} className="px-6 py-8 text-center text-sm text-gray-500">
+                            <td colSpan={showAddressDetails ? 10 : 7} className="px-6 py-8 text-center text-sm text-gray-500">
                                 {hasActiveFilters ? (
                                     <div className="flex flex-col items-center gap-2">
                                         <span className="text-gray-400">Nichts gefunden mit eingegebenen Filtern</span>
@@ -564,6 +572,11 @@ export default function Buyers() {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {buyer.name}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                                {buyer.tickets && buyer.tickets.length > 0 
+                                    ? buyer.tickets.map(t => t.id).join(',') 
+                                    : '-'}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {showAddressDetails ? '...' : buyer.email}
