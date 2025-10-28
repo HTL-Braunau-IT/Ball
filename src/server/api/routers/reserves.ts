@@ -8,7 +8,13 @@ export const reservesRouter = createTRPCRouter({
       include: { 
         type: true, 
         deliveryMethods: true,
-        soldTickets: true
+        soldTickets: {
+          select: {
+            id: true,
+            buyerId: true,
+            soldPrice: true
+          }
+        }
       }
     });
     return reserves.map(({ id, type, amount, price, updatedAt, updatedBy, deliveryMethods, soldTickets }) => ({ 

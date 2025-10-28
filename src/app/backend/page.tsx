@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "~/server/auth";
-import ReservesOverview from "~/components/ReservesOverview";
+import SalesStatsOverview from "~/components/ReservesOverview";
 
 export default async function BackendDashboard() {
     const session = await getServerSession(authOptions);
@@ -124,9 +124,9 @@ export default async function BackendDashboard() {
           </Link>
         ))}
       </div>
-      {/* Reserves Overview */}
-      <div className="py-8">
-        <ReservesOverview />
+      {/* Sales Stats Overview */}
+      <div className="-mt-6 py-8">
+        <SalesStatsOverview />
       </div>      
     </div>
   );

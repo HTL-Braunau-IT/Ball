@@ -2,7 +2,7 @@
 
 import { api } from "~/trpc/react";
 
-export default function ReservesOverview() {
+export default function SalesStatsOverview() {
     const { data, isLoading, isError, error } = api.reserves.all.useQuery();
 
     if (isLoading) {
@@ -24,13 +24,23 @@ export default function ReservesOverview() {
     if (!data || data.length === 0) {
         return (
             <div className="bg-gray-50 py-1 px-4 rounded-lg">
-                <div className="text-center text-gray-600">Keine Kontingente gefunden.</div>
+                <div className="text-center text-gray-600">Keine Daten gefunden.</div>
             </div>
         );
     }
 
     // Calculate summary statistics
-    const totalReserves = data.length;
+    // Count unique buyers from all sold tickets
+    const allBuyers = new Set<number>();
+    data.forEach(reserve => {
+        reserve.soldTickets?.forEach(ticket => {
+            if (ticket.buyerId) {
+                allBuyers.add(ticket.buyerId);
+            }
+        });
+    });
+    const totalBuyers = allBuyers.size;
+
     const totalAvailable = data.reduce((sum, reserve) => sum + reserve.amount, 0);
     const totalSold = data.reduce((sum, reserve) => sum + (reserve.soldTickets?.length || 0), 0);
     const totalRemaining = totalAvailable - totalSold;
@@ -48,7 +58,7 @@ export default function ReservesOverview() {
                 <table className="min-w-full">
                     <thead>
                         <tr>
-                            <th className="px-4 py-3 text-center text-base font-semibold text-gray-800 bg-gray-100 border-r border-gray-300">Kontingente</th>
+                            <th className="px-4 py-3 text-center text-base font-semibold text-gray-800 bg-gray-100 border-r border-gray-300">Käufer</th>
                             <th colSpan={3} className="px-4 py-3 text-center text-base font-semibold text-gray-800 bg-gray-100 border-l border-r border-gray-300">Karten</th>
                             <th colSpan={2} className="px-4 py-3 text-center text-base font-semibold text-gray-800 bg-gray-100 border-l border-gray-300">Umsatz</th>
                         </tr>
@@ -56,7 +66,7 @@ export default function ReservesOverview() {
                     <tbody>
                         <tr>
                             <td className="px-4 py-2 text-center border-r border-gray-300">
-                                <div className="text-xl font-bold text-blue-600">{totalReserves}</div>
+                                <div className="text-xl font-bold text-blue-600">{totalBuyers}</div>
                                 <div className="text-sm text-gray-600">Anzahl</div>
                             </td>
                             <td className="px-4 py-2 text-center border-l border-r border-gray-300">
