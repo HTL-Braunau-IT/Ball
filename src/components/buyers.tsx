@@ -584,8 +584,8 @@ export default function Buyers() {
                                     </td>
                                 </>
                             ) : (
-                                <td className="px-6 py-4 text-sm text-gray-500 text-center">
-                                    {buyer.address}, {buyer.postal} {buyer.province}
+                                <td className="px-6 py-4 text-sm text-gray-500 text-center whitespace-nowrap">
+                                    ...
                                 </td>
                             )}
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
