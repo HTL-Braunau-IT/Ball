@@ -574,12 +574,12 @@ export default function Buyers() {
                                 {buyer.name}
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                                {buyer.tickets && buyer.tickets.length > 0 
+                                {showAddressDetails ? '...' : (buyer.tickets && buyer.tickets.length > 0 
                                     ? buyer.tickets.map(t => t.id).join(',') 
-                                    : '-'}
+                                    : '-')}
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {buyer.email}
+                                {showAddressDetails ? '...' : buyer.email}
                             </td>
                             {showAddressDetails ? (
                                 <>
@@ -602,10 +602,10 @@ export default function Buyers() {
                                 </td>
                             )}
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {buyer.verified ? "Ja" : "Nein"}
+                                {showAddressDetails ? '...' : (buyer.verified ? "Ja" : "Nein")}
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {buyer.group?.name ?? "-"}
+                                {showAddressDetails ? '...' : (buyer.group?.name ?? "-")}
                             </td>
                         </tr>
                         ))
