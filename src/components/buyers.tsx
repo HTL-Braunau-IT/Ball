@@ -49,15 +49,8 @@ export default function Buyers() {
                             // Scroll to the element
                             element.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             
-                            // Highlight the row
-                            element.classList.add('highlighted-row');
-                            
-                            // Remove highlight after 3 seconds
-                            setTimeout(() => {
-                                element.classList.remove('highlighted-row');
-                                // Clear the hash and filter from URL without scrolling
-                                window.history.replaceState(null, '', window.location.pathname + window.location.search);
-                            }, 3000);
+                            // Clear the hash and filter from URL without scrolling
+                            window.history.replaceState(null, '', window.location.pathname + window.location.search);
                         }
                     }, 500);
                     

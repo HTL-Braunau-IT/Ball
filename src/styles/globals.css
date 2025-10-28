@@ -659,24 +659,3 @@ h4 {
   font-weight: 600;
   color: #374151;
 }
-
-/* Highlighted row animation */
-.highlighted-row {
-  background-color: #fef3c7 !important;
-  animation: highlight-pulse 3s ease-in-out;
-}
-
-@keyframes highlight-pulse {
-  0% {
-    background-color: #fef3c7;
-    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7);
-  }
-  50% {
-    background-color: #fde68a;
-    box-shadow: 0 0 0 10px rgba(251, 191, 36, 0);
-  }
-  100% {
-    background-color: #fef3c7;
-    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
-  }
-}
