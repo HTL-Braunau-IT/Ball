@@ -62,7 +62,7 @@ export default async function BackendDashboard() {
     },
     {
       title: "Absolventen Import",
-      description: "Importieren Sie Alumni-E-Mails für exklusive Ticket-Zugriffe",
+      description: "Importiere Absolventen E-Mails",
       href: "/backend/import-alumni",
       hoverBg: "hover:bg-green-50",
       iconBg: "bg-green-500 hover:bg-green-600",
