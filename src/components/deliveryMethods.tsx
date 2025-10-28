@@ -120,7 +120,7 @@ export default function DeliveryMethods() {
                                             <input
                                                 type="number"
                                                 min="0"
-                                                step="0.01"
+                                                step="0.50"
                                                 value={editData?.surcharge !== null && editData?.surcharge !== undefined ? (editData.surcharge / 100).toFixed(2) : ''}
                                                 onChange={(e) => handleFieldChange('surcharge', Math.round(parseFloat(e.target.value) * 100) || 0)}
                                                 className="w-24 px-3 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
