@@ -85,7 +85,7 @@ export default function DeliveryMethods() {
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
                             Name
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
+                        <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
                             Zuschlag
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
@@ -113,9 +113,9 @@ export default function DeliveryMethods() {
                                 </td>
 
                                 {/* Surcharge */}
-                                <td className="px-4 py-3 text-sm text-gray-500">
+                                <td className="px-4 py-3 text-sm text-gray-500 text-center">
                                     {isEditing ? (
-                                        <div className="flex items-center">
+                                        <div className="flex items-center justify-center">
                                             <span className="text-gray-500 mr-1 text-xs">€</span>
                                             <input
                                                 type="number"
@@ -127,8 +127,7 @@ export default function DeliveryMethods() {
                                             />
                                         </div>
                                     ) : (
-                                        <div className="flex items-center">
-                                            <span className="text-gray-500 mr-1 text-xs opacity-0">€</span>
+                                        <div className="flex items-center justify-center">
                                             {method.surcharge !== null ? `€${(method.surcharge / 100).toFixed(2)}` : '-'}
                                         </div>
                                     )}
