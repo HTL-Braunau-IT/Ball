@@ -19,6 +19,7 @@ export default function Buyers() {
     const [filterCountry, setFilterCountry] = useState("");
     const [filterVerified, setFilterVerified] = useState("");
     const [filterGroup, setFilterGroup] = useState("");
+    const [showAddressDetails, setShowAddressDetails] = useState(false);
 
     useEffect(() => {
         // Check for hash in URL
@@ -343,8 +344,8 @@ export default function Buyers() {
                 </div>
             </div>
 
-            <div className="-mt-5.5 px-4 overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+            <div className="-mt-5.5 px-4">
+                <table className="w-full bg-white border border-gray-200 rounded-lg shadow-sm">
                 <thead className="bg-gray-50">
                     <tr>
                         <th 
@@ -380,50 +381,85 @@ export default function Buyers() {
                                 )}
                             </div>
                         </th>
-                        <th 
-                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            onClick={() => handleSort('address')}
-                        >
-                            <div className="flex items-center justify-center gap-2">
-                                Adresse
-                                {sortColumn === 'address' && (
-                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                )}
-                            </div>
-                        </th>
-                        <th 
-                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            onClick={() => handleSort('postal')}
-                        >
-                            <div className="flex items-center justify-center gap-2">
-                                PLZ
-                                {sortColumn === 'postal' && (
-                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                )}
-                            </div>
-                        </th>
-                        <th 
-                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            onClick={() => handleSort('province')}
-                        >
-                            <div className="flex items-center justify-center gap-2">
-                                Bundesland
-                                {sortColumn === 'province' && (
-                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                )}
-                            </div>
-                        </th>
-                        <th 
-                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            onClick={() => handleSort('country')}
-                        >
-                            <div className="flex items-center justify-center gap-2">
-                                Land
-                                {sortColumn === 'country' && (
-                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                )}
-                            </div>
-                        </th>
+                        {showAddressDetails ? (
+                            <>
+                                <th 
+                                    className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none relative"
+                                >
+                                    <div className="flex items-center justify-center gap-2">
+                                        <span onClick={() => handleSort('address')}>
+                                            Adresse
+                                            {sortColumn === 'address' && (
+                                                <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                                            )}
+                                        </span>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setShowAddressDetails(false);
+                                            }}
+                                            className="text-red-600 hover:text-red-800 transition-colors ml-1"
+                                            title="Adressdetails ausblenden"
+                                        >
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </th>
+                                <th 
+                                    className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                                    onClick={() => handleSort('postal')}
+                                >
+                                    <div className="flex items-center justify-center gap-2">
+                                        PLZ
+                                        {sortColumn === 'postal' && (
+                                            <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                                        )}
+                                    </div>
+                                </th>
+                                <th 
+                                    className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                                    onClick={() => handleSort('province')}
+                                >
+                                    <div className="flex items-center justify-center gap-2">
+                                        Bundesland
+                                        {sortColumn === 'province' && (
+                                            <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                                        )}
+                                    </div>
+                                </th>
+                                <th 
+                                    className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                                    onClick={() => handleSort('country')}
+                                >
+                                    <div className="flex items-center justify-center gap-2">
+                                        Land
+                                        {sortColumn === 'country' && (
+                                            <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                                        )}
+                                    </div>
+                                </th>
+                            </>
+                        ) : (
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none">
+                                <div className="flex items-center justify-center gap-2">
+                                    <span>Adresse</span>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setShowAddressDetails(true);
+                                        }}
+                                        className="text-green-600 hover:text-green-800 transition-colors"
+                                        title="Adressdetails anzeigen"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </th>
+                        )}
                         <th 
                             className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                             onClick={() => handleSort('verified')}
@@ -462,7 +498,7 @@ export default function Buyers() {
                 <tbody className="bg-white divide-y divide-gray-200">
                     {paginatedData.length === 0 ? (
                         <tr>
-                            <td colSpan={10} className="px-6 py-8 text-center text-sm text-gray-500">
+                            <td colSpan={showAddressDetails ? 10 : 7} className="px-6 py-8 text-center text-sm text-gray-500">
                                 {hasActiveFilters ? (
                                     <div className="flex flex-col items-center gap-2">
                                         <span className="text-gray-400">Nichts gefunden mit eingegebenen Filtern</span>
@@ -495,18 +531,30 @@ export default function Buyers() {
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {buyer.email}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {buyer.address}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {buyer.postal}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {buyer.province}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {buyer.country}
-                            </td>
+                            {showAddressDetails ? (
+                                <>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {buyer.address}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {buyer.postal}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {buyer.province}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {buyer.country}
+                                    </td>
+                                </>
+                            ) : (
+                                <td className="px-6 py-4 text-sm text-gray-500">
+                                    <div className="flex items-center gap-2">
+                                        <div className="truncate max-w-xs">
+                                            {buyer.address}, {buyer.postal} {buyer.province}, {buyer.country}
+                                        </div>
+                                    </div>
+                                </td>
+                            )}
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {buyer.verified ? "Ja" : "Nein"}
                             </td>
