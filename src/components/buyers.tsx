@@ -472,7 +472,7 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
-                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap"
                             onClick={() => handleSort('maxTickets')}
                         >
                             <div className="flex items-center justify-center gap-2">
