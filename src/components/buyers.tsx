@@ -344,7 +344,7 @@ export default function Buyers() {
                 </div>
             </div>
 
-            <div className="-mt-5.5 px-4">
+            <div className="-mt-1.5 px-4">
                 <table className="w-full bg-white border border-gray-200 rounded-lg shadow-sm">
                 <thead className="bg-gray-50">
                     <tr>
