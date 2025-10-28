@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 import TicketProgressBar from "./TicketProgressBar";
 
 interface EditableReserve {

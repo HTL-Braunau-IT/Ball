@@ -3,11 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "~/server/auth";
 import DashboardStats from "~/components/DashboardStats";
 
-export default async function BackendDashboard() {
-    const session = await getServerSession(authOptions);
-    const fullName = session?.user?.name ?? session?.user?.email ?? "im Backend";
-    const displayName = fullName.includes(' ') ? fullName.split(' ')[0] : fullName;
-  const sections = [
+// Move sections outside component to prevent recreation on every render
+const sections = [
     {
       title: "Kontingente",
       description: "Verwalte Karten-Kontingente",
@@ -73,7 +70,12 @@ export default async function BackendDashboard() {
         </svg>
       ),
     },
-  ];
+];
+
+export default async function BackendDashboard() {
+    const session = await getServerSession(authOptions);
+    const fullName = session?.user?.name ?? session?.user?.email ?? "im Backend";
+    const displayName = fullName.includes(' ') ? fullName.split(' ')[0] : fullName;
 
   return (
     <div className="px-4 py-6 sm:px-0">
