@@ -558,7 +558,7 @@ export default function Buyers() {
                         </tr>
                     ) : (
                         paginatedData.map((buyer) => (
-                        <tr key={buyer.id} id={`buyer-${buyer.id}`} className="hover:bg-gray-50 transition-all duration-1000">
+                        <tr key={buyer.id} id={`buyer-${buyer.id}`} className="hover:bg-gray-50">
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                 {buyer.id}
                             </td>
