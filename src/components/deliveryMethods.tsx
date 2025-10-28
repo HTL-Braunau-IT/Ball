@@ -127,7 +127,10 @@ export default function DeliveryMethods() {
                                             />
                                         </div>
                                     ) : (
-                                        method.surcharge !== null ? `€${(method.surcharge / 100).toFixed(2)}` : '-'
+                                        <div className="flex items-center">
+                                            <span className="text-gray-500 mr-1 text-xs opacity-0">€</span>
+                                            {method.surcharge !== null ? `€${(method.surcharge / 100).toFixed(2)}` : '-'}
+                                        </div>
                                     )}
                                 </td>
 
@@ -146,7 +149,17 @@ export default function DeliveryMethods() {
                                 {/* Actions */}
                                 <td className="px-4 py-3 text-sm text-gray-500">
                                     {isEditing ? (
-                                        <div className="flex space-x-1">
+                                        <div className="flex space-x-1 justify-center">
+                                            <button
+                                                onClick={handleCancel}
+                                                disabled={updateMutation.isPending}
+                                                className="p-1.5 text-white bg-gray-600 hover:bg-gray-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                                title="Abbrechen"
+                                            >
+                                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
                                             <button
                                                 onClick={handleSave}
                                                 disabled={updateMutation.isPending}
@@ -164,27 +177,20 @@ export default function DeliveryMethods() {
                                                     </svg>
                                                 )}
                                             </button>
-                                            <button
-                                                onClick={handleCancel}
-                                                disabled={updateMutation.isPending}
-                                                className="p-1.5 text-white bg-gray-600 hover:bg-gray-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-                                                title="Abbrechen"
-                                            >
-                                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
                                         </div>
                                     ) : (
-                                        <button
-                                            onClick={() => handleEdit(method)}
-                                            className="p-1.5 text-white bg-blue-600 hover:bg-blue-700 rounded-md"
-                                            title="Bearbeiten"
-                                        >
-                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                        </button>
+                                        <div className="flex space-x-1 justify-center">
+                                            <button
+                                                onClick={() => handleEdit(method)}
+                                                className="p-1.5 text-white bg-blue-600 hover:bg-blue-700 rounded-md"
+                                                title="Bearbeiten"
+                                            >
+                                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                            </button>
+                                            <div className="w-[35px]"></div>
+                                        </div>
                                     )}
                                 </td>
                             </tr>
