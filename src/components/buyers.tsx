@@ -49,7 +49,7 @@ export default function Buyers() {
                             // Scroll to the element
                             element.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             
-                            // Clear the hash and filter from URL without scrolling
+                                // Clear the hash and filter from URL without scrolling
                             window.history.replaceState(null, '', window.location.pathname + window.location.search);
                         }
                     }, 500);
@@ -388,7 +388,7 @@ export default function Buyers() {
                     <tr>
                         <th 
                             className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '7%' : '6%' }}
+                            style={{ width: showAddressDetails ? '6%' : '6%' }}
                             onClick={() => handleSort('id')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -400,7 +400,7 @@ export default function Buyers() {
                         </th>
                         <th 
                             className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '15%' : '23%' }}
+                            style={{ width: showAddressDetails ? '15%' : '24%' }}
                             onClick={() => handleSort('name')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -411,8 +411,8 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
-                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '17%' : '21%' }}
+                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap"
+                            style={{ width: showAddressDetails ? '6%' : '20%' }}
                             onClick={() => handleSort('email')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -426,7 +426,7 @@ export default function Buyers() {
                             <>
                                 <th 
                                     className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none relative"
-                                    style={{ width: '13%' }}
+                                    style={{ width: '18%' }}
                                 >
                                     <div className="flex items-center justify-center gap-2">
                                         <span onClick={() => handleSort('address')}>
@@ -463,7 +463,7 @@ export default function Buyers() {
                                 </th>
                                 <th 
                                     className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                                    style={{ width: '10%' }}
+                                    style={{ width: '13%' }}
                                     onClick={() => handleSort('province')}
                                 >
                                     <div className="flex items-center justify-center gap-2">
@@ -487,7 +487,7 @@ export default function Buyers() {
                                 </th>
                             </>
                         ) : (
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none" style={{ width: '29%' }}>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none" style={{ width: '30%' }}>
                                 <div className="flex items-center justify-center gap-2">
                                     <span>Adresse</span>
                                     <button
@@ -507,7 +507,7 @@ export default function Buyers() {
                         )}
                         <th 
                             className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '9%' : '10%' }}
+                            style={{ width: showAddressDetails ? '10%' : '10%' }}
                             onClick={() => handleSort('verified')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -519,7 +519,7 @@ export default function Buyers() {
                         </th>
                         <th 
                             className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '11%' : '10%' }}
+                            style={{ width: showAddressDetails ? '12%' : '10%' }}
                             onClick={() => handleSort('group')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -566,7 +566,7 @@ export default function Buyers() {
                                 {buyer.name}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {buyer.email}
+                                {showAddressDetails ? '...' : buyer.email}
                             </td>
                             {showAddressDetails ? (
                                 <>
@@ -584,12 +584,8 @@ export default function Buyers() {
                                     </td>
                                 </>
                             ) : (
-                                <td className="px-6 py-4 text-sm text-gray-500">
-                                    <div className="flex items-center gap-2">
-                                        <div className="truncate max-w-xs">
-                                            {buyer.address}, {buyer.postal} {buyer.province}, {buyer.country}
-                                        </div>
-                                    </div>
+                                <td className="px-6 py-4 text-sm text-gray-500 text-center">
+                                    {buyer.address}, {buyer.postal} {buyer.province}
                                 </td>
                             )}
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
