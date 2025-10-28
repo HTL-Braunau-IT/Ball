@@ -22,19 +22,6 @@ export default async function BackendDashboard() {
       ),
     },
     {
-      title: "Verkaufte Karten",
-      description: "Übersicht über verkaufte Karten",
-      href: "/backend/tickets",
-      hoverBg: "hover:bg-orange-50",
-      iconBg: "bg-orange-500 hover:bg-orange-600",
-      titleHover: "group-hover:text-orange-600",
-      icon: (
-        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
-        </svg>
-      ),
-    },
-    {
       title: "Liefermethoden",
       description: "Verwalte Versandmethoden und Zuschläge",
       href: "/backend/delivery-methods",
@@ -44,6 +31,19 @@ export default async function BackendDashboard() {
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+        </svg>
+      ),
+    },
+    {
+      title: "Verkaufte Karten",
+      description: "Übersicht über verkaufte Karten",
+      href: "/backend/tickets",
+      hoverBg: "hover:bg-orange-50",
+      iconBg: "bg-orange-500 hover:bg-orange-600",
+      titleHover: "group-hover:text-orange-600",
+      icon: (
+        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
         </svg>
       ),
     },
