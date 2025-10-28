@@ -346,7 +346,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
             </div>
 
             {/* Table */}
-            <div className="-mt-2 px-4 overflow-x-auto">
+            <div className="-mt-5.5 px-4 overflow-x-auto">
                 <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm" style={{ tableLayout: 'fixed', width: '100%' }}>
                 <thead className="bg-gray-50">
                     <tr>
@@ -519,7 +519,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
             </div>
             
             {/* Pagination controls */}
-            <div className="-mt-2 px-4">
+            <div className="-mt-6 px-4">
                 <div className="flex items-center justify-between px-3 py-2 bg-white border border-gray-200 rounded-lg">
                 <div className="flex items-center gap-2">
                     <span className="text-xs text-gray-500">Anzeigen:</span>
