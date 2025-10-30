@@ -97,8 +97,8 @@ export default function TicketReserves() {
 
     return (
         <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
-                <thead className="bg-gray-50">
+                <table className="">
+                <thead className="">
                     <tr>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-32">
                             Typ
@@ -126,7 +126,7 @@ export default function TicketReserves() {
                         </th>
                     </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-200">
                     {data.map((reserve, idx) => {
                         const typeValue = reserve.type;
                         const typeLabel = Array.isArray(typeValue)
@@ -273,7 +273,7 @@ export default function TicketReserves() {
                                         <div className="flex space-x-1 justify-center">
                                             <button
                                                 onClick={() => handleEdit(reserve)}
-                                                className="p-1.5 text-white bg-blue-600 hover:bg-blue-700 rounded-md"
+                                                className="p-1.5 bg-violet-50 text-violet-700 ring-1 ring-violet-200 hover:bg-violet-100 rounded-md"
                                                 title="Bearbeiten"
                                             >
                                                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

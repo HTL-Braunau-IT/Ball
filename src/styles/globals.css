@@ -598,20 +598,24 @@ h4 {
 
 .backend-layout .card {
   /* Backend-specific card styles */
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 0px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(2px);
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
+  
 }
 
 .backend-layout .card:hover {
   /* Less dramatic hover effect for backend */
-  transform: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: inset 0 0 420px var(--backend-card-hover, rgba(0, 0, 0, 0.2));
+  border: 0px;
 }
 
 /* Backend navigation specific styles */
 .backend-layout nav {
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  background: transparent;
+  border-bottom: 0;
 }
 
 .backend-layout nav a {
@@ -620,7 +624,12 @@ h4 {
 }
 
 .backend-layout nav a:hover {
-  color: #1f2937;
+  /* Defer hover color to utility classes (e.g., hover:text-violet-700) */
+}
+
+/* Default (violet) theme only: active/hover text accent */
+body:not(.theme-blue):not(.theme-gold) .backend-layout nav a.text-violet-700 {
+  color: #6d28d9;
 }
 
 /* Backend form styles */
@@ -644,7 +653,10 @@ h4 {
 /* Backend table styles */
 .backend-layout table {
   width: 100%;
-  border-collapse: collapse;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border-spacing: 0;
+  border-collapse: separate;
   margin: 1rem 0;
 }
 
@@ -652,15 +664,101 @@ h4 {
 .backend-layout td {
   padding: 0.75rem;
   text-align: center;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(6px);
 }
 
 .backend-layout th {
-  background-color: #f0f0f0;
+  background: rgba(255, 255, 255, 0.7);
   font-weight: 600;
   color: #374151;
+}
+
+/* Backend table row hover */
+.backend-layout tbody td {
+  transition: background-color var(--transition-fast);
+}
+
+.backend-layout tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.6);
 }
 
 /* Link hover underline fix for backend tables */
 .backend-layout table a:hover {
   text-decoration: underline !important;
 }
+
+.backend-bg {
+  background:
+    radial-gradient(35% 35% at 20% 30%, rgba(196, 181, 253, 0.65) 0%, rgba(196, 181, 253, 0.45) 22%, rgba(196, 181, 253, 0.00) 60%),
+    radial-gradient(28% 28% at 80% 25%, rgba(233, 213, 255, 0.60) 0%, rgba(233, 213, 255, 0.40) 18%, rgba(233, 213, 255, 0.00) 58%),
+    radial-gradient(30% 30% at 72% 78%, rgba(167, 139, 250, 0.55) 0%, rgba(167, 139, 250, 0.35) 20%, rgba(167, 139, 250, 0.00) 58%),
+    linear-gradient(135deg, #faf5ff 0%, #ede9fe 45%, #ddd6fe 100%);
+  background-attachment: scroll, scroll, scroll, fixed;
+  background-size: 140% 140%, 140% 140%, 140% 140%, cover;
+  background-position: 0% 0%, 100% 10%, 80% 100%, center;
+}
+
+/* Themed backend backgrounds */
+body.theme-blue .backend-bg {
+  background:
+    radial-gradient(35% 35% at 20% 30%, rgba(191, 219, 254, 0.65) 0%, rgba(191, 219, 254, 0.45) 22%, rgba(191, 219, 254, 0.00) 60%),
+    radial-gradient(28% 28% at 80% 25%, rgba(147, 197, 253, 0.60) 0%, rgba(147, 197, 253, 0.40) 18%, rgba(147, 197, 253, 0.00) 58%),
+    radial-gradient(30% 30% at 72% 78%, rgba(96, 165, 250, 0.55) 0%, rgba(96, 165, 250, 0.35) 20%, rgba(96, 165, 250, 0.00) 58%),
+    linear-gradient(135deg, #eff6ff 0%, #dbeafe 45%, #bfdbfe 100%);
+  background-attachment: scroll, scroll, scroll, fixed;
+  background-size: 140% 140%, 140% 140%, 140% 140%, cover;
+  background-position: 0% 0%, 100% 10%, 80% 100%, center;
+}
+
+body.theme-gold .backend-bg {
+  background:
+    radial-gradient(35% 35% at 20% 30%, rgba(242, 218, 189, 0.60) 0%, rgba(242, 218, 189, 0.38) 22%, rgba(242, 218, 189, 0.00) 60%),
+    radial-gradient(28% 28% at 80% 25%, rgba(230, 190, 140, 0.55) 0%, rgba(230, 190, 140, 0.36) 18%, rgba(230, 190, 140, 0.00) 58%),
+    radial-gradient(30% 30% at 72% 78%, rgba(220, 160, 100, 0.50) 0%, rgba(220, 160, 100, 0.30) 20%, rgba(220, 160, 100, 0.00) 58%),
+    linear-gradient(135deg, #fffaf0 0%, #fdf3e7 45%, #fae8d7 100%);
+  background-attachment: scroll, scroll, scroll, fixed;
+  background-size: 140% 140%, 140% 140%, 140% 140%, cover;
+  background-position: 0% 0%, 100% 10%, 80% 100%, center;
+}
+
+/* Accent theme overrides for Tailwind violet utilities */
+/* Default theme (violet) */
+body.theme-violet {}
+
+/* Mildish blue theme */
+body.theme-blue .bg-violet-500 { background-color: #3b82f6 !important; }
+body.theme-blue .hover\:bg-violet-600:hover { background-color: #2563eb !important; }
+body.theme-blue .bg-violet-600 { background-color: #2563eb !important; }
+body.theme-blue .hover\:bg-violet-700:hover { background-color: #1d4ed8 !important; }
+body.theme-blue .text-violet-600 { color: #2563eb !important; }
+body.theme-blue .text-violet-700 { color: #1d4ed8 !important; }
+body.theme-blue .hover\:text-violet-600:hover { color: #2563eb !important; }
+body.theme-blue .border-violet-500 { border-color: #3b82f6 !important; }
+body.theme-blue .border-violet-400 { border-color: #60a5fa !important; }
+body.theme-blue .focus\:ring-violet-400:focus { --tw-ring-color: #60a5fa !important; box-shadow: 0 0 0 1px #60a5fa, 0 0 0 2px rgba(0,0,0,0.0); }
+body.theme-blue .bg-violet-50 { background-color: #eff6ff !important; }
+body.theme-blue .bg-violet-100 { background-color: #dbeafe !important; }
+body.theme-blue .ring-violet-200 { --tw-ring-color: #bfdbfe !important; }
+body.theme-blue .hover\:bg-violet-50:hover { background-color: #eff6ff !important; }
+body.theme-blue .hover\:bg-violet-100:hover { background-color: #dbeafe !important; }
+
+/* Golden accents theme */
+body.theme-gold .bg-violet-500 { background-color: #E6C39A !important; }
+body.theme-gold .hover\:bg-violet-600:hover { background-color: #D19A5C !important; }
+body.theme-gold .bg-violet-600 { background-color: #D19A5C !important; }
+body.theme-gold .hover\:bg-violet-700:hover { background-color: #B36B2C !important; }
+body.theme-gold .text-violet-600 { color: #A5662F !important; }
+body.theme-gold .text-violet-700 { color: #8A5527 !important; }
+body.theme-gold .hover\:text-violet-600:hover { color: #A5662F !important; }
+body.theme-gold .border-violet-500 { border-color: #E6C39A !important; }
+body.theme-gold .border-violet-400 { border-color: #D19A5C !important; }
+body.theme-gold .focus\:ring-violet-400:focus { --tw-ring-color: #F2DCC1 !important; box-shadow: 0 0 0 1px #F2DCC1, 0 0 0 2px rgba(0,0,0,0.0); }
+body.theme-gold .bg-violet-50 { background-color: #F7EFE3 !important; }
+body.theme-gold .bg-violet-100 { background-color: #F0E5D3 !important; }
+body.theme-gold .ring-violet-200 { --tw-ring-color: #F2DCC1 !important; }
+body.theme-gold .hover\:bg-violet-50:hover { background-color: #F7EFE3 !important; }
+body.theme-gold .hover\:bg-violet-100:hover { background-color: #F0E5D3 !important; }
+
+/* Default (violet) theme tweaks: make hover more visible on white */
+body:not(.theme-blue):not(.theme-gold) .hover\:bg-violet-50:hover { background-color: #ede9fe !important; }

@@ -219,8 +219,8 @@ export default function Buyers() {
             onClick={onClick}
             className={`px-2 py-1 text-xs rounded-md transition-colors ${
                 isActive
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-violet-50 text-violet-700 ring-1 ring-violet-200'
+                    : 'bg-white/80 text-gray-700 hover:bg-gray-100'
             }`}
         >
             {label}
@@ -251,8 +251,8 @@ export default function Buyers() {
     return (
         <div className="space-y-4">
             {/* Filter panel - always visible */}
-            <div className="px-4">
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div className="px-1">
+                <div>
                     <div className="flex items-center">
                         {/* Search bar */}
                         <div className="flex items-center border-r border-gray-200 px-3 py-2 flex-1 relative">
@@ -264,7 +264,7 @@ export default function Buyers() {
                                     setSearchText(e.target.value);
                                     setFilterBuyerId(null); // Clear buyer ID filter when user starts typing
                                 }}
-                                className="w-full border-0 outline-none focus:outline-none focus:ring-0 text-sm px-3 py-1.5 pr-8 text-gray-700 placeholder-gray-400 bg-gray-50 rounded"
+                                className="bg-white/80 w-full border-0 outline-none focus:outline-none focus:ring-0 text-sm px-3 py-1.5 pr-8 text-gray-700 placeholder-gray-400 rounded"
                                 style={{ boxShadow: 'none', border: 'none', outline: 'none' }}
                             />
                             {searchText && (
@@ -343,8 +343,8 @@ export default function Buyers() {
             </div>
 
             {/* Results counter */}
-            <div className="-mt-2 px-4">
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-lg px-4 py-2.5 shadow-sm">
+            <div className="-mt-6 px-1">
+                <div className="px-4 py-2.5">
                     <div className="flex items-center gap-2">
                         {filteredAndSortedData.length === 0 && hasActiveFilters ? (
                             <>
@@ -383,9 +383,9 @@ export default function Buyers() {
                 </div>
             </div>
 
-            <div className="-mt-5.5 px-4 overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm" style={{ tableLayout: 'fixed', width: '100%' }}>
-                <thead className="bg-gray-50">
+            <div className="-mt-7.5 px-4 overflow-x-auto">
+                <table className="min-w-full border border-gray-200 rounded-lg shadow-sm" style={{ tableLayout: 'fixed', width: '100%' }}>
+                <thead className="">
                     <tr>
                         <th 
                             className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
@@ -540,7 +540,7 @@ export default function Buyers() {
                         </th>
                     </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-200">
                     {paginatedData.length === 0 ? (
                         <tr>
                             <td colSpan={showAddressDetails ? 10 : 7} className="px-6 py-8 text-center text-sm text-gray-500">
@@ -627,7 +627,7 @@ export default function Buyers() {
             
             {/* Pagination controls */}
             <div className="-mt-6 px-4">
-                <div className="flex items-center justify-between px-3 py-2 bg-white border border-gray-200 rounded-lg">
+                <div className="flex items-center justify-between px-3 py-2">
                     <div className="flex items-center gap-2">
                         <span className="text-xs text-gray-500">Anzeigen:</span>
                         <div className="flex gap-1">
@@ -635,10 +635,10 @@ export default function Buyers() {
                                 <button
                                     key={num}
                                     onClick={() => setItemsPerPage(num)}
-                                    className={`px-2 py-0.5 text-xs rounded-md border ${
+                                className={`px-2 py-0.5 text-xs rounded-md ${
                                         itemsPerPage === num
-                                            ? 'bg-blue-600 text-white border-blue-600'
-                                            : 'border-gray-300 hover:bg-gray-200'
+                                            ? 'bg-violet-50 text-violet-700 ring-1 ring-violet-200'
+                                            : 'bg-white/80 text-gray-700 hover:bg-gray-100'
                                     }`}
                                 >
                                     {num}
@@ -646,10 +646,10 @@ export default function Buyers() {
                             ))}
                             <button
                                 onClick={() => setItemsPerPage(10000)}
-                                className={`px-2 py-0.5 text-xs rounded-md border ${
+                                className={`px-2 py-0.5 text-xs rounded-md ${
                                     itemsPerPage >= dataLength
-                                        ? 'bg-blue-600 text-white border-blue-600'
-                                        : 'border-gray-300 hover:bg-gray-200'
+                                        ? 'bg-violet-50 text-violet-700 ring-1 ring-violet-200'
+                                        : 'bg-white/80 text-gray-700 hover:bg-gray-100'
                                 }`}
                             >
                                 Alle
@@ -669,14 +669,14 @@ export default function Buyers() {
                                 <button
                                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                     disabled={currentPage === 1}
-                                    className="px-2 py-0.5 text-xs border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
+                                    className="px-2 py-0.5 text-xs rounded-md disabled:opacity-50 disabled:cursor-not-allowed bg-white/80 text-gray-700 hover:bg-gray-100"
                                 >
                                     ‹
                                 </button>
                                 <button
                                     onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                     disabled={currentPage === totalPages}
-                                    className="px-2 py-0.5 text-xs border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
+                                    className="px-2 py-0.5 text-xs rounded-md disabled:opacity-50 disabled:cursor-not-allowed bg-white/80 text-gray-700 hover:bg-gray-100"
                                 >
                                     ›
                                 </button>
