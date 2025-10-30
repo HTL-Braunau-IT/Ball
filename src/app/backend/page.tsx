@@ -2,9 +2,21 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "~/server/auth";
 import DashboardStats from "~/components/DashboardStats";
+import type { CSSProperties, ReactElement } from "react";
+
+type Section = {
+    title: string;
+    description: string;
+    href: string;
+    hoverBg: string;
+    iconBg: string;
+    titleHover: string;
+    hoverColor: string;
+    icon: ReactElement;
+};
 
 // Move sections outside component to prevent recreation on every render
-const sections = [
+const sections: ReadonlyArray<Section> = [
     {
       title: "Kontingente",
       description: "Verwalte Karten-Kontingente",
@@ -98,7 +110,7 @@ export default async function BackendDashboard() {
             key={section.title}
             href={section.href}
             className={`group relative bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 ${section.hoverBg} backend-layout card`}
-            style={{ ["--backend-card-hover" as any]: section.hoverColor }}
+            style={{ "--backend-card-hover": section.hoverColor } as CSSProperties}
           >
             <div>
               <span className={`inline-flex p-3 rounded-lg text-white ${section.iconBg}`}>

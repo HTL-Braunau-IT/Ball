@@ -7,6 +7,15 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import FloatingActionButtons from "~/components/FloatingActionButtons";
 
+const navigationItems = [
+  { name: "Dashboard", href: "/backend" },
+  { name: "Kontingente", href: "/backend/reserves" },
+  { name: "Liefermethoden", href: "/backend/delivery-methods" },
+  { name: "Karten", href: "/backend/tickets" },
+  { name: "Käufer", href: "/backend/buyers" },
+  { name: "Absolventen Import", href: "/backend/import-alumni" },
+] as const;
+
 export default function BackendLayout({
   children,
 }: {
@@ -63,14 +72,7 @@ export default function BackendLayout({
     void checkAccess();
   }, [session, status]);
 
-  const navigationItems = [
-    { name: "Dashboard", href: "/backend" },
-    { name: "Kontingente", href: "/backend/reserves" },
-    { name: "Liefermethoden", href: "/backend/delivery-methods" },
-    { name: "Karten", href: "/backend/tickets" },
-    { name: "Käufer", href: "/backend/buyers" },
-    { name: "Absolventen Import", href: "/backend/import-alumni" },
-  ];
+  // navigationItems hoisted above to avoid re-creation on re-renders
 
   if (status === "loading" || isChecking) {
     return (
