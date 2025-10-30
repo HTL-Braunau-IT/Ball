@@ -383,7 +383,7 @@ export default function Buyers() {
                 </div>
             </div>
 
-            <div className="-mt-5.5 px-4 overflow-x-auto">
+            <div className="-mt-7.5 px-4 overflow-x-auto">
                 <table className="min-w-full border border-gray-200 rounded-lg shadow-sm" style={{ tableLayout: 'fixed', width: '100%' }}>
                 <thead className="">
                     <tr>
