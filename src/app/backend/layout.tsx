@@ -139,51 +139,57 @@ export default function BackendLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 backend-layout backend-bg">
+    <div className="min-h-screen backend-layout backend-bg">
       {/* Top Navigation Bar */}
-      <nav className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex flex-col justify-center items-center text-gray-500">
-                <span className="text-lg font-light tracking-wider text-gray-600">HTL Ball 2026</span>
-                <span className="text-xs font-bold tracking-widest uppercase text-violet-600">Backend</span>
+      <nav className="border-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+          <div className="mt-6 rounded-xl bg-white/40 backdrop-blur-sm shadow-sm ring-1 ring-gray-200">
+            <div className="flex justify-between h-14 px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center gap-6">
+                <div className="flex-shrink-0 flex flex-col justify-center items-center text-gray-600 text-center">
+                  <span className="text-base font-medium tracking-wide">HTL Ball 2026</span>
+                  <span className="text-[10px] font-bold tracking-widest uppercase text-violet-600">Backend</span>
+                </div>
+                <div className="hidden sm:flex sm:items-center sm:gap-1">
+                  {navigationItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={`inline-flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                        pathname === item.href
+                          ? "bg-violet-50 text-violet-700 ring-1 ring-violet-200"
+                          : "text-gray-600 hover:text-violet-700 hover:bg-violet-50"
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </div>
               </div>
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                {navigationItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      pathname === item.href
-                        ? "border-violet-400 text-gray-900"
-                        : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                    }`}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+              
+              {/* User info and logout */}
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-700">
+                  {session?.user?.name ?? session?.user?.email}
+                </span>
+                <button
+                  onClick={session ? () => signOut() : () => router.push("/backend/login")}
+                  className={`${
+                    session
+                      ? "bg-red-50 text-red-700 ring-1 ring-red-200 hover:bg-red-100"
+                      : "bg-gray-50 text-gray-700 ring-1 ring-gray-200 hover:bg-gray-100"
+                  } px-3 py-1.5 rounded-md text-sm transition-colors`}
+                >
+                  {session ? "Abmelden": "Anmelden"}
+                </button>
               </div>
-            </div>
-            
-            {/* User info and logout */}
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-700">
-                {session?.user?.name ?? session?.user?.email}
-              </span>
-              <button
-                onClick={session ? () => signOut() : () => router.push("/backend/login")}
-                className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors"
-              >
-                {session ? "Abmelden": "Anmelden"}
-              </button>
             </div>
           </div>
         </div>
       </nav>    
 
       {/* Main content */}
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <main className="max-w-7xl mx-auto pt-3 pb-6 sm:px-6 lg:px-8">
         {children}
       </main>
 

@@ -614,8 +614,8 @@ h4 {
 
 /* Backend navigation specific styles */
 .backend-layout nav {
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  background: transparent;
+  border-bottom: 0;
 }
 
 .backend-layout nav a {
@@ -624,7 +624,12 @@ h4 {
 }
 
 .backend-layout nav a:hover {
-  color: #1f2937;
+  /* Defer hover color to utility classes (e.g., hover:text-violet-700) */
+}
+
+/* Default (violet) theme only: active/hover text accent */
+body:not(.theme-blue):not(.theme-gold) .backend-layout nav a.text-violet-700 {
+  color: #6d28d9;
 }
 
 /* Backend form styles */
@@ -727,9 +732,16 @@ body.theme-blue .hover\:bg-violet-600:hover { background-color: #2563eb !importa
 body.theme-blue .bg-violet-600 { background-color: #2563eb !important; }
 body.theme-blue .hover\:bg-violet-700:hover { background-color: #1d4ed8 !important; }
 body.theme-blue .text-violet-600 { color: #2563eb !important; }
+body.theme-blue .text-violet-700 { color: #1d4ed8 !important; }
+body.theme-blue .hover\:text-violet-600:hover { color: #2563eb !important; }
 body.theme-blue .border-violet-500 { border-color: #3b82f6 !important; }
 body.theme-blue .border-violet-400 { border-color: #60a5fa !important; }
 body.theme-blue .focus\:ring-violet-400:focus { --tw-ring-color: #60a5fa !important; box-shadow: 0 0 0 1px #60a5fa, 0 0 0 2px rgba(0,0,0,0.0); }
+body.theme-blue .bg-violet-50 { background-color: #eff6ff !important; }
+body.theme-blue .bg-violet-100 { background-color: #dbeafe !important; }
+body.theme-blue .ring-violet-200 { --tw-ring-color: #bfdbfe !important; }
+body.theme-blue .hover\:bg-violet-50:hover { background-color: #eff6ff !important; }
+body.theme-blue .hover\:bg-violet-100:hover { background-color: #dbeafe !important; }
 
 /* Golden accents theme */
 body.theme-gold .bg-violet-500 { background-color: #E6C39A !important; }
@@ -737,6 +749,16 @@ body.theme-gold .hover\:bg-violet-600:hover { background-color: #D19A5C !importa
 body.theme-gold .bg-violet-600 { background-color: #D19A5C !important; }
 body.theme-gold .hover\:bg-violet-700:hover { background-color: #B36B2C !important; }
 body.theme-gold .text-violet-600 { color: #A5662F !important; }
+body.theme-gold .text-violet-700 { color: #8A5527 !important; }
+body.theme-gold .hover\:text-violet-600:hover { color: #A5662F !important; }
 body.theme-gold .border-violet-500 { border-color: #E6C39A !important; }
 body.theme-gold .border-violet-400 { border-color: #D19A5C !important; }
 body.theme-gold .focus\:ring-violet-400:focus { --tw-ring-color: #F2DCC1 !important; box-shadow: 0 0 0 1px #F2DCC1, 0 0 0 2px rgba(0,0,0,0.0); }
+body.theme-gold .bg-violet-50 { background-color: #F7EFE3 !important; }
+body.theme-gold .bg-violet-100 { background-color: #F0E5D3 !important; }
+body.theme-gold .ring-violet-200 { --tw-ring-color: #F2DCC1 !important; }
+body.theme-gold .hover\:bg-violet-50:hover { background-color: #F7EFE3 !important; }
+body.theme-gold .hover\:bg-violet-100:hover { background-color: #F0E5D3 !important; }
+
+/* Default (violet) theme tweaks: make hover more visible on white */
+body:not(.theme-blue):not(.theme-gold) .hover\:bg-violet-50:hover { background-color: #ede9fe !important; }

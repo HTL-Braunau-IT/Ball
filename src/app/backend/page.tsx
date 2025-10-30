@@ -92,7 +92,7 @@ export default async function BackendDashboard() {
           Wähle einen Bereich aus, um mit der Verwaltung zu beginnen.
         </p>
       </div>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="-mt-2 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {sections.map((section) => (
           <Link
             key={section.title}
