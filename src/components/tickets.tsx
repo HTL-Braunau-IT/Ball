@@ -250,7 +250,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
             onClick={onClick}
             className={`px-2 py-1 text-xs rounded-md transition-colors ${
                 isActive
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-violet-500 text-white'
                     : 'bg-white/80 text-gray-700 hover:bg-gray-100'
             }`}
         >
@@ -549,7 +549,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                                     <button
                                         onClick={() => handleMarkAsSent(ticket.id)}
                                         disabled={processingTicket === ticket.id}
-                                        className="inline-flex items-center justify-center px-2 border border-transparent text-xs font-medium rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="inline-flex items-center justify-center px-2 border border-transparent text-xs font-medium rounded text-white bg-violet-500 hover:bg-violet-600 focus:outline-none focus:ring-1 focus:ring-violet-400 disabled:opacity-50 disabled:cursor-not-allowed"
                                         style={{ minWidth: '70px', height: '22px' }}
                                     >
                                         {processingTicket === ticket.id ? "..." : "Versendet"}
@@ -579,7 +579,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                                 onClick={() => setItemsPerPage(num)}
                                 className={`px-2 py-0.5 text-xs rounded-md ${
                                     itemsPerPage === num
-                                        ? 'bg-blue-600 text-white border-blue-600'
+                                        ? 'bg-violet-500 text-white border-violet-500'
                                         : 'bg-white/80 hover:bg-gray-200'
                                 }`}
                             >
@@ -590,7 +590,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                             onClick={() => setItemsPerPage(10000)}
                             className={`px-2 py-0.5 text-xs rounded-md ${
                                 itemsPerPage >= filteredAndSortedData.length
-                                    ? 'bg-blue-600 text-white border-blue-600'
+                                    ? 'bg-violet-500 text-white border-violet-500'
                                     : 'bg-white/80 hover:bg-gray-200'
                             }`}
                         >

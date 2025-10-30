@@ -219,7 +219,7 @@ export default function Buyers() {
             onClick={onClick}
             className={`px-2 py-1 text-xs rounded-md transition-colors ${
                 isActive
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-violet-500 text-white'
                     : 'bg-white/80 text-gray-700 hover:bg-gray-100'
             }`}
         >
@@ -635,9 +635,9 @@ export default function Buyers() {
                                 <button
                                     key={num}
                                     onClick={() => setItemsPerPage(num)}
-                                    className={`px-2 py-0.5 text-xs rounded-md ${
+                                className={`px-2 py-0.5 text-xs rounded-md ${
                                         itemsPerPage === num
-                                            ? 'bg-blue-600 text-white border-blue-600'
+                                            ? 'bg-violet-500 text-white border-violet-500'
                                             : 'bg-white/80 hover:bg-gray-200'
                                     }`}
                                 >
@@ -648,7 +648,7 @@ export default function Buyers() {
                                 onClick={() => setItemsPerPage(10000)}
                                 className={`px-2 py-0.5 text-xs rounded-md ${
                                     itemsPerPage >= dataLength
-                                        ? 'bg-blue-600 text-white border-blue-600'
+                                        ? 'bg-violet-500 text-white border-violet-500'
                                         : 'bg-white/80 hover:bg-gray-200'
                                 }`}
                             >
