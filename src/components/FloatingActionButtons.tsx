@@ -48,25 +48,58 @@ export default function FloatingActionButtons() {
   const pathname = usePathname();
   const [isAtTop, setIsAtTop] = useState(true);
   const [isAtBottom, setIsAtBottom] = useState(false);
+  const [hasScrollable, setHasScrollable] = useState(false);
+  const [theme, setTheme] = useState<'violet' | 'blue' | 'gold'>(() => {
+    if (typeof window === 'undefined') return 'violet';
+    return (localStorage.getItem('accentTheme') as 'violet' | 'blue' | 'gold') || 'violet';
+  });
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const scrollHeight = document.documentElement.scrollHeight;
-      const clientHeight = document.documentElement.clientHeight;
-      const isNearTop = scrollTop < 100; // 100px threshold
-      const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100; // 100px threshold
-      
-      setIsAtTop(isNearTop);
-      setIsAtBottom(isNearBottom);
+      const doc = document.documentElement;
+      const body = document.body;
+      const scrollTop = window.scrollY || doc.scrollTop || body.scrollTop || 0;
+      const scrollHeight = Math.max(doc.scrollHeight, body.scrollHeight);
+      const clientHeight = doc.clientHeight;
+      const threshold = 4; // tolerance
+      const scrollable = scrollHeight - clientHeight > threshold;
+      const isNearTop = scrollTop <= 100;
+      const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100;
+
+      setHasScrollable(scrollable);
+      setIsAtTop(isNearTop || !scrollable);
+      setIsAtBottom(isNearBottom || !scrollable);
     };
 
     handleScroll(); // Initial check
     window.addEventListener('scroll', handleScroll);
-    
+    window.addEventListener('resize', handleScroll);
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
     };
+  }, []);
+
+  // Re-evaluate on route changes
+  useEffect(() => {
+    const evt = new Event('resize');
+    window.dispatchEvent(evt);
+  }, [pathname]);
+
+  // Apply theme class to body
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const body = document.body;
+    body.classList.remove('theme-violet', 'theme-blue', 'theme-gold');
+    body.classList.add(`theme-${theme}`);
+    try {
+      localStorage.setItem('accentTheme', theme);
+    } catch {}
+  }, [theme]);
+
+  const cycleTheme = useCallback(() => {
+    setTheme((prev) => (prev === 'violet' ? 'blue' : prev === 'blue' ? 'gold' : 'violet'));
   }, []);
 
   // Get data based on current page
@@ -198,12 +231,10 @@ export default function FloatingActionButtons() {
     document.body.removeChild(link);
   }, [pathname, reservesData, ticketsData, buyersData]);
 
-  // Only show on data pages
+  // Export button only on data pages
   const showExport = pathname === "/backend/reserves" || 
                     pathname === "/backend/tickets" || 
                     pathname === "/backend/buyers";
-
-  if (!showExport) return null;
 
   // Check if we have data to export
   const hasData = (pathname === "/backend/reserves" && reservesData && reservesData.length > 0) ||
@@ -212,18 +243,31 @@ export default function FloatingActionButtons() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
-      <ScrollToTopButton isVisible={!isAtTop} />
-      <ScrollToBottomButton isVisible={!isAtBottom} />
+      <ScrollToTopButton isVisible={hasScrollable && !isAtTop} />
+      <ScrollToBottomButton isVisible={hasScrollable && !isAtBottom} />
+      {/* Theme switcher */}
       <button
-        onClick={exportToCSV}
-        disabled={!hasData}
-        className="bg-violet-500 hover:bg-violet-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 disabled:transform-none"
-        title="Export to CSV"
+        onClick={cycleTheme}
+        className="bg-gray-800 hover:bg-gray-900 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+        title={`Theme: ${theme === 'violet' ? 'Violet' : theme === 'blue' ? 'Blue' : 'Gold'}`}
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        {/* Swatches icon */}
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M7 2a2 2 0 00-2 2v13a3 3 0 006 0V4a2 2 0 00-2-2H7zm6 0a2 2 0 00-2 2v9.5a3.5 3.5 0 107 0V4a2 2 0 00-2-2h-3zm4 0h0a2 2 0 012 2v6a4 4 0 11-8 0V4a2 2 0 012-2h4z" />
         </svg>
       </button>
+      {showExport && (
+        <button
+          onClick={exportToCSV}
+          disabled={!hasData}
+          className="bg-violet-500 hover:bg-violet-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 disabled:transform-none"
+          title="Export to CSV"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 }

@@ -692,3 +692,50 @@ h4 {
   background-size: 140% 140%, 140% 140%, 140% 140%, cover;
   background-position: 0% 0%, 100% 10%, 80% 100%, center;
 }
+
+/* Themed backend backgrounds */
+body.theme-blue .backend-bg {
+  background:
+    radial-gradient(35% 35% at 20% 30%, rgba(191, 219, 254, 0.65) 0%, rgba(191, 219, 254, 0.45) 22%, rgba(191, 219, 254, 0.00) 60%),
+    radial-gradient(28% 28% at 80% 25%, rgba(147, 197, 253, 0.60) 0%, rgba(147, 197, 253, 0.40) 18%, rgba(147, 197, 253, 0.00) 58%),
+    radial-gradient(30% 30% at 72% 78%, rgba(96, 165, 250, 0.55) 0%, rgba(96, 165, 250, 0.35) 20%, rgba(96, 165, 250, 0.00) 58%),
+    linear-gradient(135deg, #eff6ff 0%, #dbeafe 45%, #bfdbfe 100%);
+  background-attachment: scroll, scroll, scroll, fixed;
+  background-size: 140% 140%, 140% 140%, 140% 140%, cover;
+  background-position: 0% 0%, 100% 10%, 80% 100%, center;
+}
+
+body.theme-gold .backend-bg {
+  background:
+    radial-gradient(35% 35% at 20% 30%, rgba(242, 218, 189, 0.60) 0%, rgba(242, 218, 189, 0.38) 22%, rgba(242, 218, 189, 0.00) 60%),
+    radial-gradient(28% 28% at 80% 25%, rgba(230, 190, 140, 0.55) 0%, rgba(230, 190, 140, 0.36) 18%, rgba(230, 190, 140, 0.00) 58%),
+    radial-gradient(30% 30% at 72% 78%, rgba(220, 160, 100, 0.50) 0%, rgba(220, 160, 100, 0.30) 20%, rgba(220, 160, 100, 0.00) 58%),
+    linear-gradient(135deg, #fffaf0 0%, #fdf3e7 45%, #fae8d7 100%);
+  background-attachment: scroll, scroll, scroll, fixed;
+  background-size: 140% 140%, 140% 140%, 140% 140%, cover;
+  background-position: 0% 0%, 100% 10%, 80% 100%, center;
+}
+
+/* Accent theme overrides for Tailwind violet utilities */
+/* Default theme (violet) */
+body.theme-violet {}
+
+/* Mildish blue theme */
+body.theme-blue .bg-violet-500 { background-color: #3b82f6 !important; }
+body.theme-blue .hover\:bg-violet-600:hover { background-color: #2563eb !important; }
+body.theme-blue .bg-violet-600 { background-color: #2563eb !important; }
+body.theme-blue .hover\:bg-violet-700:hover { background-color: #1d4ed8 !important; }
+body.theme-blue .text-violet-600 { color: #2563eb !important; }
+body.theme-blue .border-violet-500 { border-color: #3b82f6 !important; }
+body.theme-blue .border-violet-400 { border-color: #60a5fa !important; }
+body.theme-blue .focus\:ring-violet-400:focus { --tw-ring-color: #60a5fa !important; box-shadow: 0 0 0 1px #60a5fa, 0 0 0 2px rgba(0,0,0,0.0); }
+
+/* Golden accents theme */
+body.theme-gold .bg-violet-500 { background-color: #E6C39A !important; }
+body.theme-gold .hover\:bg-violet-600:hover { background-color: #D19A5C !important; }
+body.theme-gold .bg-violet-600 { background-color: #D19A5C !important; }
+body.theme-gold .hover\:bg-violet-700:hover { background-color: #B36B2C !important; }
+body.theme-gold .text-violet-600 { color: #A5662F !important; }
+body.theme-gold .border-violet-500 { border-color: #E6C39A !important; }
+body.theme-gold .border-violet-400 { border-color: #D19A5C !important; }
+body.theme-gold .focus\:ring-violet-400:focus { --tw-ring-color: #F2DCC1 !important; box-shadow: 0 0 0 1px #F2DCC1, 0 0 0 2px rgba(0,0,0,0.0); }
