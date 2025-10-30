@@ -343,8 +343,8 @@ export default function Buyers() {
             </div>
 
             {/* Results counter */}
-            <div className="-mt-2 px-4">
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-lg px-4 py-2.5 shadow-sm">
+            <div className="-mt-6 px-1">
+                <div className="px-4 py-2.5">
                     <div className="flex items-center gap-2">
                         {filteredAndSortedData.length === 0 && hasActiveFilters ? (
                             <>
