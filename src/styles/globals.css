@@ -598,8 +598,8 @@ h4 {
 
 .backend-layout .card {
   /* Backend-specific card styles */
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.1);
+  border: 0px;
+  background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(2px);
   box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
   
@@ -607,8 +607,9 @@ h4 {
 
 .backend-layout .card:hover {
   /* Less dramatic hover effect for backend */
-  transform: translateY(-1px) scale(1.005);
-  background: var(--backend-card-hover, rgba(0, 0, 0, 0.05));
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: inset 0 0 420px var(--backend-card-hover, rgba(0, 0, 0, 0.2));
+  border: 0px;
 }
 
 /* Backend navigation specific styles */
