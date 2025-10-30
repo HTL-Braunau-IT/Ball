@@ -1,13 +1,10 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "~/server/auth";
-import ReservesOverview from "~/components/ReservesOverview";
+import DashboardStats from "~/components/DashboardStats";
 
-export default async function BackendDashboard() {
-    const session = await getServerSession(authOptions);
-    const fullName = session?.user?.name ?? session?.user?.email ?? "im Backend";
-    const displayName = fullName.includes(' ') ? fullName.split(' ')[0] : fullName;
-  const sections = [
+// Move sections outside component to prevent recreation on every render
+const sections = [
     {
       title: "Kontingente",
       description: "Verwalte Karten-Kontingente",
@@ -18,6 +15,19 @@ export default async function BackendDashboard() {
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      ),
+    },
+    {
+      title: "Liefermethoden",
+      description: "Verwalte Versandmethoden und Zuschläge",
+      href: "/backend/delivery-methods",
+      hoverBg: "hover:bg-teal-50",
+      iconBg: "bg-teal-500 hover:bg-teal-600",
+      titleHover: "group-hover:text-teal-600",
+      icon: (
+        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
         </svg>
       ),
     },
@@ -49,7 +59,7 @@ export default async function BackendDashboard() {
     },
     {
       title: "Absolventen Import",
-      description: "Importieren Sie Alumni-E-Mails für exklusive Ticket-Zugriffe",
+      description: "Importiere Absolventen E-Mails",
       href: "/backend/import-alumni",
       hoverBg: "hover:bg-green-50",
       iconBg: "bg-green-500 hover:bg-green-600",
@@ -60,7 +70,12 @@ export default async function BackendDashboard() {
         </svg>
       ),
     },
-  ];
+];
+
+export default async function BackendDashboard() {
+    const session = await getServerSession(authOptions);
+    const fullName = session?.user?.name ?? session?.user?.email ?? "im Backend";
+    const displayName = fullName.includes(' ') ? fullName.split(' ')[0] : fullName;
 
   return (
     <div className="px-4 py-6 sm:px-0">
@@ -72,7 +87,7 @@ export default async function BackendDashboard() {
           Wähle einen Bereich aus, um mit der Verwaltung zu beginnen.
         </p>
       </div>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {sections.map((section) => (
           <Link
             key={section.title}
@@ -111,9 +126,9 @@ export default async function BackendDashboard() {
           </Link>
         ))}
       </div>
-      {/* Reserves Overview */}
-      <div className="py-8">
-        <ReservesOverview />
+      {/* Dashboard Stats Overview */}
+      <div className="-mt-6 py-8">
+        <DashboardStats />
       </div>      
     </div>
   );

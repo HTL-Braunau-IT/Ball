@@ -13,12 +13,32 @@ const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
 export const ticketRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
     const tickets = await ctx.db.soldTickets.findMany({
+      include: { buyer: true },
       // Z - Uncomment or use in another router to only return owned tickets
       // where: {
       //   buyerId: parseInt(ctx.session.user.id),
       // },
     });
-    return tickets.map(({ id, delivery, code, paid, sent, timestamp }) => ({ id, delivery, code, paid, sent, timestamp }));
+    return tickets.map(({ id, delivery, code, paid, sent, timestamp, buyer }) => ({ 
+      id, 
+      delivery, 
+      code, 
+      paid, 
+      sent, 
+      timestamp, 
+      buyer: {
+        id: buyer.id,
+        name: buyer.name,
+        email: buyer.email,
+        phone: buyer.phone,
+        address: buyer.address,
+        postal: buyer.postal,
+        province: buyer.province,
+        country: buyer.country,
+        verified: buyer.verified,
+        groupId: buyer.groupId,
+      }
+    }));
   }),
 
   // Get available ticket types for the user's group
@@ -64,7 +84,6 @@ export const ticketRouter = createTRPCRouter({
       price,
       type: type[0]?.name || "Unknown",
       groupId: type[0]?.id || 0,
-      maxTickets: buyer?.maxTickets || 10, // Include user's max ticket limit
       deliveryMethods: deliveryMethods.map(({ id, name, surcharge }) => ({
         id,
         name,
@@ -204,7 +223,6 @@ export const ticketRouter = createTRPCRouter({
             province: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).province : "",
             country: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).country : "",
             verified: true,
-            maxTickets: 10, // Default max tickets
             groupId: publicGroup.id,
           },
         });
@@ -446,6 +464,11 @@ export const ticketRouter = createTRPCRouter({
 
       if (ticket.sent) {
         throw new Error("Ticket already marked as sent");
+      }
+
+      // Only paid tickets can be sent
+      if (!ticket.paid) {
+        throw new Error("Only paid tickets can be marked as sent");
       }
 
       // Only send notification for shipping delivery methods

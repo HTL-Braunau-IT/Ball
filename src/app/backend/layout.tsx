@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import FloatingCSVExport from "~/components/FloatingCSVExport";
+import FloatingActionButtons from "~/components/FloatingActionButtons";
 
 export default function BackendLayout({
   children,
@@ -66,8 +66,9 @@ export default function BackendLayout({
   const navigationItems = [
     { name: "Dashboard", href: "/backend" },
     { name: "Kontingente", href: "/backend/reserves" },
+    { name: "Liefermethoden", href: "/backend/delivery-methods" },
     { name: "Karten", href: "/backend/tickets" },
-    { name: "Benutzer", href: "/backend/buyers" },
+    { name: "Käufer", href: "/backend/buyers" },
     { name: "Absolventen Import", href: "/backend/import-alumni" },
   ];
 
@@ -186,8 +187,8 @@ export default function BackendLayout({
         {children}
       </main>
 
-      {/* Floating CSV Export */}
-      <FloatingCSVExport />
+      {/* Floating Action Buttons */}
+      <FloatingActionButtons />
     </div>
   );
 }

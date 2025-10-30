@@ -4,10 +4,10 @@ import { z } from "zod";
 export const buyersRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
     const buyers = await ctx.db.buyers.findMany({
-      include: { group: true }
+      include: { group: true, tickets: true }
     });
-    return buyers.map(({ id, name, email, address, postal, province, country, verified, maxTickets, group }) => ({ 
-      id, name, email, address, postal, province, country, verified, maxTickets, group 
+    return buyers.map(({ id, name, email, address, postal, province, country, verified, group, tickets }) => ({ 
+      id, name, email, address, postal, province, country, verified, group, tickets 
     }));
   }),
 
@@ -93,7 +93,6 @@ export const buyersRouter = createTRPCRouter({
                 province: "",
                 country: "",
                 verified: false,
-                maxTickets: 10,
                 groupId: alumniGroup.id,
               }
             });

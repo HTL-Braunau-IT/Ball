@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { api } from "~/trpc/react";
 
 export default function ImportAlumniPage() {
@@ -13,6 +13,11 @@ export default function ImportAlumniPage() {
   } | null>(null);
 
   const importAlumni = api.buyers.importAlumni.useMutation();
+
+  // Memoize CSV parsing to avoid recalculating on every render
+  const csvLines = useMemo(() => csvContent.split('\n').filter(l => l.trim()), [csvContent]);
+  const csvLineCount = useMemo(() => csvLines.length, [csvLines]);
+  const csvPreview = useMemo(() => csvLines.slice(0, 10).join('\n'), [csvLines]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -86,11 +91,11 @@ anna.schmidt@example.com,Anna Schmidt`}
           {csvContent && (
             <div className="mb-4">
               <h3 className="text-sm font-semibold mb-2" style={{ color: "var(--color-text-primary)" }}>
-                Vorschau ({csvContent.split('\n').filter(l => l.trim()).length} Zeilen):
+                Vorschau ({csvLineCount} Zeilen):
               </h3>
               <pre className="bg-gray-100 p-3 rounded text-xs max-h-40 overflow-auto">
-                {csvContent.split('\n').slice(0, 10).join('\n')}
-                {csvContent.split('\n').length > 10 && '\n...'}
+                {csvPreview}
+                {csvLineCount > 10 && '\n...'}
               </pre>
             </div>
           )}

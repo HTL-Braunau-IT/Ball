@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 import TicketProgressBar from "./TicketProgressBar";
 
 interface EditableReserve {
@@ -100,28 +100,28 @@ export default function TicketReserves() {
                 <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
                 <thead className="bg-gray-50">
                     <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-32">
                             Typ
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-20">
                             Menge
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
-                            Preis
-                        </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-40">
-                            Liefermethoden
-                        </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
-                            Geändert am
-                        </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Status
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-24">
+                            Preis
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-32">
+                            Liefermethoden
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-28">
+                            Geändert am
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-28">
                             Geändert von
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-24">
                             Aktionen
                         </th>
                     </tr>
@@ -165,6 +165,15 @@ export default function TicketReserves() {
                                     )}
                                 </td>
 
+                                {/* Status */}
+                                <td className="px-4 py-3 text-sm text-gray-500">
+                                    <TicketProgressBar 
+                                        total={reserve.amount}
+                                        sold={soldCount}
+                                        remaining={remainingCount}
+                                    />
+                                </td>
+
                                 {/* Preis */}
                                 <td className="px-4 py-3 text-sm text-gray-500">
                                     {isEditing ? (
@@ -180,7 +189,10 @@ export default function TicketReserves() {
                                             />
                                         </div>
                                     ) : (
-                                        `€${reserve.price}`
+                                        <div className="flex items-center">
+                                            <span className="text-gray-500 mr-1 text-xs opacity-0">€</span>
+                                            €{reserve.price}
+                                        </div>
                                     )}
                                 </td>
 
@@ -220,15 +232,6 @@ export default function TicketReserves() {
                                     </div>
                                 </td>
 
-                                {/* Status */}
-                                <td className="px-4 py-3 text-sm text-gray-500">
-                                    <TicketProgressBar 
-                                        total={reserve.amount}
-                                        sold={soldCount}
-                                        remaining={remainingCount}
-                                    />
-                                </td>
-
                                 {/* Geändert von */}
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {reserve.updatedBy ?? "-"}
@@ -237,7 +240,17 @@ export default function TicketReserves() {
                                 {/* Aktionen */}
                                 <td className="px-4 py-3 text-sm text-gray-500">
                                     {isEditing ? (
-                                        <div className="flex space-x-1">
+                                        <div className="flex space-x-1 justify-center">
+                                            <button
+                                                onClick={handleCancel}
+                                                disabled={updateMutation.isPending}
+                                                className="p-1.5 text-white bg-gray-600 hover:bg-gray-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                                title="Abbrechen"
+                                            >
+                                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
                                             <button
                                                 onClick={handleSave}
                                                 disabled={updateMutation.isPending}
@@ -255,27 +268,20 @@ export default function TicketReserves() {
                                                     </svg>
                                                 )}
                                             </button>
-                                            <button
-                                                onClick={handleCancel}
-                                                disabled={updateMutation.isPending}
-                                                className="p-1.5 text-white bg-gray-600 hover:bg-gray-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-                                                title="Abbrechen"
-                                            >
-                                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
                                         </div>
                                     ) : (
-                                        <button
-                                            onClick={() => handleEdit(reserve)}
-                                            className="p-1.5 text-white bg-blue-600 hover:bg-blue-700 rounded-md"
-                                            title="Bearbeiten"
-                                        >
-                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                        </button>
+                                        <div className="flex space-x-1 justify-center">
+                                            <button
+                                                onClick={() => handleEdit(reserve)}
+                                                className="p-1.5 text-white bg-blue-600 hover:bg-blue-700 rounded-md"
+                                                title="Bearbeiten"
+                                            >
+                                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                            </button>
+                                            <div className="w-[35px]"></div>
+                                        </div>
                                     )}
                                 </td>
                             </tr>

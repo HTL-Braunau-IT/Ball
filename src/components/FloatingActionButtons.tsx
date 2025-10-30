@@ -1,11 +1,73 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { api } from "~/utils/api";
 
-export default function FloatingCSVExport() {
+const ScrollToTopButton = ({ isVisible }: { isVisible: boolean }) => {
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  if (!isVisible) return null;
+
+  return (
+    <button
+      onClick={handleScrollToTop}
+      className="bg-gray-700 hover:bg-gray-800 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+      title="Scroll to top"
+    >
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+  );
+};
+
+const ScrollToBottomButton = ({ isVisible }: { isVisible: boolean }) => {
+  const handleScrollToBottom = () => {
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+  };
+
+  if (!isVisible) return null;
+
+  return (
+    <button
+      onClick={handleScrollToBottom}
+      className="bg-gray-700 hover:bg-gray-800 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+      title="Scroll to bottom"
+    >
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+  );
+};
+
+export default function FloatingActionButtons() {
   const pathname = usePathname();
+  const [isAtTop, setIsAtTop] = useState(true);
+  const [isAtBottom, setIsAtBottom] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight;
+      const isNearTop = scrollTop < 100; // 100px threshold
+      const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100; // 100px threshold
+      
+      setIsAtTop(isNearTop);
+      setIsAtBottom(isNearBottom);
+    };
+
+    handleScroll(); // Initial check
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   // Get data based on current page
   const { data: reservesData } = api.reserves.all.useQuery(undefined, {
@@ -98,7 +160,6 @@ export default function FloatingCSVExport() {
         'Bundesland',
         'Land',
         'Verifiziert',
-        'Max Tickets',
         'Gruppe'
       ];
 
@@ -111,7 +172,6 @@ export default function FloatingCSVExport() {
         buyer.province,
         buyer.country,
         buyer.verified ? "Ja" : "Nein",
-        buyer.maxTickets,
         buyer.group?.name ?? "-"
       ]);
 
@@ -151,7 +211,9 @@ export default function FloatingCSVExport() {
                  (pathname === "/backend/buyers" && buyersData && buyersData.length > 0);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+      <ScrollToTopButton isVisible={!isAtTop} />
+      <ScrollToBottomButton isVisible={!isAtBottom} />
       <button
         onClick={exportToCSV}
         disabled={!hasData}
@@ -165,3 +227,4 @@ export default function FloatingCSVExport() {
     </div>
   );
 }
+

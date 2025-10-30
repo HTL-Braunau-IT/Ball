@@ -43,7 +43,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
   };
 
   const handleQuantityChange = (newQuantity: number) => {
-    const maxAllowed = selectedTicket ? Math.min(selectedTicket.maxTickets, selectedTicket.amount) : 10;
+    const maxAllowed = selectedTicket?.amount ?? 10;
     setQuantity(Math.min(Math.max(1, newQuantity), maxAllowed));
   };
 
@@ -75,7 +75,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
     dm.name.toLowerCase().includes(deliveryMethod === "shipping" ? "versand" : "abholung")
   );
 
-  const maxQuantity = selectedTicket ? Math.min(selectedTicket.maxTickets, selectedTicket.amount) : 10;
+  const maxQuantity = selectedTicket?.amount ?? 10;
   const totalPrice = selectedTicket ? 
     (selectedTicket.price * quantity) + (deliveryMethod === "shipping" ? (selectedDeliveryMethod?.surcharge ?? 0) : 0) : 0;
 
@@ -487,9 +487,6 @@ function TicketSelection({
                 </h3>
                 <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
                   {ticket.amount > 0 ? `${ticket.amount} verfügbar` : "Ausverkauft"}
-                </p>
-                <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>
-                  Max. {ticket.maxTickets} pro Person
                 </p>
               </div>
               <div className="text-right">
