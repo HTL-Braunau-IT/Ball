@@ -250,7 +250,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
             onClick={onClick}
             className={`px-2 py-1 text-xs rounded-md transition-colors ${
                 isActive
-                    ? 'bg-violet-500 text-white'
+                    ? 'bg-violet-50 text-violet-700 ring-1 ring-violet-200'
                     : 'bg-white/80 text-gray-700 hover:bg-gray-100'
             }`}
         >
@@ -549,7 +549,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                                     <button
                                         onClick={() => handleMarkAsSent(ticket.id)}
                                         disabled={processingTicket === ticket.id}
-                                        className="inline-flex items-center justify-center px-2 border border-transparent text-xs font-medium rounded text-white bg-violet-500 hover:bg-violet-600 focus:outline-none focus:ring-1 focus:ring-violet-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="inline-flex items-center justify-center px-2 text-xs font-medium rounded bg-violet-50 text-violet-700 ring-1 ring-violet-200 hover:bg-violet-100 focus:outline-none focus:ring-1 focus:ring-violet-400 disabled:opacity-50 disabled:cursor-not-allowed"
                                         style={{ minWidth: '70px', height: '22px' }}
                                     >
                                         {processingTicket === ticket.id ? "..." : "Versendet"}
@@ -579,8 +579,8 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                                 onClick={() => setItemsPerPage(num)}
                                 className={`px-2 py-0.5 text-xs rounded-md ${
                                     itemsPerPage === num
-                                        ? 'bg-violet-500 text-white border-violet-500'
-                                        : 'bg-white/80 hover:bg-gray-200'
+                                        ? 'bg-violet-50 text-violet-700 ring-1 ring-violet-200'
+                                        : 'bg-white text-gray-700 hover:bg-gray-100'
                                 }`}
                             >
                                 {num}
@@ -590,8 +590,8 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                             onClick={() => setItemsPerPage(10000)}
                             className={`px-2 py-0.5 text-xs rounded-md ${
                                 itemsPerPage >= filteredAndSortedData.length
-                                    ? 'bg-violet-500 text-white border-violet-500'
-                                    : 'bg-white/80 hover:bg-gray-200'
+                                    ? 'bg-violet-50 text-violet-700 ring-1 ring-violet-200'
+                                    : 'bg-white/80 text-gray-700 hover:bg-gray-100'
                             }`}
                         >
                             Alle
@@ -611,14 +611,14 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                             <button
                                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1}
-                                className="bg-white/80 px-2 py-0.5 text-xs rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
+                                    className="px-2 py-0.5 text-xs rounded-md disabled:opacity-50 disabled:cursor-not-allowed bg-white/80 text-gray-700 hover:bg-gray-100"
                             >
                                 ‹
                             </button>
                             <button
                                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages}
-                                className="bg-white/80 px-2 py-0.5 text-xs rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
+                                    className="px-2 py-0.5 text-xs rounded-md disabled:opacity-50 disabled:cursor-not-allowed bg-white/80 text-gray-700 hover:bg-gray-100"
                             >
                                 ›
                             </button>

@@ -14,7 +14,7 @@ const ScrollToTopButton = ({ isVisible }: { isVisible: boolean }) => {
   return (
     <button
       onClick={handleScrollToTop}
-      className="bg-gray-700 hover:bg-gray-800 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+      className="bg-violet-100 text-violet-700 ring-1 ring-violet-200 hover:bg-violet-200 p-3 rounded-full shadow-sm transition-all duration-200"
       title="Scroll to top"
     >
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,7 +34,7 @@ const ScrollToBottomButton = ({ isVisible }: { isVisible: boolean }) => {
   return (
     <button
       onClick={handleScrollToBottom}
-      className="bg-gray-700 hover:bg-gray-800 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+      className="bg-violet-100 text-violet-700 ring-1 ring-violet-200 hover:bg-violet-200 p-3 rounded-full shadow-sm transition-all duration-200"
       title="Scroll to bottom"
     >
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,19 +248,29 @@ export default function FloatingActionButtons() {
       {/* Theme switcher */}
       <button
         onClick={cycleTheme}
-        className="bg-gray-800 hover:bg-gray-900 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+        className="bg-violet-100 text-violet-700 ring-1 ring-violet-200 hover:bg-violet-200 p-3 rounded-full shadow-sm transition-all duration-200"
         title={`Theme: ${theme === 'violet' ? 'Violet' : theme === 'blue' ? 'Blue' : 'Gold'}`}
       >
-        {/* Swatches icon */}
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M7 2a2 2 0 00-2 2v13a3 3 0 006 0V4a2 2 0 00-2-2H7zm6 0a2 2 0 00-2 2v9.5a3.5 3.5 0 107 0V4a2 2 0 00-2-2h-3zm4 0h0a2 2 0 012 2v6a4 4 0 11-8 0V4a2 2 0 012-2h4z" />
-        </svg>
+        <span
+          aria-hidden
+          className="block w-6 h-6 bg-current"
+          style={{
+            WebkitMaskImage: 'url(/icons/paint-brush.png)',
+            maskImage: 'url(/icons/paint-brush.png)',
+            WebkitMaskSize: 'contain',
+            maskSize: 'contain',
+            WebkitMaskRepeat: 'no-repeat',
+            maskRepeat: 'no-repeat',
+            WebkitMaskPosition: 'center',
+            maskPosition: 'center',
+          }}
+        />
       </button>
       {showExport && (
         <button
           onClick={exportToCSV}
           disabled={!hasData}
-          className="bg-violet-500 hover:bg-violet-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 disabled:transform-none"
+          className="bg-violet-100 text-violet-700 ring-1 ring-violet-200 hover:bg-violet-200 disabled:opacity-50 disabled:cursor-not-allowed p-3 rounded-full shadow-sm transition-all duration-200"
           title="Export to CSV"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

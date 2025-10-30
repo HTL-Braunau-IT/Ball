@@ -181,7 +181,7 @@ export default function DeliveryMethods() {
                                         <div className="flex space-x-1 justify-center">
                                             <button
                                                 onClick={() => handleEdit(method)}
-                                                className="p-1.5 text-white bg-violet-500 hover:bg-violet-600 rounded-md"
+                                                className="p-1.5 bg-violet-50 text-violet-700 ring-1 ring-violet-200 hover:bg-violet-100 rounded-md"
                                                 title="Bearbeiten"
                                             >
                                                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

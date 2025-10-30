@@ -219,7 +219,7 @@ export default function Buyers() {
             onClick={onClick}
             className={`px-2 py-1 text-xs rounded-md transition-colors ${
                 isActive
-                    ? 'bg-violet-500 text-white'
+                    ? 'bg-violet-50 text-violet-700 ring-1 ring-violet-200'
                     : 'bg-white/80 text-gray-700 hover:bg-gray-100'
             }`}
         >
@@ -637,8 +637,8 @@ export default function Buyers() {
                                     onClick={() => setItemsPerPage(num)}
                                 className={`px-2 py-0.5 text-xs rounded-md ${
                                         itemsPerPage === num
-                                            ? 'bg-violet-500 text-white border-violet-500'
-                                            : 'bg-white/80 hover:bg-gray-200'
+                                            ? 'bg-violet-50 text-violet-700 ring-1 ring-violet-200'
+                                            : 'bg-white/80 text-gray-700 hover:bg-gray-100'
                                     }`}
                                 >
                                     {num}
@@ -648,8 +648,8 @@ export default function Buyers() {
                                 onClick={() => setItemsPerPage(10000)}
                                 className={`px-2 py-0.5 text-xs rounded-md ${
                                     itemsPerPage >= dataLength
-                                        ? 'bg-violet-500 text-white border-violet-500'
-                                        : 'bg-white/80 hover:bg-gray-200'
+                                        ? 'bg-violet-50 text-violet-700 ring-1 ring-violet-200'
+                                        : 'bg-white/80 text-gray-700 hover:bg-gray-100'
                                 }`}
                             >
                                 Alle
@@ -669,14 +669,14 @@ export default function Buyers() {
                                 <button
                                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                     disabled={currentPage === 1}
-                                    className="bg-white/80 px-2 py-0.5 text-xs rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
+                                    className="px-2 py-0.5 text-xs rounded-md disabled:opacity-50 disabled:cursor-not-allowed bg-white/80 text-gray-700 hover:bg-gray-100"
                                 >
                                     ‹
                                 </button>
                                 <button
                                     onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                     disabled={currentPage === totalPages}
-                                    className="bg-white/80 px-2 py-0.5 text-xs rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
+                                    className="px-2 py-0.5 text-xs rounded-md disabled:opacity-50 disabled:cursor-not-allowed bg-white/80 text-gray-700 hover:bg-gray-100"
                                 >
                                     ›
                                 </button>
