@@ -251,7 +251,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
             className={`px-2 py-1 text-xs rounded-md transition-colors ${
                 isActive
                     ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-white/80 text-gray-700 hover:bg-gray-100'
             }`}
         >
             {label}
@@ -284,8 +284,8 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
     return (
         <div className="space-y-4">
             {/* Filter panel - always visible */}
-            <div className="px-4">
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div className="px-1">
+                <div>
                     <div className="flex items-center">
                         {/* Search bar */}
                         <div className="flex items-center border-r border-gray-200 px-3 py-2 flex-1 relative">
@@ -297,7 +297,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                                     setSearchText(e.target.value);
                                     setFilterTicketId(null); // Clear ticket ID filter when user starts typing
                                 }}
-                                className="w-full border-0 outline-none focus:outline-none focus:ring-0 text-sm px-3 py-1.5 pr-8 text-gray-700 placeholder-gray-400 bg-gray-50 rounded"
+                                className="bg-white/80 w-full border-0 outline-none focus:outline-none focus:ring-0 text-sm px-3 py-1.5 pr-8 text-gray-700 placeholder-gray-400 rounded"
                                 style={{ boxShadow: 'none', border: 'none', outline: 'none' }}
                             />
                             {searchText && (
