@@ -53,14 +53,14 @@ export default function DashboardStats() {
     }, 0);
 
     return (
-        <div className="bg-gray-50 py-1 px-4 rounded-lg">
+        <div className="rounded-lg">
             <div className="overflow-x-auto">
-                <table className="min-w-full">
+                <table className="min-w-full backend-layout table">
                     <thead>
                         <tr>
-                            <th colSpan={3} className="px-4 py-3 text-center text-base font-semibold text-gray-800 bg-gray-100 border-r border-gray-300">Karten</th>
-                            <th className="px-4 py-3 text-center text-base font-semibold text-gray-800 bg-gray-100 border-l border-r border-gray-300">Käufer</th>
-                            <th colSpan={2} className="px-4 py-3 text-center text-base font-semibold text-gray-800 bg-gray-100 border-l border-gray-300">Umsatz</th>
+                            <th colSpan={3} className="px-4 py-3 text-center text-base font-semibold text-gray-800 border-r border-gray-300 !bg-white/50">Karten</th>
+                            <th className="px-4 py-3 text-center text-base font-semibold text-gray-800 border-l border-r border-gray-300 !bg-white/50">Käufer</th>
+                            <th colSpan={2} className="px-4 py-3 text-center text-base font-semibold text-gray-800 border-l border-gray-300 !bg-white/50">Umsatz</th>
                         </tr>
                     </thead>
                     <tbody>

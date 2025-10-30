@@ -396,8 +396,8 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
 
             {/* Table */}
             <div className="-mt-5.5 px-4 overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm" style={{ tableLayout: 'fixed', width: '100%' }}>
-                <thead className="bg-gray-50">
+                <table className="min-w-full border border-gray-200 rounded-lg shadow-sm" style={{ tableLayout: 'fixed', width: '100%' }}>
+                <thead className="">
                     <tr>
                         <th 
                             className="px-4 py-2.5 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
@@ -488,7 +488,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
                         </th>
                     </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-200">
                     {paginatedData.length === 0 ? (
                         <tr>
                             <td colSpan={8} className="px-4 py-8 text-center text-sm text-gray-500">

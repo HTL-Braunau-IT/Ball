@@ -647,7 +647,10 @@ h4 {
 /* Backend table styles */
 .backend-layout table {
   width: 100%;
-  border-collapse: collapse;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border-spacing: 0;
+  border-collapse: separate;
   margin: 1rem 0;
 }
 
@@ -655,12 +658,23 @@ h4 {
 .backend-layout td {
   padding: 0.75rem;
   text-align: center;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(6px);
 }
 
 .backend-layout th {
-  background-color: #f0f0f0;
+  background: rgba(255, 255, 255, 0.7);
   font-weight: 600;
   color: #374151;
+}
+
+/* Backend table row hover */
+.backend-layout tbody td {
+  transition: background-color var(--transition-fast);
+}
+
+.backend-layout tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.6);
 }
 
 /* Link hover underline fix for backend tables */
