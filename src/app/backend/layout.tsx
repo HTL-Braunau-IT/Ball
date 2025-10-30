@@ -139,7 +139,7 @@ export default function BackendLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 backend-layout">
+    <div className="min-h-screen bg-gray-50 backend-layout backend-bg">
       {/* Top Navigation Bar */}
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
