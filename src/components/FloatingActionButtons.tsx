@@ -3,6 +3,7 @@
 import { useCallback, useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { api } from "~/utils/api";
+import { useFilteredData } from "~/contexts/FilteredDataContext";
 
 const ScrollToTopButton = ({ isVisible }: { isVisible: boolean }) => {
   const handleScrollToTop = () => {
@@ -46,6 +47,7 @@ const ScrollToBottomButton = ({ isVisible }: { isVisible: boolean }) => {
 
 export default function FloatingActionButtons() {
   const pathname = usePathname();
+  const { buyers: filteredBuyers, tickets: filteredTickets } = useFilteredData();
   const [isAtTop, setIsAtTop] = useState(true);
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [hasScrollable, setHasScrollable] = useState(false);
@@ -102,17 +104,9 @@ export default function FloatingActionButtons() {
     setTheme((prev) => (prev === 'violet' ? 'blue' : prev === 'blue' ? 'gold' : 'violet'));
   }, []);
 
-  // Get data based on current page
+  // Get data based on current page (only for reserves, tickets and buyers use filtered data from context)
   const { data: reservesData } = api.reserves.all.useQuery(undefined, {
     enabled: pathname === "/backend/reserves"
-  });
-  
-  const { data: ticketsData } = api.ticket.all.useQuery(undefined, {
-    enabled: pathname === "/backend/tickets"
-  });
-  
-  const { data: buyersData } = api.buyers.all.useQuery(undefined, {
-    enabled: pathname === "/backend/buyers"
   });
 
   const exportToCSV = useCallback(() => {
@@ -160,7 +154,7 @@ export default function FloatingActionButtons() {
 
       filename = `reserves_export_${new Date().toISOString().split('T')[0]}.csv`;
     } 
-    else if (pathname === "/backend/tickets" && ticketsData) {
+    else if (pathname === "/backend/tickets" && filteredTickets) {
       csvHeaders = [
         'ID',
         'Lieferung',
@@ -171,7 +165,7 @@ export default function FloatingActionButtons() {
         'Aktionen'
       ];
 
-      csvData = ticketsData.map((ticket) => [
+      csvData = filteredTickets.map((ticket) => [
         ticket.id,
         ticket.delivery,
         ticket.code,
@@ -183,7 +177,7 @@ export default function FloatingActionButtons() {
 
       filename = `tickets_export_${new Date().toISOString().split('T')[0]}.csv`;
     } 
-    else if (pathname === "/backend/buyers" && buyersData) {
+    else if (pathname === "/backend/buyers" && filteredBuyers) {
       csvHeaders = [
         'ID',
         'Name',
@@ -196,7 +190,7 @@ export default function FloatingActionButtons() {
         'Gruppe'
       ];
 
-      csvData = buyersData.map((buyer) => [
+      csvData = filteredBuyers.map((buyer) => [
         buyer.id,
         buyer.name,
         buyer.email,
@@ -229,7 +223,7 @@ export default function FloatingActionButtons() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }, [pathname, reservesData, ticketsData, buyersData]);
+  }, [pathname, reservesData, filteredTickets, filteredBuyers]);
 
   // Export button only on data pages
   const showExport = pathname === "/backend/reserves" || 
@@ -238,8 +232,8 @@ export default function FloatingActionButtons() {
 
   // Check if we have data to export
   const hasData = (pathname === "/backend/reserves" && reservesData && reservesData.length > 0) ||
-                 (pathname === "/backend/tickets" && ticketsData && ticketsData.length > 0) ||
-                 (pathname === "/backend/buyers" && buyersData && buyersData.length > 0);
+                 (pathname === "/backend/tickets" && filteredTickets && filteredTickets.length > 0) ||
+                 (pathname === "/backend/buyers" && filteredBuyers && filteredBuyers.length > 0);
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
