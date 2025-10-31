@@ -3,6 +3,7 @@
 import { api } from "~/trpc/react";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import { useFilteredData } from "~/contexts/FilteredDataContext";
 
 type SortColumn = 'id' | 'name' | 'delivery' | 'code' | 'paid' | 'sent' | 'timestamp' | null;
 type SortDirection = 'asc' | 'desc' | null;
@@ -39,6 +40,7 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
         refetchOnWindowFocus: false,
         staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
     });
+    const { setFilteredTickets } = useFilteredData();
     const [processingTicket, setProcessingTicket] = useState<number | null>(null);
     
     // Search and filter states
@@ -221,6 +223,18 @@ export default function Tickets({ initialData }: TicketsProps = {}) {
 
         return filtered;
     }, [data, debouncedSearchText, filterDelivery, filterPaid, filterSent, filterTicketId, sortColumn, sortDirection]);
+
+    // Update context with filtered data
+    useEffect(() => {
+        setFilteredTickets(filteredAndSortedData.length > 0 ? filteredAndSortedData : null);
+    }, [filteredAndSortedData, setFilteredTickets]);
+
+    // Clear context when component unmounts or path changes
+    useEffect(() => {
+        return () => {
+            setFilteredTickets(null);
+        };
+    }, [setFilteredTickets]);
 
     // Pagination logic
     const paginatedData = useMemo(() => {
