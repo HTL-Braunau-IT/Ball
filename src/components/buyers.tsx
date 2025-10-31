@@ -3,12 +3,14 @@
 import { api } from "~/trpc/react";
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
+import { useFilteredData } from "~/contexts/FilteredDataContext";
 
 type SortColumn = 'id' | 'name' | 'email' | 'address' | 'postal' | 'province' | 'country' | 'verified' | 'group' | null;
 type SortDirection = 'asc' | 'desc' | null;
 
 export default function Buyers() {
     const { data, isLoading, isError, error } = api.buyers.all.useQuery();
+    const { setFilteredBuyers } = useFilteredData();
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(20);
     const [sortColumn, setSortColumn] = useState<SortColumn>(null);
@@ -184,6 +186,18 @@ export default function Buyers() {
 
         return filtered;
     }, [data, debouncedSearchText, filterCountry, filterVerified, filterGroup, filterBuyerId, sortColumn, sortDirection]);
+
+    // Update context with filtered data
+    useEffect(() => {
+        setFilteredBuyers(filteredAndSortedData.length > 0 ? filteredAndSortedData : null);
+    }, [filteredAndSortedData, setFilteredBuyers]);
+
+    // Clear context when component unmounts or path changes
+    useEffect(() => {
+        return () => {
+            setFilteredBuyers(null);
+        };
+    }, [setFilteredBuyers]);
 
     // Pagination logic
     const paginatedData = useMemo(() => {
