@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import FloatingActionButtons from "~/components/FloatingActionButtons";
+import { FilteredDataProvider } from "~/contexts/FilteredDataContext";
 
 const navigationItems = [
   { name: "Dashboard", href: "/backend" },
@@ -191,12 +192,14 @@ export default function BackendLayout({
       </nav>    
 
       {/* Main content */}
-      <main className="max-w-7xl mx-auto pt-3 pb-6 sm:px-6 lg:px-8">
-        {children}
-      </main>
+      <FilteredDataProvider>
+        <main className="max-w-7xl mx-auto pt-3 pb-6 sm:px-6 lg:px-8">
+          {children}
+        </main>
 
-      {/* Floating Action Buttons */}
-      <FloatingActionButtons />
+        {/* Floating Action Buttons */}
+        <FloatingActionButtons />
+      </FilteredDataProvider>
     </div>
   );
 }
