@@ -415,7 +415,7 @@ export default function Buyers() {
                         </th>
                         <th 
                             className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '10%' : '20%' }}
+                            style={{ width: showAddressDetails ? '15%' : '15%' }}
                             onClick={() => handleSort('name')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -426,30 +426,30 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none"
-                            style={{ width: showAddressDetails ? '10%' : '12%' }}
+                            className={`px-4 py-3 text-center text-xs font-medium uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap ${showAddressDetails ? '!text-transparent' : '!text-gray-500'}`}
+                            style={{ width: showAddressDetails ? '0%' : '12%' }}
                         >
                             <div className="flex items-center justify-center gap-2">
                                 Karten
                             </div>
                         </th>
                         <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap"
-                            style={{ width: showAddressDetails ? '10%' : '26%' }}
+                            className={`px-4 py-3 text-center text-xs font-medium uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap ${showAddressDetails ? '!text-transparent' : '!text-gray-500'}`}
+                            style={{ width: showAddressDetails ? '0%' : '20%' }}
                             onClick={() => handleSort('email')}
                         >
-                            <div className="flex items-center justify-center gap-2">
+                            <div className="flex items-center justify-center gap-4">
                                 E-Mail
                                 {sortColumn === 'email' && (
                                     <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                )}
+                                )} 
                             </div>
                         </th>
                         {showAddressDetails ? (
                             <>
                                 <th 
                                     className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none relative"
-                                    style={{ width: '15%' }}
+                                    style={{ width: '23%' }}
                                 >
                                     <div className="flex items-center justify-center gap-2">
                                         <span onClick={() => handleSort('address')}>
@@ -510,7 +510,10 @@ export default function Buyers() {
                                 </th>
                             </>
                         ) : (
-                            <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none" style={{ width: '10%' }}>
+                            <th 
+                                className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none cursor-pointer hover:bg-gray-100"
+                                style={{ width: showAddressDetails ? '5%' : '7%' }}
+                            >
                                 <div className="flex items-center justify-center gap-2">
                                     <span>Adresse</span>
                                     <button
@@ -528,18 +531,7 @@ export default function Buyers() {
                                 </div>
                             </th>
                         )}
-                        <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '8%' : '8%' }}
-                            onClick={() => handleSort('verified')}
-                        >
-                            <div className="flex items-center justify-center gap-2">
-                                Verifiziert
-                                {sortColumn === 'verified' && (
-                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                )}
-                            </div>
-                        </th>
+
                         <th 
                             className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                             style={{ width: showAddressDetails ? '10%' : '10%' }}
@@ -626,9 +618,6 @@ export default function Buyers() {
                                     ...
                                 </td>
                             )}
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {showAddressDetails ? '...' : (buyer.verified ? "Ja" : "Nein")}
-                            </td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {showAddressDetails ? '...' : (buyer.group?.name ?? "-")}
                             </td>
