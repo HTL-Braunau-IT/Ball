@@ -106,39 +106,14 @@ export const authOptions: NextAuthOptions = {
           </div>
         `;
 
-        // Plain text version
-        const text = `
-HTL BRAUNAU - Ball der Auserwählten 2026
-
-Willkommen zum Ball der Auserwählten!
-
-Sehr geehrte Damen und Herren,
-
-wir freuen uns sehr über Ihr Interesse am HTL Ball 2026 - Ball der Auserwählten. 
-Dieser elegante Abend im Zeichen von DUNE verspricht ein unvergessliches Erlebnis voller Magie und Eleganz.
-
-Um Ihre Anmeldung abzuschließen und Zugang zu unserem exklusiven Ticketverkauf zu erhalten, 
-klicken Sie bitte auf den folgenden Link:
-
-${url}
-
-Wichtiger Hinweis: Dieser Anmeldungslink ist 24 Stunden gültig.
-
-Bei Fragen oder Problemen wenden Sie sich gerne an uns:
-ball@htl-braunau.at
-
-Wir freuen uns auf einen magischen Abend mit Ihnen!
-Ihr HTL Braunau Team
-        `;
-
         try {
           const { getGraphClient } = await import("~/utils/graphClient");
-          const { env } = await import("~/env");
           
           // Extract email address from EMAIL_FROM string
           const fromString = provider.from;
-          const emailMatch = fromString.match(/<([^>]+)>/) || fromString.match(/([\w\.-]+@[\w\.-]+\.\w+)/);
-          const fromEmail = emailMatch ? emailMatch[1] : fromString;
+          const angleBracketMatch = /<([^>]+)>/.exec(fromString);
+          const emailMatch = angleBracketMatch || /([\w\.-]+@[\w\.-]+\.\w+)/.exec(fromString);
+          const fromEmail = emailMatch?.[1] ?? fromString;
 
           const graphClient = await getGraphClient();
           

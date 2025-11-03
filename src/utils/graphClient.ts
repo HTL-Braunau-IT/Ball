@@ -39,25 +39,27 @@ export async function getGraphClient(): Promise<Client> {
   try {
     const response = await cca.acquireTokenByClientCredential(clientCredentialRequest);
     
-    if (!response || !response.accessToken) {
+    if (!response?.accessToken) {
       throw new Error("Failed to acquire access token from Microsoft Graph");
     }
 
     // Create Graph client with a function that fetches a fresh token
     const graphClient = Client.init({
-      authProvider: async (done) => {
-        try {
-          // Get a fresh token (MSAL will use cached token if still valid)
-          const tokenResponse = await cca.acquireTokenByClientCredential(clientCredentialRequest);
-          if (tokenResponse && tokenResponse.accessToken) {
-            done(null, tokenResponse.accessToken);
-          } else {
-            done(new Error("Failed to acquire access token"), null);
+      authProvider: (done) => {
+        void (async () => {
+          try {
+            // Get a fresh token (MSAL will use cached token if still valid)
+            const tokenResponse = await cca.acquireTokenByClientCredential(clientCredentialRequest);
+            if (tokenResponse?.accessToken) {
+              done(null, tokenResponse.accessToken);
+            } else {
+              done(new Error("Failed to acquire access token"), null);
+            }
+          } catch (error) {
+            console.error("Error in authProvider:", error);
+            done(error as Error, null);
           }
-        } catch (error) {
-          console.error("Error in authProvider:", error);
-          done(error as Error, null);
-        }
+        })();
       },
     });
 

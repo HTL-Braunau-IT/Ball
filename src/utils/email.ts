@@ -6,8 +6,9 @@ import { env } from '~/env';
  * Handles formats like: "Name <email@domain.com>" or "email@domain.com"
  */
 function extractEmailAddress(fromString: string): string {
-  const match = fromString.match(/<([^>]+)>/) || fromString.match(/([\w\.-]+@[\w\.-]+\.\w+)/);
-  return match ? match[1] : fromString;
+  const angleBracketMatch = /<([^>]+)>/.exec(fromString);
+  const match = angleBracketMatch || /([\w\.-]+@[\w\.-]+\.\w+)/.exec(fromString);
+  return match?.[1] ?? fromString;
 }
 
 export interface EmailData {
