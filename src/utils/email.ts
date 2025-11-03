@@ -1,14 +1,15 @@
-import nodemailer from 'nodemailer';
+import { getGraphClient } from './graphClient';
+import { env } from '~/env';
 
-// Create reusable transporter object using the same SMTP config as NextAuth
-const transporter = nodemailer.createTransport({
-  host: "smtp.office365.com",
-  port: 587,
-  auth: {
-    user: process.env.EMAIL_SERVER_USER,
-    pass: process.env.EMAIL_SERVER_PASSWORD,
-  },
-});
+/**
+ * Extract email address from EMAIL_FROM string
+ * Handles formats like: "Name <email@domain.com>" or "email@domain.com"
+ */
+function extractEmailAddress(fromString: string): string {
+  const angleBracketMatch = /<([^>]+)>/.exec(fromString);
+  const match = angleBracketMatch || /([\w\.-]+@[\w\.-]+\.\w+)/.exec(fromString);
+  return match?.[1] ?? fromString;
+}
 
 export interface EmailData {
   to: string;
@@ -67,12 +68,26 @@ export async function sendConfirmationEmail(data: EmailData): Promise<void> {
   }
 
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
-      to,
-      subject,
-      html: htmlContent,
+    const graphClient = await getGraphClient();
+    const fromEmail = extractEmailAddress(env.EMAIL_FROM);
+
+    await graphClient.api(`/users/${fromEmail}/sendMail`).post({
+      message: {
+        subject,
+        body: {
+          contentType: 'HTML',
+          content: htmlContent,
+        },
+        toRecipients: [
+          {
+            emailAddress: {
+              address: to,
+            },
+          },
+        ],
+      },
     });
+
     console.log(`Confirmation email sent to ${to}`);
   } catch (error) {
     console.error('Error sending confirmation email:', error);
@@ -87,12 +102,26 @@ export async function sendShippingNotificationEmail(data: ShippingNotificationDa
   const htmlContent = generateShippingNotificationHTML({ name, code, address });
 
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
-      to,
-      subject,
-      html: htmlContent,
+    const graphClient = await getGraphClient();
+    const fromEmail = extractEmailAddress(env.EMAIL_FROM);
+
+    await graphClient.api(`/users/${fromEmail}/sendMail`).post({
+      message: {
+        subject,
+        body: {
+          contentType: 'HTML',
+          content: htmlContent,
+        },
+        toRecipients: [
+          {
+            emailAddress: {
+              address: to,
+            },
+          },
+        ],
+      },
     });
+
     console.log(`Shipping notification email sent to ${to}`);
   } catch (error) {
     console.error('Error sending shipping notification email:', error);

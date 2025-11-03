@@ -16,11 +16,6 @@ declare module "next-auth" {
   }
 }
 
-// Z - Debug
-// console.log("🔧 Email config check:");
-// console.log("  EMAIL_SERVER_USER:", process.env.EMAIL_SERVER_USER ? "✅ Set" : "❌ Missing");
-// console.log("  EMAIL_SERVER_PASSWORD:", process.env.EMAIL_SERVER_PASSWORD ? "✅ Set" : "❌ Missing");
-// console.log("  EMAIL_FROM:", process.env.EMAIL_FROM ? "✅ Set" : "❌ Missing");
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
@@ -50,15 +45,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     EmailProvider({
-      server: {
-        host: "smtp.office365.com",
-        port: 587,
-        // secure: false,
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
-        },
-      },
+      server: {},
       from: process.env.EMAIL_FROM,
       async sendVerificationRequest({ url, identifier, provider }) {
         
@@ -119,47 +106,33 @@ export const authOptions: NextAuthOptions = {
           </div>
         `;
 
-        // Plain text version
-        const text = `
-HTL BRAUNAU - Ball der Auserwählten 2026
-
-Willkommen zum Ball der Auserwählten!
-
-Sehr geehrte Damen und Herren,
-
-wir freuen uns sehr über Ihr Interesse am HTL Ball 2026 - Ball der Auserwählten. 
-Dieser elegante Abend im Zeichen von DUNE verspricht ein unvergessliches Erlebnis voller Magie und Eleganz.
-
-Um Ihre Anmeldung abzuschließen und Zugang zu unserem exklusiven Ticketverkauf zu erhalten, 
-klicken Sie bitte auf den folgenden Link:
-
-${url}
-
-Wichtiger Hinweis: Dieser Anmeldungslink ist 24 Stunden gültig.
-
-Bei Fragen oder Problemen wenden Sie sich gerne an uns:
-ball@htl-braunau.at
-
-Wir freuen uns auf einen magischen Abend mit Ihnen!
-Ihr HTL Braunau Team
-        `;
-
         try {
-          const { createTransport } = await import("nodemailer");
-          const transport = createTransport(provider.server);
+          const { getGraphClient } = await import("~/utils/graphClient");
           
-          const result = await transport.sendMail({
-            to: identifier,
-            from: provider.from,
-            subject: "HTL Ball 2026 - Anmeldung für den Ball der Auserwählten",
-            text: text,
-            html: html,
-          });
+          // Extract email address from EMAIL_FROM string
+          const fromString = provider.from;
+          const angleBracketMatch = /<([^>]+)>/.exec(fromString);
+          const emailMatch = angleBracketMatch || /([\w\.-]+@[\w\.-]+\.\w+)/.exec(fromString);
+          const fromEmail = emailMatch?.[1] ?? fromString;
 
-          const failed = result.rejected.concat(result.pending).filter(Boolean);
-          if (failed.length) {
-            throw new Error(`Email(s) could not be sent: ${failed.length} failed`);
-          }
+          const graphClient = await getGraphClient();
+          
+          await graphClient.api(`/users/${fromEmail}/sendMail`).post({
+            message: {
+              subject: "HTL Ball 2026 - Anmeldung für den Ball der Auserwählten",
+              body: {
+                contentType: 'HTML',
+                content: html,
+              },
+              toRecipients: [
+                {
+                  emailAddress: {
+                    address: identifier,
+                  },
+                },
+              ],
+            },
+          });
         } catch (error) {
           console.error("❌ Email sending failed:", error);
           throw error;
