@@ -16,11 +16,6 @@ declare module "next-auth" {
   }
 }
 
-// Z - Debug
-// console.log("🔧 Email config check:");
-// console.log("  EMAIL_SERVER_USER:", process.env.EMAIL_SERVER_USER ? "✅ Set" : "❌ Missing");
-// console.log("  EMAIL_SERVER_PASSWORD:", process.env.EMAIL_SERVER_PASSWORD ? "✅ Set" : "❌ Missing");
-// console.log("  EMAIL_FROM:", process.env.EMAIL_FROM ? "✅ Set" : "❌ Missing");
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
@@ -50,15 +45,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     EmailProvider({
-      server: {
-        host: "smtp.office365.com",
-        port: 587,
-        // secure: false,
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
-        },
-      },
+      server: {},
       from: process.env.EMAIL_FROM,
       async sendVerificationRequest({ url, identifier, provider }) {
         
@@ -145,21 +132,32 @@ Ihr HTL Braunau Team
         `;
 
         try {
-          const { createTransport } = await import("nodemailer");
-          const transport = createTransport(provider.server);
+          const { getGraphClient } = await import("~/utils/graphClient");
+          const { env } = await import("~/env");
           
-          const result = await transport.sendMail({
-            to: identifier,
-            from: provider.from,
-            subject: "HTL Ball 2026 - Anmeldung für den Ball der Auserwählten",
-            text: text,
-            html: html,
-          });
+          // Extract email address from EMAIL_FROM string
+          const fromString = provider.from;
+          const emailMatch = fromString.match(/<([^>]+)>/) || fromString.match(/([\w\.-]+@[\w\.-]+\.\w+)/);
+          const fromEmail = emailMatch ? emailMatch[1] : fromString;
 
-          const failed = result.rejected.concat(result.pending).filter(Boolean);
-          if (failed.length) {
-            throw new Error(`Email(s) could not be sent: ${failed.length} failed`);
-          }
+          const graphClient = await getGraphClient();
+          
+          await graphClient.api(`/users/${fromEmail}/sendMail`).post({
+            message: {
+              subject: "HTL Ball 2026 - Anmeldung für den Ball der Auserwählten",
+              body: {
+                contentType: 'HTML',
+                content: html,
+              },
+              toRecipients: [
+                {
+                  emailAddress: {
+                    address: identifier,
+                  },
+                },
+              ],
+            },
+          });
         } catch (error) {
           console.error("❌ Email sending failed:", error);
           throw error;
