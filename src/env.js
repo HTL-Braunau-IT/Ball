@@ -10,9 +10,11 @@ export const env = createEnv({
     DATABASE_URL: z.string(),
     NEXTAUTH_URL: z.string(),
     NEXTAUTH_SECRET: z.string(),
-    EMAIL_SERVER_USER: z.string(),
-    EMAIL_SERVER_PASSWORD: z.string(),
     EMAIL_FROM: z.string(),
+    // Microsoft Graph API Configuration
+    CLIENT_ID: z.string(),
+    TENANT_ID: z.string(),
+    APP_SECRET: z.string(),
     STRIPE_SECRET_KEY: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -37,9 +39,10 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-    EMAIL_SERVER_USER: process.env.EMAIL_SERVER_USER,
-    EMAIL_SERVER_PASSWORD: process.env.EMAIL_SERVER_PASSWORD,
     EMAIL_FROM: process.env.EMAIL_FROM,
+    CLIENT_ID: process.env.CLIENT_ID,
+    TENANT_ID: process.env.TENANT_ID,
+    APP_SECRET: process.env.APP_SECRET,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_TICKET_SALE_DATE: process.env.NEXT_PUBLIC_TICKET_SALE_DATE,
