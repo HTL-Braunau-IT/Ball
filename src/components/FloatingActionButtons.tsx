@@ -157,6 +157,8 @@ export default function FloatingActionButtons() {
     else if (pathname === "/backend/tickets" && filteredTickets) {
       csvHeaders = [
         'ID',
+        'Name',
+        'E-Mail',
         'Lieferung',
         'Code',
         'Bezahlt',
@@ -167,6 +169,8 @@ export default function FloatingActionButtons() {
 
       csvData = filteredTickets.map((ticket) => [
         ticket.id,
+        ticket.buyer.name ?? "-",
+        ticket.buyer.email ?? "-",
         ticket.delivery,
         ticket.code,
         ticket.paid ? "Ja" : "Nein",
