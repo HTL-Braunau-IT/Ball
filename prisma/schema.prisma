@@ -59,7 +59,6 @@ model Buyers {
   province   String
   country    String
   verified   Boolean
-  maxTickets Int           @default(0)
   groupId    Int
   group      buyerGroups   @relation(fields: [groupId], references: [id])
   tickets    soldTickets[]
@@ -68,6 +67,7 @@ model Buyers {
 model buyerGroups {
   id             Int              @id @default(autoincrement())
   name           String
+  maxTickets     Int              @default(2)
   buyers         Buyers[]
   ticketReserves ticketReserves[]
 }
