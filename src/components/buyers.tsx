@@ -101,13 +101,14 @@ export default function Buyers() {
             const matchesBuyerId = filterBuyerId === null || 
                 buyer.id.toString() === filterBuyerId;
             
-            // Search filter (name, email, address, province, postal) - use debounced search
+            // Search filter (name, email, address, province, postal, pickup code) - use debounced search
             const matchesSearch = debouncedSearchText === "" || 
                 buyer.name.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
                 buyer.email.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
                 buyer.address.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
                 buyer.province.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
-                buyer.postal.toString().includes(debouncedSearchText);
+                buyer.postal.toString().includes(debouncedSearchText) ||
+                buyer.tickets[0]?.code?.toLowerCase().includes(debouncedSearchText.toLowerCase());
             
             // Delivery method filter
             const firstTicket = buyer.tickets[0];
@@ -268,7 +269,7 @@ export default function Buyers() {
                         <div className="flex items-center border-r border-gray-200 px-3 py-2 flex-1 relative">
                             <input
                                 type="text"
-                                placeholder="Name, E-Mail, Adresse, PLZ oder Bundesland..."
+                                placeholder="Name, E-Mail, Adresse, PLZ, Bundesland oder Abholcode..."
                                 value={searchText}
                                 onChange={(e) => {
                                     setSearchText(e.target.value);
