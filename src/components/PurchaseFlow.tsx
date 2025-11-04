@@ -16,19 +16,21 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
   const [currentStep, setCurrentStep] = useState(1);
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod | null>(null);
   const [contactInfo, setContactInfo] = useState<ShippingAddress | SelfPickupInfo | null>(null);
-  const [selectedTicketType, setSelectedTicketType] = useState<number | null>(null);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState<number | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // API calls
-  const { data: availableTickets, isLoading: ticketsLoading } = api.ticket.getAvailableTickets.useQuery();
+  // API calls - now returns single ticket object instead of array
+  const { data: availableTicket, isLoading: ticketsLoading } = api.ticket.getAvailableTickets.useQuery();
   const { data: deliveryMethods } = api.ticket.getDeliveryMethods.useQuery();
   const createPurchase = api.ticket.createPurchase.useMutation();
 
   const totalSteps = 4;
 
-  const handleTicketSelect = (ticketTypeId: number) => {
-    setSelectedTicketType(ticketTypeId);
+  // Auto-select ticket type when availableTicket loads
+  const selectedTicketType = availableTicket?.id ?? null;
+
+  const handleQuantitySelect = (selectedQuantity: number) => {
+    setQuantity(selectedQuantity);
     setCurrentStep(2);
   };
 
@@ -42,13 +44,8 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
     setCurrentStep(4);
   };
 
-  const handleQuantityChange = (newQuantity: number) => {
-    const maxAllowed = selectedTicket?.amount ?? 10;
-    setQuantity(Math.min(Math.max(1, newQuantity), maxAllowed));
-  };
-
   const handlePurchase = async () => {
-    if (!deliveryMethod || !contactInfo || !selectedTicketType) {
+    if (!deliveryMethod || !contactInfo || !selectedTicketType || !quantity) {
       return;
     }
 
@@ -70,14 +67,14 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
     }
   };
 
-  const selectedTicket = availableTickets?.find(t => t.id === selectedTicketType);
   const selectedDeliveryMethod = deliveryMethods?.find(dm => 
     dm.name.toLowerCase().includes(deliveryMethod === "shipping" ? "versand" : "abholung")
   );
 
-  const maxQuantity = selectedTicket?.amount ?? 10;
-  const totalPrice = selectedTicket ? 
-    (selectedTicket.price * quantity) + (deliveryMethod === "shipping" ? (selectedDeliveryMethod?.surcharge ?? 0) : 0) : 0;
+  const maxQuantity = availableTicket?.maxTickets ?? 2;
+  const availableAmount = availableTicket?.amount ?? 0;
+  const totalPrice = availableTicket && quantity ? 
+    (availableTicket.price * quantity) + (deliveryMethod === "shipping" ? (selectedDeliveryMethod?.surcharge ?? 0) : 0) : 0;
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -105,44 +102,17 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
         </div>
       </div>
 
-      {/* Step 1: Ticket Selection */}
+      {/* Step 1: Quantity Selection */}
       {currentStep === 1 && (
-        <TicketSelection
-          availableTickets={availableTickets}
+        <QuantitySelection
+          availableTicket={availableTicket}
           isLoading={ticketsLoading}
-          selectedTicketType={selectedTicketType}
-          quantity={quantity}
+          selectedQuantity={quantity}
           maxQuantity={maxQuantity}
-          onTicketSelect={handleTicketSelect}
-          onQuantityChange={handleQuantityChange}
+          availableAmount={availableAmount}
+          onQuantitySelect={handleQuantitySelect}
           onBack={onCancel}
-          onNext={() => setCurrentStep(2)}
         />
-      )}
-
-      {/* No Tickets Available Message */}
-      {currentStep === 1 && !ticketsLoading && availableTickets?.length === 0 && (
-        <div className="card text-center">
-          <div className="mb-4">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: "var(--color-error)" }}>
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </div>
-            <h2 className="text-2xl font-semibold mb-2" style={{ color: "var(--color-text-primary)" }}>
-              Keine Tickets verfügbar
-            </h2>
-            <p className="text-lg" style={{ color: "var(--color-text-secondary)" }}>
-              Alle Tickets sind bereits ausverkauft.
-            </p>
-          </div>
-          <button
-            onClick={onCancel}
-            className="btn btn-primary"
-          >
-            Zurück zur Übersicht
-          </button>
-        </div>
       )}
 
       {/* Step 2: Delivery Method Selection */}
@@ -210,9 +180,9 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
       )}
 
       {/* Step 4: Payment Summary */}
-      {currentStep === 4 && selectedTicket && (
+      {currentStep === 4 && availableTicket && quantity && (
         <PaymentSummary
-          selectedTicket={selectedTicket}
+          selectedTicket={availableTicket}
           quantity={quantity}
           deliveryMethod={deliveryMethod!}
           shippingFee={selectedDeliveryMethod?.surcharge ?? 0}
@@ -416,27 +386,23 @@ function ContactForm({
   );
 }
 
-// Ticket Selection Component
-function TicketSelection({
-  availableTickets,
+// Quantity Selection Component
+function QuantitySelection({
+  availableTicket,
   isLoading,
-  selectedTicketType,
-  quantity,
+  selectedQuantity,
   maxQuantity,
-  onTicketSelect,
-  onQuantityChange,
+  availableAmount,
+  onQuantitySelect,
   onBack,
-  onNext,
 }: {
-  availableTickets?: any[];
+  availableTicket?: { id: number; price: number; type: string; amount: number; maxTickets: number } | null;
   isLoading: boolean;
-  selectedTicketType: number | null;
-  quantity: number;
+  selectedQuantity: number | null;
   maxQuantity: number;
-  onTicketSelect: (id: number) => void;
-  onQuantityChange: (quantity: number) => void;
+  availableAmount: number;
+  onQuantitySelect: (quantity: number) => void;
   onBack: () => void;
-  onNext: () => void;
 }) {
   if (isLoading) {
     return (
@@ -447,15 +413,22 @@ function TicketSelection({
     );
   }
 
-  if (!availableTickets || availableTickets.length === 0) {
+  if (!availableTicket) {
     return (
       <div className="card text-center">
-        <h2 className="text-2xl font-semibold mb-4" style={{ color: "var(--color-error)" }}>
-          Keine Tickets verfügbar
-        </h2>
-        <p style={{ color: "var(--color-text-secondary)" }}>
-          Derzeit sind keine Tickets zum Verkauf verfügbar.
-        </p>
+        <div className="mb-4">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: "var(--color-error)" }}>
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-semibold mb-2" style={{ color: "var(--color-text-primary)" }}>
+            Keine Tickets verfügbar
+          </h2>
+          <p className="text-lg" style={{ color: "var(--color-text-secondary)" }}>
+            Derzeit sind keine Tickets zum Verkauf verfügbar.
+          </p>
+        </div>
         <button onClick={onBack} className="btn btn-secondary mt-4">
           Zurück
         </button>
@@ -463,85 +436,68 @@ function TicketSelection({
     );
   }
 
+  // Generate quantity options based on maxTickets
+  const quantityOptions = Array.from({ length: maxQuantity }, (_, i) => i + 1);
+  const ticketPrice = availableTicket.price;
+
   return (
     <div className="card">
-      <h2 className="text-2xl font-semibold mb-6 gradient-text text-center">
-        Ticket auswählen
+      <h2 className="text-2xl font-semibold mb-2 gradient-text text-center">
+        Anzahl der Tickets wählen
       </h2>
+      
+      {/* Show ticket type info */}
+      <p className="text-center mb-6" style={{ color: "var(--color-text-secondary)" }}>
+        {availableTicket.type} Ticket
+      </p>
 
-      <div className="space-y-4 mb-6">
-        {availableTickets.map((ticket) => (
-          <div
-            key={ticket.id}
-            className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
-              selectedTicketType === ticket.id
-                ? "border-[var(--color-gold-light)] bg-[var(--color-bg-accent)]"
-                : "border-[var(--color-accent-warm)] hover:border-[var(--color-bronze)]"
-            } ${ticket.amount === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
-            onClick={() => ticket.amount > 0 && onTicketSelect(ticket.id)}
-          >
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="text-lg font-semibold" style={{ color: "var(--color-text-primary)" }}>
-                  {ticket.type}
+      {/* Quantity selection cards */}
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        {quantityOptions.map((qty) => {
+          const totalPrice = ticketPrice * qty;
+          const isDisabled = qty > availableAmount;
+          const isSelected = selectedQuantity === qty;
+          
+          return (
+            <button
+              key={qty}
+              onClick={() => !isDisabled && onQuantitySelect(qty)}
+              disabled={isDisabled}
+              className={`p-6 border-2 rounded-lg text-left transition-colors ${
+                isSelected
+                  ? "border-[var(--color-gold-light)] bg-[var(--color-bg-accent)]"
+                  : isDisabled
+                  ? "opacity-50 cursor-not-allowed border-gray-300"
+                  : "border-[var(--color-accent-warm)] hover:border-[var(--color-bronze)]"
+              }`}
+            >
+              <div className="flex flex-col items-center text-center">
+                <h3 className="text-lg font-semibold mb-2" style={{ color: "var(--color-text-primary)" }}>
+                  {qty} {qty === 1 ? "Ticket" : "Tickets"}
                 </h3>
-                <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
-                  {ticket.amount > 0 ? `${ticket.amount} verfügbar` : "Ausverkauft"}
-                </p>
-              </div>
-              <div className="text-right">
                 <p className="text-xl font-bold" style={{ color: "var(--color-gold-light)" }}>
-                  {ticket.price}€
+                  €{totalPrice}
                 </p>
+                {isDisabled && (
+                  <p className="text-xs mt-2" style={{ color: "var(--color-text-muted)" }}>
+                    Nicht verfügbar
+                  </p>
+                )}
               </div>
-            </div>
-          </div>
-        ))}
+            </button>
+          );
+        })}
       </div>
 
-      {selectedTicketType && (
-        <div className="mb-6">
-          <label className="block text-sm font-medium mb-2" style={{ color: "var(--color-text-primary)" }}>
-            Anzahl
-          </label>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
-              className="w-10 h-10 rounded-full border-2 flex items-center justify-center"
-              style={{ borderColor: "var(--color-accent-warm)" }}
-            >
-              -
-            </button>
-            <span className="text-lg font-semibold" style={{ color: "var(--color-text-primary)" }}>
-              {quantity}
-            </span>
-            <button
-              onClick={() => onQuantityChange(Math.min(maxQuantity, quantity + 1))}
-              disabled={quantity >= maxQuantity}
-              className="w-10 h-10 rounded-full border-2 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ borderColor: "var(--color-accent-warm)" }}
-            >
-              +
-            </button>
-          </div>
-          {quantity >= maxQuantity && (
-            <p className="text-xs mt-2" style={{ color: "var(--color-text-muted)" }}>
-              Maximum erreicht ({maxQuantity} Tickets)
-            </p>
-          )}
-        </div>
+      {availableAmount < maxQuantity && (
+        <p className="text-sm text-center mb-4" style={{ color: "var(--color-text-muted)" }}>
+          Nur {availableAmount} {availableAmount === 1 ? "Ticket" : "Tickets"} verfügbar
+        </p>
       )}
 
       <div className="flex gap-4">
         <button onClick={onBack} className="btn btn-secondary flex-1">
           Zurück
-        </button>
-        <button
-          onClick={onNext}
-          disabled={!selectedTicketType}
-          className="btn btn-primary flex-1"
-        >
-          Weiter
         </button>
       </div>
     </div>
