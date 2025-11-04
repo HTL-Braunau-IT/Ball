@@ -47,7 +47,7 @@ const ScrollToBottomButton = ({ isVisible }: { isVisible: boolean }) => {
 
 export default function FloatingActionButtons() {
   const pathname = usePathname();
-  const { buyers: filteredBuyers, tickets: filteredTickets } = useFilteredData();
+  const { buyers: filteredBuyers } = useFilteredData();
   const [isAtTop, setIsAtTop] = useState(true);
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [hasScrollable, setHasScrollable] = useState(false);
@@ -104,7 +104,7 @@ export default function FloatingActionButtons() {
     setTheme((prev) => (prev === 'violet' ? 'blue' : prev === 'blue' ? 'gold' : 'violet'));
   }, []);
 
-  // Get data based on current page (only for reserves, tickets and buyers use filtered data from context)
+  // Get data based on current page (only for reserves, buyers use filtered data from context)
   const { data: reservesData } = api.reserves.all.useQuery(undefined, {
     enabled: pathname === "/backend/reserves"
   });
@@ -154,33 +154,6 @@ export default function FloatingActionButtons() {
 
       filename = `reserves_export_${new Date().toISOString().split('T')[0]}.csv`;
     } 
-    else if (pathname === "/backend/tickets" && filteredTickets) {
-      csvHeaders = [
-        'ID',
-        'Name',
-        'E-Mail',
-        'Lieferung',
-        'Code',
-        'Bezahlt',
-        'Versendet',
-        'Zeitstempel',
-        'Aktionen'
-      ];
-
-      csvData = filteredTickets.map((ticket) => [
-        ticket.id,
-        ticket.buyer.name ?? "-",
-        ticket.buyer.email ?? "-",
-        ticket.delivery,
-        ticket.code,
-        ticket.paid ? "Ja" : "Nein",
-        ticket.sent ? "Ja" : "Nein",
-        ticket.timestamp ? new Date(ticket.timestamp).toLocaleString() : "-",
-        ticket.paid && !ticket.sent ? "Versendbar" : "-"
-      ]);
-
-      filename = `tickets_export_${new Date().toISOString().split('T')[0]}.csv`;
-    } 
     else if (pathname === "/backend/buyers" && filteredBuyers) {
       csvHeaders = [
         'ID',
@@ -227,7 +200,7 @@ export default function FloatingActionButtons() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }, [pathname, reservesData, filteredTickets, filteredBuyers]);
+  }, [pathname, reservesData, filteredBuyers]);
 
   // Export button only on data pages
   const showExport = pathname === "/backend/reserves" || 
@@ -236,7 +209,6 @@ export default function FloatingActionButtons() {
 
   // Check if we have data to export
   const hasData = (pathname === "/backend/reserves" && reservesData && reservesData.length > 0) ||
-                 (pathname === "/backend/tickets" && filteredTickets && filteredTickets.length > 0) ||
                  (pathname === "/backend/buyers" && filteredBuyers && filteredBuyers.length > 0);
 
   return (

@@ -2,7 +2,6 @@
 
 import { api } from "~/trpc/react";
 import { useEffect, useState, useMemo } from "react";
-import Link from "next/link";
 import { useFilteredData } from "~/contexts/FilteredDataContext";
 
 type SortColumn = 'id' | 'name' | 'email' | 'address' | 'postal' | 'province' | 'country' | 'verified' | 'group' | 'tickets' | 'pickupCode' | null;

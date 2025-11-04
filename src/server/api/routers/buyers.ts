@@ -130,7 +130,7 @@ export const buyersRouter = createTRPCRouter({
         throw new Error("Buyer not found");
       }
 
-      if (!buyer.tickets || buyer.tickets.length === 0) {
+      if (!buyer.tickets?.length) {
         throw new Error("No tickets found for this buyer");
       }
 
@@ -149,8 +149,8 @@ export const buyersRouter = createTRPCRouter({
       // Get the delivery method from the first ticket (all tickets in a purchase share the same delivery method)
       const firstTicket = buyer.tickets[0];
       const deliveryMethodLower = (firstTicket?.delivery ?? "").toLowerCase();
-      const isShippingDelivery = deliveryMethodLower.includes('versand') || deliveryMethodLower.includes('shipping');
-      const isPickupDelivery = deliveryMethodLower.includes('abholung') || deliveryMethodLower.includes('pickup');
+      const isShippingDelivery = deliveryMethodLower.includes('versand');
+      const isPickupDelivery = deliveryMethodLower.includes('abholung');
       const pickupCode = firstTicket?.code;
 
       // Update all tickets for this buyer as sent
