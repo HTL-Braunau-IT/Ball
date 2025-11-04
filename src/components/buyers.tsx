@@ -10,6 +10,8 @@ type SortDirection = 'asc' | 'desc' | null;
 
 export default function Buyers() {
     const { data, isLoading, isError, error } = api.buyers.all.useQuery();
+    const markAsSentMutation = api.buyers.markBuyerTicketsAsSent.useMutation();
+    const utils = api.useUtils();
     const { setFilteredBuyers } = useFilteredData();
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(20);
@@ -437,6 +439,14 @@ export default function Buyers() {
                                 Liefermethode
                             </div>
                         </th>
+                        <th 
+                            className={`px-4 py-3 text-center text-xs font-medium uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap ${showAddressDetails ? '!text-transparent' : '!text-gray-500'}`}
+                            style={{ width: showAddressDetails ? '0%' : '12%' }}
+                        >
+                            <div className="flex items-center justify-center gap-2">
+                                Status
+                            </div>
+                        </th>
                         {showAddressDetails ? (
                             <>
                                 <th 
@@ -528,7 +538,7 @@ export default function Buyers() {
                 <tbody className="divide-y divide-gray-200">
                     {paginatedData.length === 0 ? (
                         <tr>
-                            <td colSpan={showAddressDetails ? 10 : 7} className="px-6 py-8 text-center text-sm text-gray-500">
+                            <td colSpan={showAddressDetails ? 11 : 8} className="px-6 py-8 text-center text-sm text-gray-500">
                                 {hasActiveFilters ? (
                                     <div className="flex flex-col items-center gap-2">
                                         <span className="text-gray-400">Nichts gefunden mit eingegebenen Filtern</span>
@@ -568,6 +578,47 @@ export default function Buyers() {
                                         <div>
                                             {buyer.tickets[0]?.delivery ?? '-'}
                                         </div>
+                            </td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                                        {(() => {
+                                            const firstTicket = buyer.tickets[0];
+                                            if (!firstTicket) return <span>-</span>;
+                                            
+                                            const isSent = firstTicket.sent === true;
+                                            const delivery = firstTicket.delivery?.toLowerCase() ?? '';
+                                            const isShipping = delivery.includes('versand') || delivery.includes('shipping');
+                                            const isPickup = delivery.includes('abholung') || delivery.includes('pickup');
+                                            
+                                            if (isSent) {
+                                                return (
+                                                    <div className="flex items-center justify-center gap-1.5">
+                                                        <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                        <span className="text-xs font-medium text-gray-700">
+                                                            {isShipping ? 'Versendet' : isPickup ? 'Abgeholt' : 'Erledigt'}
+                                                        </span>
+                                                    </div>
+                                                );
+                                            } else {
+                                                return (
+                                                    <button
+                                                        onClick={async () => {
+                                                            try {
+                                                                await markAsSentMutation.mutateAsync({ buyerId: buyer.id });
+                                                                await utils.buyers.all.invalidate();
+                                                            } catch (error) {
+                                                                console.error('Failed to mark tickets as sent:', error);
+                                                            }
+                                                        }}
+                                                        disabled={markAsSentMutation.isPending}
+                                                        className="px-2 py-1 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    >
+                                                        {markAsSentMutation.isPending ? '...' : 'Erledigt'}
+                                                    </button>
+                                                );
+                                            }
+                                        })()}
                             </td>
                             {showAddressDetails ? (
                                 <>
