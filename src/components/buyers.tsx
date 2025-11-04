@@ -403,18 +403,6 @@ export default function Buyers() {
                     <tr>
                         <th 
                             className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '6%' : '6%' }}
-                            onClick={() => handleSort('id')}
-                        >
-                            <div className="flex items-center justify-center gap-2">
-                                ID
-                                {sortColumn === 'id' && (
-                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                )}
-                            </div>
-                        </th>
-                        <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                             style={{ width: showAddressDetails ? '15%' : '15%' }}
                             onClick={() => handleSort('name')}
                         >
@@ -431,18 +419,6 @@ export default function Buyers() {
                         >
                             <div className="flex items-center justify-center gap-2">
                                 Karten
-                            </div>
-                        </th>
-                        <th 
-                            className={`px-4 py-3 text-center text-xs font-medium uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap ${showAddressDetails ? '!text-transparent' : '!text-gray-500'}`}
-                            style={{ width: showAddressDetails ? '0%' : '20%' }}
-                            onClick={() => handleSort('email')}
-                        >
-                            <div className="flex items-center justify-center gap-4">
-                                E-Mail
-                                {sortColumn === 'email' && (
-                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                )} 
                             </div>
                         </th>
                         {showAddressDetails ? (
@@ -531,19 +507,6 @@ export default function Buyers() {
                                 </div>
                             </th>
                         )}
-
-                        <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '10%' : '10%' }}
-                            onClick={() => handleSort('group')}
-                        >
-                            <div className="flex items-center justify-center gap-2">
-                                Gruppe
-                                {sortColumn === 'group' && (
-                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                )}
-                            </div>
-                        </th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -574,18 +537,12 @@ export default function Buyers() {
                     ) : (
                         paginatedData.map((buyer) => (
                         <tr key={buyer.id} id={`buyer-${buyer.id}`} className="hover:bg-gray-50">
-                            <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                {buyer.id}
-                            </td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {buyer.name}
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                                         {/* Rework to display number of tickets */}
                                         <div># of tickets</div>
-                            </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {showAddressDetails ? '...' : buyer.email}
                             </td>
                             {showAddressDetails ? (
                                 <>
@@ -607,9 +564,6 @@ export default function Buyers() {
                                     ...
                                 </td>
                             )}
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {showAddressDetails ? '...' : (buyer.group?.name ?? "-")}
-                            </td>
                         </tr>
                         ))
                     )}
