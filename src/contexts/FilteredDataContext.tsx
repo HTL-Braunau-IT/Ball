@@ -12,6 +12,7 @@ type BuyerData = {
   country: string;
   verified: boolean;
   group?: { name: string } | null;
+  tickets?: { id: number }[] | null;
 };
 
 type TicketData = {
