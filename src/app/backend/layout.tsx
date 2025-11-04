@@ -12,7 +12,6 @@ const navigationItems = [
   { name: "Dashboard", href: "/backend" },
   { name: "Kontingente", href: "/backend/reserves" },
   { name: "Liefermethoden", href: "/backend/delivery-methods" },
-  { name: "Karten", href: "/backend/tickets" },
   { name: "Käufer", href: "/backend/buyers" },
   { name: "Absolventen Import", href: "/backend/import-alumni" },
 ] as const;

@@ -46,20 +46,6 @@ const sections: ReadonlyArray<Section> = [
       ),
     },
     {
-      title: "Verkaufte Karten",
-      description: "Übersicht über verkaufte Karten",
-      href: "/backend/tickets",
-      hoverBg: "hover:bg-orange-50",
-      iconBg: "bg-orange-500 hover:bg-orange-600",
-      titleHover: "group-hover:text-orange-600",
-      hoverColor: "rgba(249,115,22,0.5)",
-      icon: (
-        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
-        </svg>
-      ),
-    },
-    {
       title: "Käufer Übersicht",
       description: "Übersicht über alle registrierten Käufer",
       href: "/backend/buyers",
@@ -104,7 +90,7 @@ export default async function BackendDashboard() {
           Wähle einen Bereich aus, um mit der Verwaltung zu beginnen.
         </p>
       </div>
-      <div className="-mt-2 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="-mt-2 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {sections.map((section) => (
           <Link
             key={section.title}

@@ -581,19 +581,8 @@ export default function Buyers() {
                                 {buyer.name}
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                                {showAddressDetails ? '...' : (buyer.tickets && buyer.tickets.length > 0 
-                                    ? buyer.tickets.map((t, idx) => (
-                                        <span key={t.id}>
-                                            <Link 
-                                                href={`/backend/tickets#ticket-${t.id}`}
-                                                className="text-blue-600 hover:text-blue-800 hover:underline"
-                                            >
-                                                {t.id}
-                                            </Link>
-                                            {idx < buyer.tickets.length - 1 && ', '}
-                                        </span>
-                                    ))
-                                    : '-')}
+                                        {/* Rework to display number of tickets */}
+                                        <div># of tickets</div>
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {showAddressDetails ? '...' : buyer.email}
