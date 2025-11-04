@@ -5,7 +5,7 @@ import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { useFilteredData } from "~/contexts/FilteredDataContext";
 
-type SortColumn = 'id' | 'name' | 'email' | 'address' | 'postal' | 'province' | 'country' | 'verified' | 'group' | null;
+type SortColumn = 'id' | 'name' | 'email' | 'address' | 'postal' | 'province' | 'country' | 'verified' | 'group' | 'tickets' | 'pickupCode' | null;
 type SortDirection = 'asc' | 'desc' | null;
 
 export default function Buyers() {
@@ -174,6 +174,14 @@ export default function Buyers() {
                 case 'group':
                     aValue = a.group?.name ?? "";
                     bValue = b.group?.name ?? "";
+                    break;
+                case 'tickets':
+                    aValue = a.tickets?.length ?? 0;
+                    bValue = b.tickets?.length ?? 0;
+                    break;
+                case 'pickupCode':
+                    aValue = a.tickets[0]?.code ?? "";
+                    bValue = b.tickets[0]?.code ?? "";
                     break;
                 default:
                     return 0;
@@ -393,17 +401,25 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
-                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap"
+                            onClick={() => handleSort('tickets')}
                         >
                             <div className="flex items-center justify-center gap-2">
                                 Karten
+                                {sortColumn === 'tickets' && (
+                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                                )}
                             </div>
                         </th>
                         <th 
-                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap"
+                            onClick={() => handleSort('pickupCode')}
                         >
                             <div className="flex items-center justify-center gap-2">
                                 Abholcode
+                                {sortColumn === 'pickupCode' && (
+                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                                )}
                             </div>
                         </th>
                         <th 
