@@ -14,10 +14,6 @@ export const ticketRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
     const tickets = await ctx.db.soldTickets.findMany({
       include: { buyer: true },
-      // Z - Uncomment or use in another router to only return owned tickets
-      // where: {
-      //   buyerId: parseInt(ctx.session.user.id),
-      // },
     });
     return tickets.map(({ id, delivery, code, paid, sent, timestamp, buyer }) => ({ 
       id, 
@@ -283,31 +279,13 @@ export const ticketRouter = createTRPCRouter({
         throw new Error("Failed to create or update buyer");
       }
 
-      // Generate unique code for both pickup and shipping (for tracking purposes)
-      let pickupCode = generatePickupCode();
-      
-      // Ensure code is unique (retry if collision)
-      let attempts = 0;
-      while (attempts < 5) {
-        const existingTicket = await ctx.db.soldTickets.findUnique({
-          where: { code: pickupCode }
-        });
-        
-        if (!existingTicket) {
-          break; // Code is unique
-        }
-        
-        pickupCode = generatePickupCode();
-        attempts++;
-      }
-      
-      if (attempts >= 5) {
-        throw new Error("Unable to generate unique pickup code");
-      }
+      // Generate pickup code for all tickets in this purchase
+      // All tickets in the same purchase share the same code
+      const pickupCode = generatePickupCode();
 
-      // Create sold tickets record
-      const soldTicket = await ctx.db.soldTickets.create({
-        data: {
+      // Create sold tickets records (one per quantity)
+      await ctx.db.soldTickets.createMany({
+        data: Array.from({ length: quantity }, () => ({
           delivery: deliveryMethodInfo.name,
           code: pickupCode,
           paid: false,
@@ -316,8 +294,22 @@ export const ticketRouter = createTRPCRouter({
           buyerId: buyer.id,
           reserveId: ticketReserve.id,
           soldPrice: ticketReserve.price + shippingFee,
-        },
+        })),
       });
+
+      // Get the first ticket ID for metadata (all tickets share the same code)
+      const firstTicket = await ctx.db.soldTickets.findFirst({
+        where: {
+          buyerId: buyer.id,
+          code: pickupCode,
+          paid: false,
+        },
+        orderBy: { timestamp: 'desc' },
+      });
+
+      if (!firstTicket) {
+        throw new Error("Failed to create tickets");
+      }
 
       // Create Stripe checkout session
       const session = await stripe.checkout.sessions.create({
@@ -354,7 +346,8 @@ export const ticketRouter = createTRPCRouter({
         success_url: `${env.NEXTAUTH_URL}/buyer/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${env.NEXTAUTH_URL}/buyer?cancelled=true`,
         metadata: {
-          soldTicketId: soldTicket.id.toString(),
+          soldTicketId: firstTicket.id.toString(),
+          pickupCode: pickupCode,
           buyerId: buyer.id.toString(),
           deliveryMethod,
           quantity: quantity.toString(),
@@ -364,7 +357,7 @@ export const ticketRouter = createTRPCRouter({
 
       return {
         checkoutUrl: session.url,
-        soldTicketId: soldTicket.id,
+        soldTicketId: firstTicket.id,
       };
     }),
 
@@ -382,43 +375,54 @@ export const ticketRouter = createTRPCRouter({
 
       const soldTicketId = parseInt(session.metadata?.soldTicketId ?? "0");
       const buyerId = parseInt(session.metadata?.buyerId ?? "0");
+      const pickupCode = session.metadata?.pickupCode;
 
-      console.log(`[confirmPayment] Ticket ID: ${soldTicketId}, Buyer ID: ${buyerId}`);
+      console.log(`[confirmPayment] Ticket ID: ${soldTicketId}, Buyer ID: ${buyerId}, Pickup Code: ${pickupCode}`);
 
-      // Check if payment has already been processed
-      const existingTicket = await ctx.db.soldTickets.findUnique({
-        where: { id: soldTicketId },
+      // Find all tickets for this purchase (by pickup code or first ticket ID)
+      const existingTickets = await ctx.db.soldTickets.findMany({
+        where: pickupCode 
+          ? { code: pickupCode, buyerId: buyerId }
+          : { id: soldTicketId },
         include: { buyer: true },
       });
 
-      if (!existingTicket) {
-        throw new Error("Ticket not found");
+      if (existingTickets.length === 0) {
+        throw new Error("Tickets not found");
       }
 
-      // If already paid, return existing data (idempotency)
-      if (existingTicket.paid) {
-        console.log(`[confirmPayment] Payment already processed for ticket ${soldTicketId}`);
+      // Check if payment has already been processed (check first ticket)
+      const firstTicket = existingTickets[0]!;
+      if (firstTicket.paid) {
+        console.log(`[confirmPayment] Payment already processed for pickup code ${pickupCode || firstTicket.code}`);
         return {
           success: true,
-          soldTicket: existingTicket,
-          pickupCode: existingTicket.code,
+          soldTicket: firstTicket,
+          pickupCode: firstTicket.code,
           alreadyProcessed: true,
         };
       }
 
-      console.log(`[confirmPayment] Processing new payment for ticket ${soldTicketId}`);
-
-      // Update sold ticket record
-      const soldTicket = await ctx.db.soldTickets.update({
-        where: { id: soldTicketId },
+      // Update all sold ticket records for this purchase
+      await ctx.db.soldTickets.updateMany({
+        where: pickupCode 
+          ? { code: pickupCode, buyerId: buyerId, paid: false }
+          : { id: { in: existingTickets.map(t => t.id) }, paid: false },
         data: {
           paid: true,
           transref: session.payment_intent as string,
         },
-        include: {
-          buyer: true,
-        },
       });
+
+      // Get updated ticket for response
+      const soldTicket = await ctx.db.soldTickets.findFirst({
+        where: { id: existingTickets[0]!.id },
+        include: { buyer: true },
+      });
+
+      if (!soldTicket) {
+        throw new Error("Failed to retrieve updated ticket");
+      }
 
       // Update ticket contingent (only if not already processed)
       const quantity = parseInt(session.metadata?.quantity ?? "1");
