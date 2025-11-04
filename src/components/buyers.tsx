@@ -421,6 +421,14 @@ export default function Buyers() {
                                 Karten
                             </div>
                         </th>
+                        <th 
+                            className={`px-4 py-3 text-center text-xs font-medium uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap ${showAddressDetails ? '!text-transparent' : '!text-gray-500'}`}
+                            style={{ width: showAddressDetails ? '0%' : '10%' }}
+                        >
+                            <div className="flex items-center justify-center gap-2">
+                                Abholcode
+                            </div>
+                        </th>
                         {showAddressDetails ? (
                             <>
                                 <th 
@@ -542,6 +550,11 @@ export default function Buyers() {
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                                         <div>{buyer.tickets?.length ?? 0}</div>
+                            </td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                                        <div>
+                                            {buyer.tickets[0]?.code ?? '-'}
+                                        </div>
                             </td>
                             {showAddressDetails ? (
                                 <>
