@@ -157,7 +157,7 @@ export default function FloatingActionButtons() {
     else if (pathname === "/backend/tickets" && filteredTickets) {
       csvHeaders = [
         'ID',
-        'Käufer',
+        'Name',
         'E-Mail',
         'Lieferung',
         'Code',
