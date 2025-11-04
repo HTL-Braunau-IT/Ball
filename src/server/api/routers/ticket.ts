@@ -51,6 +51,21 @@ export const ticketRouter = createTRPCRouter({
 
     // Get user's group name (default to "Öffentlich" if not found)
     const userGroupName = buyer?.group.name || "Öffentlich";
+    
+    // Get maxTickets from buyer's group or fetch default group
+    let maxTickets = 2; // Default
+    if (buyer?.group) {
+      const groupWithMaxTickets = buyer.group as { name: string; id: number; maxTickets: number };
+      maxTickets = groupWithMaxTickets.maxTickets ?? 2;
+    } else {
+      // Fetch Öffentlich group for default
+      const publicGroup = await ctx.db.buyerGroups.findFirst({
+        where: { name: "Öffentlich" }
+      });
+      if (publicGroup) {
+        maxTickets = (publicGroup as unknown as { maxTickets: number }).maxTickets;
+      }
+    }
 
     // Get all ticket reserves with their groups
     const reserves = await ctx.db.ticketReserves.findMany({
@@ -60,36 +75,34 @@ export const ticketRouter = createTRPCRouter({
       },
     });
 
-    // Filter tickets based on user's group
+    // Filter tickets to return ONLY the ticket type matching buyer's group
     const filteredReserves = reserves.filter(({ type }) => {
       const ticketGroupName = type[0]?.name || "";
       
-      // Everyone can see "Öffentlich" tickets
-      if (ticketGroupName === "Öffentlich") {
-        return true;
-      }
-      
-      // Only alumni can see "Absolventen" tickets
-      if (ticketGroupName === "Absolventen") {
-        return userGroupName === "Absolventen";
-      }
-      
-      // Default: show the ticket
-      return true;
+      // Return only tickets matching the buyer's group
+      return ticketGroupName === userGroupName;
     });
 
-    return filteredReserves.map(({ id, amount, price, type, deliveryMethods }) => ({
-      id,
-      amount,
-      price,
-      type: type[0]?.name || "Unknown",
-      groupId: type[0]?.id || 0,
-      deliveryMethods: deliveryMethods.map(({ id, name, surcharge }) => ({
+    // Return the first matching reserve (should be only one)
+    const matchingReserve = filteredReserves[0];
+
+    if (!matchingReserve) {
+      return null;
+    }
+
+    return {
+      id: matchingReserve.id,
+      amount: matchingReserve.amount,
+      price: matchingReserve.price,
+      type: matchingReserve.type[0]?.name || "Unknown",
+      groupId: matchingReserve.type[0]?.id || 0,
+      maxTickets: maxTickets,
+      deliveryMethods: matchingReserve.deliveryMethods.map(({ id, name, surcharge }) => ({
         id,
         name,
         surcharge: surcharge ?? 0,
       })),
-    }));
+    };
   }),
 
   // Get delivery methods
@@ -155,11 +168,37 @@ export const ticketRouter = createTRPCRouter({
         deliveryMethod: z.enum(["shipping", "self-pickup"]),
         contactInfo: z.union([shippingAddressSchema, selfPickupSchema]),
         ticketTypeId: z.number(),
-        quantity: z.number().min(1).max(10),
+        quantity: z.number().min(1).max(4),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const { deliveryMethod, contactInfo, ticketTypeId, quantity } = input;
+
+      // Get buyer's group first to check maxTickets
+      let buyer = await ctx.db.buyers.findUnique({
+        where: { email: ctx.session.user.email! },
+        include: { group: true },
+      });
+
+      // Get buyer's group maxTickets
+      let maxTickets = 2; // Default to 2 for Öffentlich
+      if (buyer?.group) {
+        const groupWithMaxTickets = buyer.group as { name: string; id: number; maxTickets: number };
+        maxTickets = groupWithMaxTickets.maxTickets ?? 2;
+      } else {
+        // If buyer doesn't exist yet, get Öffentlich group
+        const publicGroup = await ctx.db.buyerGroups.findFirst({
+          where: { name: "Öffentlich" }
+        });
+        if (publicGroup) {
+          maxTickets = (publicGroup as unknown as { maxTickets: number }).maxTickets;
+        }
+      }
+
+      // Validate quantity against buyer's group maxTickets
+      if (quantity > maxTickets) {
+        throw new Error(`Sie können maximal ${maxTickets} Tickets kaufen.`);
+      }
 
       // Get ticket reserve info
       const ticketReserve = await ctx.db.ticketReserves.findFirst({
@@ -199,10 +238,6 @@ export const ticketRouter = createTRPCRouter({
       }
 
       // Create or update buyer record
-      let buyer = await ctx.db.buyers.findUnique({
-        where: { email: ctx.session.user.email! },
-      });
-
       if (!buyer) {
         // Create new buyer record - default to "Öffentlich" group
         const publicGroup = await ctx.db.buyerGroups.findFirst({
@@ -225,6 +260,7 @@ export const ticketRouter = createTRPCRouter({
             verified: true,
             groupId: publicGroup.id,
           },
+          include: { group: true },
         });
       } else {
         // Update existing buyer record
@@ -238,7 +274,13 @@ export const ticketRouter = createTRPCRouter({
             province: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).province : buyer.province,
             country: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).country : buyer.country,
           },
+          include: { group: true },
         });
+      }
+
+      // Ensure buyer exists at this point
+      if (!buyer) {
+        throw new Error("Failed to create or update buyer");
       }
 
       // Generate unique code for both pickup and shipping (for tracking purposes)
