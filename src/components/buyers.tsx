@@ -23,7 +23,6 @@ export default function Buyers() {
     const [debouncedSearchText, setDebouncedSearchText] = useState("");
     const [filterDeliveryMethod, setFilterDeliveryMethod] = useState("all");
     const [filterSentStatus, setFilterSentStatus] = useState("all");
-    const [showAddressDetails, setShowAddressDetails] = useState(false);
 
     // Filter by buyer ID for hash navigation
     const [filterBuyerId, setFilterBuyerId] = useState<string | null>(null);
@@ -260,7 +259,7 @@ export default function Buyers() {
     const hasActiveFilters = debouncedSearchText !== "" || filterDeliveryMethod !== "all" || filterSentStatus !== "all" || filterBuyerId !== null;
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 w-full mx-auto">
             {/* Filter panel - always visible */}
             <div className="px-1">
                 <div>
@@ -377,13 +376,12 @@ export default function Buyers() {
                 </div>
             </div>
 
-            <div className="-mt-7.5 px-4 overflow-x-auto">
-                <table className="min-w-full border border-gray-200 rounded-lg shadow-sm" style={{ tableLayout: 'fixed', width: '100%' }}>
+            <div className="-mt-3.5 px-4">
+                <table className="w-full border border-gray-200 rounded-lg shadow-sm">
                 <thead className="">
                     <tr>
                         <th 
                             className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '15%' : '15%' }}
                             onClick={() => handleSort('name')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -394,129 +392,72 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
-                            className={`px-4 py-3 text-center text-xs font-medium uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap ${showAddressDetails ? '!text-transparent' : '!text-gray-500'}`}
-                            style={{ width: showAddressDetails ? '0%' : '12%' }}
+                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
                         >
                             <div className="flex items-center justify-center gap-2">
                                 Karten
                             </div>
                         </th>
                         <th 
-                            className={`px-4 py-3 text-center text-xs font-medium uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap ${showAddressDetails ? '!text-transparent' : '!text-gray-500'}`}
-                            style={{ width: showAddressDetails ? '0%' : '10%' }}
+                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
                         >
                             <div className="flex items-center justify-center gap-2">
                                 Abholcode
                             </div>
                         </th>
                         <th 
-                            className={`px-4 py-3 text-center text-xs font-medium uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap ${showAddressDetails ? '!text-transparent' : '!text-gray-500'}`}
-                            style={{ width: showAddressDetails ? '0%' : '12%' }}
+                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
                         >
                             <div className="flex items-center justify-center gap-2">
                                 Liefermethode
                             </div>
                         </th>
                         <th 
-                            className={`px-4 py-3 text-center text-xs font-medium uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap ${showAddressDetails ? '!text-transparent' : '!text-gray-500'}`}
-                            style={{ width: showAddressDetails ? '0%' : '12%' }}
+                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => handleSort('address')}
+                        >
+                            <div className="flex items-center justify-center gap-2">
+                                Adresse
+                                {sortColumn === 'address' && (
+                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                                )}
+                            </div>
+                        </th>
+                        <th 
+                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => handleSort('postal')}
+                        >
+                            <div className="flex items-center justify-center gap-2">
+                                PLZ
+                                {sortColumn === 'postal' && (
+                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                                )}
+                            </div>
+                        </th>
+                        <th 
+                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => handleSort('province')}
+                        >
+                            <div className="flex items-center justify-center gap-2">
+                                Bundesland
+                                {sortColumn === 'province' && (
+                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                                )}
+                            </div>
+                        </th>
+                        <th 
+                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
                         >
                             <div className="flex items-center justify-center gap-2">
                                 Status
                             </div>
                         </th>
-                        {showAddressDetails ? (
-                            <>
-                                <th 
-                                    className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none relative"
-                                    style={{ width: '23%' }}
-                                >
-                                    <div className="flex items-center justify-center gap-2">
-                                        <span onClick={() => handleSort('address')}>
-                                            Adresse
-                                            {sortColumn === 'address' && (
-                                                <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                            )}
-                                        </span>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setShowAddressDetails(false);
-                                            }}
-                                            className="text-red-600 hover:text-red-800 transition-colors ml-1"
-                                            title="Adressdetails ausblenden"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </th>
-                                <th 
-                                    className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                                    style={{ width: '8%' }}
-                                    onClick={() => handleSort('postal')}
-                                >
-                                    <div className="flex items-center justify-center gap-2">
-                                        PLZ
-                                        {sortColumn === 'postal' && (
-                                            <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                        )}
-                                    </div>
-                                </th>
-                                <th 
-                                    className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                                    style={{ width: '12%' }}
-                                    onClick={() => handleSort('province')}
-                                >
-                                    <div className="flex items-center justify-center gap-2">
-                                        Bundesland
-                                        {sortColumn === 'province' && (
-                                            <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                        )}
-                                    </div>
-                                </th>
-                                <th 
-                                    className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                                    style={{ width: '8%' }}
-                                    onClick={() => handleSort('country')}
-                                >
-                                    <div className="flex items-center justify-center gap-2">
-                                        Land
-                                        {sortColumn === 'country' && (
-                                            <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                        )}
-                                    </div>
-                                </th>
-                            </>
-                        ) : (
-                            <th 
-                                className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none cursor-pointer hover:bg-gray-100"
-                                style={{ width: showAddressDetails ? '5%' : '7%' }}
-                            >
-                                <div className="flex items-center justify-center gap-2">
-                                    <span>Adresse</span>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setShowAddressDetails(true);
-                                        }}
-                                        className="text-green-600 hover:text-green-800 transition-colors"
-                                        title="Adressdetails anzeigen"
-                                    >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </th>
-                        )}
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                     {paginatedData.length === 0 ? (
                         <tr>
-                            <td colSpan={showAddressDetails ? 11 : 8} className="px-6 py-8 text-center text-sm text-gray-500">
+                            <td colSpan={8} className="px-6 py-8 text-center text-sm text-gray-500">
                                 {hasActiveFilters ? (
                                     <div className="flex flex-col items-center gap-2">
                                         <span className="text-gray-400">Nichts gefunden mit eingegebenen Filtern</span>
@@ -555,6 +496,15 @@ export default function Buyers() {
                                         <div>
                                             {buyer.tickets[0]?.delivery ?? '-'}
                                         </div>
+                            </td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {buyer.address}
+                            </td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {buyer.postal}
+                            </td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {buyer.province}
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                                         {(() => {
@@ -597,26 +547,6 @@ export default function Buyers() {
                                             }
                                         })()}
                             </td>
-                            {showAddressDetails ? (
-                                <>
-                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {buyer.address}
-                                    </td>
-                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {buyer.postal}
-                                    </td>
-                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {buyer.province}
-                                    </td>
-                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {buyer.country}
-                                    </td>
-                                </>
-                            ) : (
-                                <td className="px-4 py-4 text-sm text-gray-500 text-center whitespace-nowrap">
-                                    ...
-                                </td>
-                            )}
                         </tr>
                         ))
                     )}
@@ -625,7 +555,7 @@ export default function Buyers() {
             </div>
             
             {/* Pagination controls */}
-            <div className="-mt-6 px-4">
+            <div className="-mt-3 px-4">
                 <div className="flex items-center justify-between px-3 py-2">
                     <div className="flex items-center gap-2">
                         <span className="text-xs text-gray-500">Anzeigen:</span>
