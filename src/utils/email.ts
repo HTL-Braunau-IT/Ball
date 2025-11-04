@@ -39,6 +39,12 @@ export interface ShippingNotificationData {
   };
 }
 
+export interface PickupNotificationData {
+  to: string;
+  name: string;
+  code: string;
+}
+
 export async function sendConfirmationEmail(data: EmailData): Promise<void> {
   const { to, name, ticketType, quantity, totalPrice, deliveryMethod, pickupCode, address } = data;
 
@@ -126,6 +132,40 @@ export async function sendShippingNotificationEmail(data: ShippingNotificationDa
   } catch (error) {
     console.error('Error sending shipping notification email:', error);
     throw new Error('Failed to send shipping notification email');
+  }
+}
+
+export async function sendPickupNotificationEmail(data: PickupNotificationData): Promise<void> {
+  const { to, name, code } = data;
+
+  const subject = `HTL Ball 2026 - Ihre Tickets wurden abgeholt!`;
+  const htmlContent = generatePickupNotificationHTML({ name, code });
+
+  try {
+    const graphClient = await getGraphClient();
+    const fromEmail = extractEmailAddress(env.EMAIL_FROM);
+
+    await graphClient.api(`/users/${fromEmail}/sendMail`).post({
+      message: {
+        subject,
+        body: {
+          contentType: 'HTML',
+          content: htmlContent,
+        },
+        toRecipients: [
+          {
+            emailAddress: {
+              address: to,
+            },
+          },
+        ],
+      },
+    });
+
+    console.log(`Pickup notification email sent to ${to}`);
+  } catch (error) {
+    console.error('Error sending pickup notification email:', error);
+    throw new Error('Failed to send pickup notification email');
   }
 }
 
@@ -337,6 +377,72 @@ function generateShippingNotificationHTML(data: {
           <p>Die Lieferung erfolgt in der Regel innerhalb von 2-3 Werktagen. Falls Sie Fragen zum Versand haben, wenden Sie sich gerne an unser Team.</p>
           
           <p>Wir freuen uns, Sie am HTL Ball 2026 - Ball der Auserwählten begrüßen zu dürfen!</p>
+          
+          <p>Mit freundlichen Grüßen,<br>
+          <strong>Das HTL Ball 2026 Team</strong></p>
+        </div>
+        
+        <div class="footer">
+          <p>HTL Ball 2026 - Ball der Auserwählten</p>
+          <p>Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht direkt auf diese E-Mail.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+function generatePickupNotificationHTML(data: {
+  name: string;
+  code: string;
+}): string {
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>HTL Ball 2026 - Ihre Tickets wurden abgeholt!</title>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #D4AF37, #B8860B); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+        .pickup-info { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .code-info { background: #e8f4fd; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
+        .code { font-size: 24px; font-weight: bold; color: #D4AF37; letter-spacing: 2px; font-family: monospace; }
+        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+        .highlight { color: #D4AF37; font-weight: bold; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 8px; margin: 15px 0; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>HTL Ball 2026 - Ball der Auserwählten</h1>
+          <h2>Ihre Tickets wurden abgeholt!</h2>
+        </div>
+        
+        <div class="content">
+          <p>Liebe/r <strong>${data.name}</strong>,</p>
+          
+          <div class="success">
+            <h3>Gute Nachrichten!</h3>
+            <p>Ihre Tickets für den HTL Ball 2026 wurden erfolgreich abgeholt!</p>
+          </div>
+          
+          <div class="pickup-info">
+            <h3>Abholbestätigung</h3>
+            <p>Dies ist eine Bestätigung, dass Ihre Tickets mit dem folgenden Abholcode erfolgreich abgeholt wurden:</p>
+          </div>
+          
+          <div class="code-info">
+            <h3>Abholcode</h3>
+            <div class="code">${data.code}</div>
+          </div>
+          
+          <p>Wir freuen uns, Sie am HTL Ball 2026 - Ball der Auserwählten begrüßen zu dürfen!</p>
+          
+          <p>Bei Fragen wenden Sie sich gerne an unser Team.</p>
           
           <p>Mit freundlichen Grüßen,<br>
           <strong>Das HTL Ball 2026 Team</strong></p>

@@ -2,14 +2,15 @@
 
 import { api } from "~/trpc/react";
 import { useEffect, useState, useMemo } from "react";
-import Link from "next/link";
 import { useFilteredData } from "~/contexts/FilteredDataContext";
 
-type SortColumn = 'id' | 'name' | 'email' | 'address' | 'postal' | 'province' | 'country' | 'verified' | 'group' | null;
+type SortColumn = 'id' | 'name' | 'email' | 'address' | 'postal' | 'province' | 'country' | 'verified' | 'group' | 'tickets' | 'pickupCode' | null;
 type SortDirection = 'asc' | 'desc' | null;
 
 export default function Buyers() {
     const { data, isLoading, isError, error } = api.buyers.all.useQuery();
+    const markAsSentMutation = api.buyers.markBuyerTicketsAsSent.useMutation();
+    const utils = api.useUtils();
     const { setFilteredBuyers } = useFilteredData();
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(20);
@@ -19,10 +20,8 @@ export default function Buyers() {
     // Search and filter states
     const [searchText, setSearchText] = useState("");
     const [debouncedSearchText, setDebouncedSearchText] = useState("");
-    const [filterCountry, setFilterCountry] = useState("");
-    const [filterVerified, setFilterVerified] = useState("");
-    const [filterGroup, setFilterGroup] = useState("");
-    const [showAddressDetails, setShowAddressDetails] = useState(false);
+    const [filterDeliveryMethod, setFilterDeliveryMethod] = useState("all");
+    const [filterSentStatus, setFilterSentStatus] = useState("all");
 
     // Filter by buyer ID for hash navigation
     const [filterBuyerId, setFilterBuyerId] = useState<string | null>(null);
@@ -78,7 +77,7 @@ export default function Buyers() {
     // Reset to page 1 when filters change
     useEffect(() => {
         setCurrentPage(1);
-    }, [debouncedSearchText, filterCountry, filterVerified, filterGroup, itemsPerPage, sortColumn, sortDirection]);
+    }, [debouncedSearchText, filterDeliveryMethod, filterSentStatus, itemsPerPage, sortColumn, sortDirection]);
 
     // Handle column sorting
     const handleSort = (column: SortColumn) => {
@@ -101,28 +100,35 @@ export default function Buyers() {
             const matchesBuyerId = filterBuyerId === null || 
                 buyer.id.toString() === filterBuyerId;
             
-            // Search filter (name, email, address, province, postal) - use debounced search
+            // Search filter (name, email, address, province, postal, pickup code) - use debounced search
             const matchesSearch = debouncedSearchText === "" || 
                 buyer.name.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
                 buyer.email.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
                 buyer.address.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
                 buyer.province.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
-                buyer.postal.toString().includes(debouncedSearchText);
+                buyer.postal.toString().includes(debouncedSearchText) ||
+                buyer.tickets[0]?.code?.toLowerCase().includes(debouncedSearchText.toLowerCase());
             
-            // Country filter
-            const matchesCountry = filterCountry === "" || 
-                buyer.country.toLowerCase().includes(filterCountry.toLowerCase());
+            // Delivery method filter
+            const firstTicket = buyer.tickets[0];
+            const deliveryMethodLower = (firstTicket?.delivery ?? "").toLowerCase();
+            const isPostversand = deliveryMethodLower.includes('postversand');
+            const isAbholung = deliveryMethodLower.includes('abholung');
+            const matchesDeliveryMethod = filterDeliveryMethod === "all" 
+                ? true
+                : filterDeliveryMethod === "Abholung" 
+                    ? isAbholung 
+                    : filterDeliveryMethod === "Postversand" 
+                        ? isPostversand 
+                        : true;
             
-            // Verified filter
-            const matchesVerified = filterVerified === "" || 
-                (filterVerified === "ja" && buyer.verified) ||
-                (filterVerified === "nein" && !buyer.verified);
+            // Sent status filter
+            const isSent = firstTicket?.sent === true;
+            const matchesSentStatus = filterSentStatus === "all" || 
+                (filterSentStatus === "1" && isSent) ||
+                (filterSentStatus === "0" && !isSent);
             
-            // Group filter
-            const matchesGroup = filterGroup === "" || 
-                (buyer.group?.name ?? "").toLowerCase().includes(filterGroup.toLowerCase());
-            
-            return matchesBuyerId && matchesSearch && matchesCountry && matchesVerified && matchesGroup;
+            return matchesBuyerId && matchesSearch && matchesDeliveryMethod && matchesSentStatus;
         });
 
     // Sort data
@@ -168,6 +174,14 @@ export default function Buyers() {
                     aValue = a.group?.name ?? "";
                     bValue = b.group?.name ?? "";
                     break;
+                case 'tickets':
+                    aValue = a.tickets?.length ?? 0;
+                    bValue = b.tickets?.length ?? 0;
+                    break;
+                case 'pickupCode':
+                    aValue = a.tickets[0]?.code ?? "";
+                    bValue = b.tickets[0]?.code ?? "";
+                    break;
                 default:
                     return 0;
             }
@@ -185,7 +199,7 @@ export default function Buyers() {
         }
 
         return filtered;
-    }, [data, debouncedSearchText, filterCountry, filterVerified, filterGroup, filterBuyerId, sortColumn, sortDirection]);
+    }, [data, debouncedSearchText, filterDeliveryMethod, filterSentStatus, filterBuyerId, sortColumn, sortDirection]);
 
     // Update context with filtered data
     useEffect(() => {
@@ -215,16 +229,6 @@ export default function Buyers() {
         ? 1 
         : Math.ceil(dataLength / itemsPerPage);
 
-    // Get unique values for filters
-    const uniqueCountries = useMemo(() => {
-        if (!data) return [];
-        return Array.from(new Set(data.map(b => b.country)));
-    }, [data]);
-
-    const uniqueGroups = useMemo(() => {
-        if (!data) return [];
-        return Array.from(new Set(data.map(b => b.group?.name).filter(Boolean))).sort();
-    }, [data]);
 
     // Helper function to render filter button
     const renderFilterButton = (label: string, isActive: boolean, onClick: () => void, key?: string) => (
@@ -260,10 +264,10 @@ export default function Buyers() {
     }
 
     // Check if any filters are active
-    const hasActiveFilters = debouncedSearchText !== "" || filterCountry !== "" || filterVerified !== "" || filterGroup !== "" || filterBuyerId !== null;
+    const hasActiveFilters = debouncedSearchText !== "" || filterDeliveryMethod !== "all" || filterSentStatus !== "all" || filterBuyerId !== null;
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 w-full mx-auto">
             {/* Filter panel - always visible */}
             <div className="px-1">
                 <div>
@@ -272,7 +276,7 @@ export default function Buyers() {
                         <div className="flex items-center border-r border-gray-200 px-3 py-2 flex-1 relative">
                             <input
                                 type="text"
-                                placeholder="Name, E-Mail, Adresse, PLZ oder Bundesland..."
+                                placeholder="Name, E-Mail, Adresse, PLZ, Bundesland oder Abholcode..."
                                 value={searchText}
                                 onChange={(e) => {
                                     setSearchText(e.target.value);
@@ -294,62 +298,45 @@ export default function Buyers() {
                             )}
                         </div>
                         
-                        {/* Land filter */}
+                        {/* Liefermethode filter */}
                         <div className="flex items-center justify-center border-r border-gray-200">
                             <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Land
+                                Liefermethode
                             </div>
                             <div className="flex flex-wrap gap-2 px-3 py-2 justify-center">
-                                {renderFilterButton("Alle", filterCountry === "", () => {
-                                    setFilterCountry("");
+                                {renderFilterButton("Alle", filterDeliveryMethod === "all", () => {
+                                    setFilterDeliveryMethod("all");
                                     setFilterBuyerId(null);
                                 })}
-                                {uniqueCountries.map(c => 
-                                    renderFilterButton(c, filterCountry === c, () => {
-                                        setFilterCountry(c);
-                                        setFilterBuyerId(null);
-                                    }, c)
-                                )}
-                            </div>
-                        </div>
-                        
-                        {/* Verifiziert filter */}
-                        <div className="flex items-center justify-center border-r border-gray-200">
-                            <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Verifiziert
-                            </div>
-                            <div className="flex flex-wrap gap-2 px-3 py-2 justify-center">
-                                {renderFilterButton("Alle", filterVerified === "", () => {
-                                    setFilterVerified("");
+                                {renderFilterButton("Abholung", filterDeliveryMethod === "Abholung", () => {
+                                    setFilterDeliveryMethod("Abholung");
                                     setFilterBuyerId(null);
                                 })}
-                                {renderFilterButton("Ja", filterVerified === "ja", () => {
-                                    setFilterVerified("ja");
-                                    setFilterBuyerId(null);
-                                })}
-                                {renderFilterButton("Nein", filterVerified === "nein", () => {
-                                    setFilterVerified("nein");
+                                {renderFilterButton("Postversand", filterDeliveryMethod === "Postversand", () => {
+                                    setFilterDeliveryMethod("Postversand");
                                     setFilterBuyerId(null);
                                 })}
                             </div>
                         </div>
                         
-                        {/* Gruppe filter */}
+                        {/* Status filter */}
                         <div className="flex items-center justify-center">
                             <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Gruppe
+                                Status
                             </div>
                             <div className="flex flex-wrap gap-2 px-3 py-2 justify-center">
-                                {renderFilterButton("Alle", filterGroup === "", () => {
-                                    setFilterGroup("");
+                                {renderFilterButton("Alle", filterSentStatus === "all", () => {
+                                    setFilterSentStatus("all");
                                     setFilterBuyerId(null);
                                 })}
-                                {uniqueGroups.map(g => 
-                                    renderFilterButton(g, filterGroup === g, () => {
-                                        setFilterGroup(g);
-                                        setFilterBuyerId(null);
-                                    }, g)
-                                )}
+                                {renderFilterButton("Erledigt", filterSentStatus === "1", () => {
+                                    setFilterSentStatus("1");
+                                    setFilterBuyerId(null);
+                                })}
+                                {renderFilterButton("Nicht erledigt", filterSentStatus === "0", () => {
+                                    setFilterSentStatus("0");
+                                    setFilterBuyerId(null);
+                                })}
                             </div>
                         </div>
                     </div>
@@ -397,25 +384,12 @@ export default function Buyers() {
                 </div>
             </div>
 
-            <div className="-mt-7.5 px-4 overflow-x-auto">
-                <table className="min-w-full border border-gray-200 rounded-lg shadow-sm" style={{ tableLayout: 'fixed', width: '100%' }}>
+            <div className="-mt-3.5 px-4">
+                <table className="w-full border border-gray-200 rounded-lg shadow-sm">
                 <thead className="">
                     <tr>
                         <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '6%' : '6%' }}
-                            onClick={() => handleSort('id')}
-                        >
-                            <div className="flex items-center justify-center gap-2">
-                                ID
-                                {sortColumn === 'id' && (
-                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                )}
-                            </div>
-                        </th>
-                        <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '15%' : '15%' }}
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                             onClick={() => handleSort('name')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -426,122 +400,72 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
-                            className={`px-4 py-3 text-center text-xs font-medium uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap ${showAddressDetails ? '!text-transparent' : '!text-gray-500'}`}
-                            style={{ width: showAddressDetails ? '0%' : '12%' }}
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap"
+                            onClick={() => handleSort('tickets')}
                         >
                             <div className="flex items-center justify-center gap-2">
                                 Karten
-                            </div>
-                        </th>
-                        <th 
-                            className={`px-4 py-3 text-center text-xs font-medium uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap ${showAddressDetails ? '!text-transparent' : '!text-gray-500'}`}
-                            style={{ width: showAddressDetails ? '0%' : '20%' }}
-                            onClick={() => handleSort('email')}
-                        >
-                            <div className="flex items-center justify-center gap-4">
-                                E-Mail
-                                {sortColumn === 'email' && (
-                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                )} 
-                            </div>
-                        </th>
-                        {showAddressDetails ? (
-                            <>
-                                <th 
-                                    className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none relative"
-                                    style={{ width: '23%' }}
-                                >
-                                    <div className="flex items-center justify-center gap-2">
-                                        <span onClick={() => handleSort('address')}>
-                                            Adresse
-                                            {sortColumn === 'address' && (
-                                                <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                            )}
-                                        </span>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setShowAddressDetails(false);
-                                            }}
-                                            className="text-red-600 hover:text-red-800 transition-colors ml-1"
-                                            title="Adressdetails ausblenden"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </th>
-                                <th 
-                                    className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                                    style={{ width: '8%' }}
-                                    onClick={() => handleSort('postal')}
-                                >
-                                    <div className="flex items-center justify-center gap-2">
-                                        PLZ
-                                        {sortColumn === 'postal' && (
-                                            <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                        )}
-                                    </div>
-                                </th>
-                                <th 
-                                    className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                                    style={{ width: '12%' }}
-                                    onClick={() => handleSort('province')}
-                                >
-                                    <div className="flex items-center justify-center gap-2">
-                                        Bundesland
-                                        {sortColumn === 'province' && (
-                                            <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                        )}
-                                    </div>
-                                </th>
-                                <th 
-                                    className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                                    style={{ width: '8%' }}
-                                    onClick={() => handleSort('country')}
-                                >
-                                    <div className="flex items-center justify-center gap-2">
-                                        Land
-                                        {sortColumn === 'country' && (
-                                            <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
-                                        )}
-                                    </div>
-                                </th>
-                            </>
-                        ) : (
-                            <th 
-                                className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none cursor-pointer hover:bg-gray-100"
-                                style={{ width: showAddressDetails ? '5%' : '7%' }}
-                            >
-                                <div className="flex items-center justify-center gap-2">
-                                    <span>Adresse</span>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setShowAddressDetails(true);
-                                        }}
-                                        className="text-green-600 hover:text-green-800 transition-colors"
-                                        title="Adressdetails anzeigen"
-                                    >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </th>
-                        )}
-
-                        <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            style={{ width: showAddressDetails ? '10%' : '10%' }}
-                            onClick={() => handleSort('group')}
-                        >
-                            <div className="flex items-center justify-center gap-2">
-                                Gruppe
-                                {sortColumn === 'group' && (
+                                {sortColumn === 'tickets' && (
                                     <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
                                 )}
+                            </div>
+                        </th>
+                        <th 
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap"
+                            onClick={() => handleSort('pickupCode')}
+                        >
+                            <div className="flex items-center justify-center gap-2">
+                                Abholcode
+                                {sortColumn === 'pickupCode' && (
+                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                                )}
+                            </div>
+                        </th>
+                        <th 
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
+                        >
+                            <div className="flex items-center justify-center gap-2">
+                                Liefermethode
+                            </div>
+                        </th>
+                        <th 
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => handleSort('address')}
+                        >
+                            <div className="flex items-center justify-center gap-2">
+                                Adresse
+                                {sortColumn === 'address' && (
+                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                                )}
+                            </div>
+                        </th>
+                        <th 
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => handleSort('postal')}
+                        >
+                            <div className="flex items-center justify-center gap-2">
+                                PLZ
+                                {sortColumn === 'postal' && (
+                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                                )}
+                            </div>
+                        </th>
+                        <th 
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => handleSort('province')}
+                        >
+                            <div className="flex items-center justify-center gap-2">
+                                Bundesland
+                                {sortColumn === 'province' && (
+                                    <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                                )}
+                            </div>
+                        </th>
+                        <th 
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
+                        >
+                            <div className="flex items-center justify-center gap-2">
+                                Status
                             </div>
                         </th>
                     </tr>
@@ -549,16 +473,15 @@ export default function Buyers() {
                 <tbody className="divide-y divide-gray-200">
                     {paginatedData.length === 0 ? (
                         <tr>
-                            <td colSpan={showAddressDetails ? 10 : 7} className="px-6 py-8 text-center text-sm text-gray-500">
+                            <td colSpan={8} className="px-6 py-8 text-center text-sm text-gray-500">
                                 {hasActiveFilters ? (
                                     <div className="flex flex-col items-center gap-2">
                                         <span className="text-gray-400">Nichts gefunden mit eingegebenen Filtern</span>
                                         <button
                                             onClick={() => {
                                                 setSearchText("");
-                                                setFilterCountry("");
-                                                setFilterVerified("");
-                                                setFilterGroup("");
+                                                setFilterDeliveryMethod("all");
+                                                setFilterSentStatus("all");
                                                 setFilterBuyerId(null);
                                             }}
                                             className="mt-2 text-xs text-blue-600 hover:text-blue-800 hover:underline"
@@ -574,52 +497,73 @@ export default function Buyers() {
                     ) : (
                         paginatedData.map((buyer) => (
                         <tr key={buyer.id} id={`buyer-${buyer.id}`} className="hover:bg-gray-50">
-                            <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                {buyer.id}
-                            </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 h-10">
                                 {buyer.name}
                             </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                                {showAddressDetails ? '...' : (buyer.tickets && buyer.tickets.length > 0 
-                                    ? buyer.tickets.map((t, idx) => (
-                                        <span key={t.id}>
-                                            <Link 
-                                                href={`/backend/tickets#ticket-${t.id}`}
-                                                className="text-blue-600 hover:text-blue-800 hover:underline"
-                                            >
-                                                {t.id}
-                                            </Link>
-                                            {idx < buyer.tickets.length - 1 && ', '}
-                                        </span>
-                                    ))
-                                    : '-')}
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
+                                        <div>{buyer.tickets?.length ?? 0}</div>
                             </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {showAddressDetails ? '...' : buyer.email}
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
+                                        <div>
+                                            {buyer.tickets[0]?.code ?? '-'}
+                                        </div>
                             </td>
-                            {showAddressDetails ? (
-                                <>
-                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {buyer.address}
-                                    </td>
-                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {buyer.postal}
-                                    </td>
-                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {buyer.province}
-                                    </td>
-                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {buyer.country}
-                                    </td>
-                                </>
-                            ) : (
-                                <td className="px-4 py-4 text-sm text-gray-500 text-center whitespace-nowrap">
-                                    ...
-                                </td>
-                            )}
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {showAddressDetails ? '...' : (buyer.group?.name ?? "-")}
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
+                                        <div>
+                                            {buyer.tickets[0]?.delivery ?? '-'}
+                                        </div>
+                            </td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 h-10">
+                                {buyer.address}
+                            </td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 h-10">
+                                {buyer.postal}
+                            </td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 h-10">
+                                {buyer.province}
+                            </td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
+                                        <div className="flex items-center justify-center h-full">
+                                        {(() => {
+                                            const firstTicket = buyer.tickets[0];
+                                            if (!firstTicket) return <span>-</span>;
+                                            
+                                            const isSent = firstTicket.sent === true;
+                                            const delivery = firstTicket.delivery?.toLowerCase() ?? '';
+                                            const isShipping = delivery.includes('versand') || delivery.includes('shipping');
+                                            const isPickup = delivery.includes('abholung') || delivery.includes('pickup');
+                                            
+                                            if (isSent) {
+                                                return (
+                                                    <div className="flex items-center justify-center gap-1.5">
+                                                        <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                        <span className="text-xs font-medium text-gray-700">
+                                                            {isShipping ? 'Versendet' : isPickup ? 'Abgeholt' : 'Erledigt'}
+                                                        </span>
+                                                    </div>
+                                                );
+                                            } else {
+                                                return (
+                                                    <button
+                                                        onClick={async () => {
+                                                            try {
+                                                                await markAsSentMutation.mutateAsync({ buyerId: buyer.id });
+                                                                await utils.buyers.all.invalidate();
+                                                            } catch (error) {
+                                                                console.error('Failed to mark tickets as sent:', error);
+                                                            }
+                                                        }}
+                                                        disabled={markAsSentMutation.isPending}
+                                                        className="px-2 py-0.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    >
+                                                        {markAsSentMutation.isPending ? '...' : 'Erledigt'}
+                                                    </button>
+                                                );
+                                            }
+                                        })()}
+                                        </div>
                             </td>
                         </tr>
                         ))
@@ -629,7 +573,7 @@ export default function Buyers() {
             </div>
             
             {/* Pagination controls */}
-            <div className="-mt-6 px-4">
+            <div className="-mt-3 px-4">
                 <div className="flex items-center justify-between px-3 py-2">
                     <div className="flex items-center gap-2">
                         <span className="text-xs text-gray-500">Anzeigen:</span>
