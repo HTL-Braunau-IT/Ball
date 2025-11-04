@@ -181,6 +181,7 @@ export default function FloatingActionButtons() {
       csvHeaders = [
         'ID',
         'Name',
+        'Ticket ID',
         'E-Mail',
         'Adresse',
         'PLZ',
@@ -190,17 +191,36 @@ export default function FloatingActionButtons() {
         'Gruppe'
       ];
 
-      csvData = filteredBuyers.map((buyer) => [
-        buyer.id,
-        buyer.name,
-        buyer.email,
-        buyer.address,
-        buyer.postal,
-        buyer.province,
-        buyer.country,
-        buyer.verified ? "Ja" : "Nein",
-        buyer.group?.name ?? "-"
-      ]);
+      csvData = filteredBuyers.flatMap((buyer) => {
+        // If buyer has no tickets, create one row with "-" for ticket ID
+        if (!buyer.tickets || buyer.tickets.length === 0) {
+          return [[
+            buyer.id,
+            buyer.name,
+            "-",
+            buyer.email,
+            buyer.address,
+            buyer.postal,
+            buyer.province,
+            buyer.country,
+            buyer.verified ? "Ja" : "Nein",
+            buyer.group?.name ?? "-"
+          ]];
+        }
+        // Create one row per ticket
+        return buyer.tickets.map((ticket) => [
+          buyer.id,
+          buyer.name,
+          ticket.id,
+          buyer.email,
+          buyer.address,
+          buyer.postal,
+          buyer.province,
+          buyer.country,
+          buyer.verified ? "Ja" : "Nein",
+          buyer.group?.name ?? "-"
+        ]);
+      });
 
       filename = `buyers_export_${new Date().toISOString().split('T')[0]}.csv`;
     }
