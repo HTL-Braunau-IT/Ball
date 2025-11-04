@@ -381,7 +381,7 @@ export default function Buyers() {
                 <thead className="">
                     <tr>
                         <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                             onClick={() => handleSort('name')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -392,28 +392,28 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
                         >
                             <div className="flex items-center justify-center gap-2">
                                 Karten
                             </div>
                         </th>
                         <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
                         >
                             <div className="flex items-center justify-center gap-2">
                                 Abholcode
                             </div>
                         </th>
                         <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
                         >
                             <div className="flex items-center justify-center gap-2">
                                 Liefermethode
                             </div>
                         </th>
                         <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                             onClick={() => handleSort('address')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -424,7 +424,7 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                             onClick={() => handleSort('postal')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -435,7 +435,7 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                             onClick={() => handleSort('province')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -446,7 +446,7 @@ export default function Buyers() {
                             </div>
                         </th>
                         <th 
-                            className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
+                            className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider select-none whitespace-nowrap"
                         >
                             <div className="flex items-center justify-center gap-2">
                                 Status
@@ -481,32 +481,33 @@ export default function Buyers() {
                     ) : (
                         paginatedData.map((buyer) => (
                         <tr key={buyer.id} id={`buyer-${buyer.id}`} className="hover:bg-gray-50">
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 h-10">
                                 {buyer.name}
                             </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
                                         <div>{buyer.tickets?.length ?? 0}</div>
                             </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
                                         <div>
                                             {buyer.tickets[0]?.code ?? '-'}
                                         </div>
                             </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
                                         <div>
                                             {buyer.tickets[0]?.delivery ?? '-'}
                                         </div>
                             </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 h-10">
                                 {buyer.address}
                             </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 h-10">
                                 {buyer.postal}
                             </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 h-10">
                                 {buyer.province}
                             </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
+                                        <div className="flex items-center justify-center h-full">
                                         {(() => {
                                             const firstTicket = buyer.tickets[0];
                                             if (!firstTicket) return <span>-</span>;
@@ -539,13 +540,14 @@ export default function Buyers() {
                                                             }
                                                         }}
                                                         disabled={markAsSentMutation.isPending}
-                                                        className="px-2 py-1 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        className="px-2 py-0.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                                     >
                                                         {markAsSentMutation.isPending ? '...' : 'Erledigt'}
                                                     </button>
                                                 );
                                             }
                                         })()}
+                                        </div>
                             </td>
                         </tr>
                         ))
