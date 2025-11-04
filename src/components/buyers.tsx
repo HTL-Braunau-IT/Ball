@@ -21,9 +21,8 @@ export default function Buyers() {
     // Search and filter states
     const [searchText, setSearchText] = useState("");
     const [debouncedSearchText, setDebouncedSearchText] = useState("");
-    const [filterCountry, setFilterCountry] = useState("");
-    const [filterVerified, setFilterVerified] = useState("");
-    const [filterGroup, setFilterGroup] = useState("");
+    const [filterDeliveryMethod, setFilterDeliveryMethod] = useState("all");
+    const [filterSentStatus, setFilterSentStatus] = useState("all");
     const [showAddressDetails, setShowAddressDetails] = useState(false);
 
     // Filter by buyer ID for hash navigation
@@ -80,7 +79,7 @@ export default function Buyers() {
     // Reset to page 1 when filters change
     useEffect(() => {
         setCurrentPage(1);
-    }, [debouncedSearchText, filterCountry, filterVerified, filterGroup, itemsPerPage, sortColumn, sortDirection]);
+    }, [debouncedSearchText, filterDeliveryMethod, filterSentStatus, itemsPerPage, sortColumn, sortDirection]);
 
     // Handle column sorting
     const handleSort = (column: SortColumn) => {
@@ -111,20 +110,26 @@ export default function Buyers() {
                 buyer.province.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
                 buyer.postal.toString().includes(debouncedSearchText);
             
-            // Country filter
-            const matchesCountry = filterCountry === "" || 
-                buyer.country.toLowerCase().includes(filterCountry.toLowerCase());
+            // Delivery method filter
+            const firstTicket = buyer.tickets[0];
+            const deliveryMethodLower = (firstTicket?.delivery ?? "").toLowerCase();
+            const isPostversand = deliveryMethodLower.includes('postversand');
+            const isAbholung = deliveryMethodLower.includes('abholung');
+            const matchesDeliveryMethod = filterDeliveryMethod === "all" 
+                ? true
+                : filterDeliveryMethod === "Abholung" 
+                    ? isAbholung 
+                    : filterDeliveryMethod === "Postversand" 
+                        ? isPostversand 
+                        : true;
             
-            // Verified filter
-            const matchesVerified = filterVerified === "" || 
-                (filterVerified === "ja" && buyer.verified) ||
-                (filterVerified === "nein" && !buyer.verified);
+            // Sent status filter
+            const isSent = firstTicket?.sent === true;
+            const matchesSentStatus = filterSentStatus === "all" || 
+                (filterSentStatus === "1" && isSent) ||
+                (filterSentStatus === "0" && !isSent);
             
-            // Group filter
-            const matchesGroup = filterGroup === "" || 
-                (buyer.group?.name ?? "").toLowerCase().includes(filterGroup.toLowerCase());
-            
-            return matchesBuyerId && matchesSearch && matchesCountry && matchesVerified && matchesGroup;
+            return matchesBuyerId && matchesSearch && matchesDeliveryMethod && matchesSentStatus;
         });
 
     // Sort data
@@ -187,7 +192,7 @@ export default function Buyers() {
         }
 
         return filtered;
-    }, [data, debouncedSearchText, filterCountry, filterVerified, filterGroup, filterBuyerId, sortColumn, sortDirection]);
+    }, [data, debouncedSearchText, filterDeliveryMethod, filterSentStatus, filterBuyerId, sortColumn, sortDirection]);
 
     // Update context with filtered data
     useEffect(() => {
@@ -217,16 +222,6 @@ export default function Buyers() {
         ? 1 
         : Math.ceil(dataLength / itemsPerPage);
 
-    // Get unique values for filters
-    const uniqueCountries = useMemo(() => {
-        if (!data) return [];
-        return Array.from(new Set(data.map(b => b.country)));
-    }, [data]);
-
-    const uniqueGroups = useMemo(() => {
-        if (!data) return [];
-        return Array.from(new Set(data.map(b => b.group?.name).filter(Boolean))).sort();
-    }, [data]);
 
     // Helper function to render filter button
     const renderFilterButton = (label: string, isActive: boolean, onClick: () => void, key?: string) => (
@@ -262,7 +257,7 @@ export default function Buyers() {
     }
 
     // Check if any filters are active
-    const hasActiveFilters = debouncedSearchText !== "" || filterCountry !== "" || filterVerified !== "" || filterGroup !== "" || filterBuyerId !== null;
+    const hasActiveFilters = debouncedSearchText !== "" || filterDeliveryMethod !== "all" || filterSentStatus !== "all" || filterBuyerId !== null;
 
     return (
         <div className="space-y-4">
@@ -296,62 +291,45 @@ export default function Buyers() {
                             )}
                         </div>
                         
-                        {/* Land filter */}
+                        {/* Liefermethode filter */}
                         <div className="flex items-center justify-center border-r border-gray-200">
                             <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Land
+                                Liefermethode
                             </div>
                             <div className="flex flex-wrap gap-2 px-3 py-2 justify-center">
-                                {renderFilterButton("Alle", filterCountry === "", () => {
-                                    setFilterCountry("");
+                                {renderFilterButton("Alle", filterDeliveryMethod === "all", () => {
+                                    setFilterDeliveryMethod("all");
                                     setFilterBuyerId(null);
                                 })}
-                                {uniqueCountries.map(c => 
-                                    renderFilterButton(c, filterCountry === c, () => {
-                                        setFilterCountry(c);
-                                        setFilterBuyerId(null);
-                                    }, c)
-                                )}
-                            </div>
-                        </div>
-                        
-                        {/* Verifiziert filter */}
-                        <div className="flex items-center justify-center border-r border-gray-200">
-                            <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Verifiziert
-                            </div>
-                            <div className="flex flex-wrap gap-2 px-3 py-2 justify-center">
-                                {renderFilterButton("Alle", filterVerified === "", () => {
-                                    setFilterVerified("");
+                                {renderFilterButton("Abholung", filterDeliveryMethod === "Abholung", () => {
+                                    setFilterDeliveryMethod("Abholung");
                                     setFilterBuyerId(null);
                                 })}
-                                {renderFilterButton("Ja", filterVerified === "ja", () => {
-                                    setFilterVerified("ja");
-                                    setFilterBuyerId(null);
-                                })}
-                                {renderFilterButton("Nein", filterVerified === "nein", () => {
-                                    setFilterVerified("nein");
+                                {renderFilterButton("Postversand", filterDeliveryMethod === "Postversand", () => {
+                                    setFilterDeliveryMethod("Postversand");
                                     setFilterBuyerId(null);
                                 })}
                             </div>
                         </div>
                         
-                        {/* Gruppe filter */}
+                        {/* Status filter */}
                         <div className="flex items-center justify-center">
                             <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Gruppe
+                                Status
                             </div>
                             <div className="flex flex-wrap gap-2 px-3 py-2 justify-center">
-                                {renderFilterButton("Alle", filterGroup === "", () => {
-                                    setFilterGroup("");
+                                {renderFilterButton("Alle", filterSentStatus === "all", () => {
+                                    setFilterSentStatus("all");
                                     setFilterBuyerId(null);
                                 })}
-                                {uniqueGroups.map(g => 
-                                    renderFilterButton(g, filterGroup === g, () => {
-                                        setFilterGroup(g);
-                                        setFilterBuyerId(null);
-                                    }, g)
-                                )}
+                                {renderFilterButton("Erledigt", filterSentStatus === "1", () => {
+                                    setFilterSentStatus("1");
+                                    setFilterBuyerId(null);
+                                })}
+                                {renderFilterButton("Nicht erledigt", filterSentStatus === "0", () => {
+                                    setFilterSentStatus("0");
+                                    setFilterBuyerId(null);
+                                })}
                             </div>
                         </div>
                     </div>
@@ -545,9 +523,8 @@ export default function Buyers() {
                                         <button
                                             onClick={() => {
                                                 setSearchText("");
-                                                setFilterCountry("");
-                                                setFilterVerified("");
-                                                setFilterGroup("");
+                                                setFilterDeliveryMethod("all");
+                                                setFilterSentStatus("all");
                                                 setFilterBuyerId(null);
                                             }}
                                             className="mt-2 text-xs text-blue-600 hover:text-blue-800 hover:underline"
