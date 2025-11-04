@@ -181,7 +181,7 @@ export default function FloatingActionButtons() {
       csvHeaders = [
         'ID',
         'Name',
-        'Ticket ID',
+        'Karte',
         'E-Mail',
         'Adresse',
         'PLZ',
