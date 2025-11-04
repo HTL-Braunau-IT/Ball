@@ -541,8 +541,7 @@ export default function Buyers() {
                                 {buyer.name}
                             </td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                                        {/* Rework to display number of tickets */}
-                                        <div># of tickets</div>
+                                        <div>{buyer.tickets?.length ?? 0}</div>
                             </td>
                             {showAddressDetails ? (
                                 <>
