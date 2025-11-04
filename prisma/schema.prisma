@@ -28,7 +28,7 @@ model ticketReserves {
 model soldTickets {                                    
     id        Int      @id @default(autoincrement())
     delivery  String                                   // Z - delivery method of the ticket
-    code      String   @unique                         // Z - code need when using pickup as delivery method (randomly generate?)
+    code      String                        // Z - code need when using pickup as delivery method (randomly generate?)
     paid      Boolean?
     sent      Boolean?                                // Z - has the ticket been sent? (only relevant if the delivery is not a reservation)
     transref  String                                   // Z - placeholder for a transaction reference from stripe 
