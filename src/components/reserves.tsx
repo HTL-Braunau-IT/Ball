@@ -9,6 +9,7 @@ interface EditableReserve {
   amount: number;
   price: number;
   deliveryMethodIds: number[];
+  maxTickets?: number;
 }
 
 export default function TicketReserves() {
@@ -38,23 +39,43 @@ export default function TicketReserves() {
             window.alert(message);
         }
     });
+    const updateBuyerGroupMutation = api.buyerGroups.update.useMutation({
+        onSuccess: () => {
+            void refetch();
+        },
+        onError: (error) => {
+            console.error("Update buyerGroup failed:", error);
+            alert(error.message || "Fehler beim Aktualisieren der Max. Tickets");
+        }
+    });
 
+    const [originalMaxTickets, setOriginalMaxTickets] = useState<number | null>(null);
+    const [buyerGroupId, setBuyerGroupId] = useState<number | null>(null);
     const handleEdit = useCallback((reserve: any) => {
         const deliveryMethodIds = Array.isArray(reserve.deliveryMethods) 
             ? reserve.deliveryMethods.map((dm: any) => dm.id as number)
             : [];
         const typeId = Array.isArray(reserve.type) ? reserve.type[0]?.id : reserve.type?.id;
+        const maxTickets = Array.isArray(reserve.type) && reserve.type.length > 0
+            ? reserve.type[0]?.maxTickets
+            : undefined;
+        const bgId = Array.isArray(reserve.type) && reserve.type.length > 0
+            ? reserve.type[0]?.id
+            : null;
 
         const initialData = {
             id: reserve.id,
             amount: reserve.amount,
             price: reserve.price,
-            deliveryMethodIds
+            deliveryMethodIds,
+            maxTickets
         };
 
         setEditData(initialData);
         originalDataRef.current = initialData; // Store original for error recovery
         setOriginalTypeId(typeId || 1);
+        setOriginalMaxTickets(maxTickets);
+        setBuyerGroupId(bgId);
         setEditingId(reserve.id);
     }, []);
 
@@ -80,6 +101,7 @@ export default function TicketReserves() {
             return;
         }
         
+        // Update reserve fields
         updateMutation.mutate({
             id: editData.id,
             amount: editData.amount,
@@ -87,13 +109,24 @@ export default function TicketReserves() {
             typeId: originalTypeId || 1, // Keep existing type, don't allow editing
             deliveryMethodIds: editData.deliveryMethodIds
         });
-    }, [editData, originalTypeId, updateMutation, data]);
+
+        // Update maxTickets if it was changed (using buyerGroups router)
+        if (editData.maxTickets !== undefined && editData.maxTickets !== originalMaxTickets && buyerGroupId) {
+            updateBuyerGroupMutation.mutate({
+                id: buyerGroupId,
+                maxTickets: editData.maxTickets,
+                reserveId: editData.id // Pass reserveId for validation
+            });
+        }
+    }, [editData, originalTypeId, originalMaxTickets, buyerGroupId, updateMutation, updateBuyerGroupMutation, data]);
 
     const handleCancel = useCallback(() => {
         setEditingId(null);
         setEditData(null);
         originalDataRef.current = null;
         setOriginalTypeId(null);
+        setOriginalMaxTickets(null);
+        setBuyerGroupId(null);
     }, []);
 
     const handleFieldChange = useCallback((field: keyof EditableReserve, value: any) => {
@@ -137,6 +170,9 @@ export default function TicketReserves() {
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-20">
                             Menge
                         </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap w-32">
+                            Max. Tickets
+                        </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Status
                         </th>
@@ -163,6 +199,10 @@ export default function TicketReserves() {
                         const typeLabel = Array.isArray(typeValue)
                             ? typeValue.map((t: { name?: string }) => t?.name ?? "").filter(Boolean).join(", ") || "Unbekannter Typ"
                             : (typeValue as { name?: string })?.name ?? "Unbekannter Typ";
+                        
+                        const maxTickets = Array.isArray(typeValue) && typeValue.length > 0
+                            ? typeValue[0]?.maxTickets ?? "-"
+                            : "-";
 
                         const deliveryMethodsText = Array.isArray(reserve.deliveryMethods)
                             ? reserve.deliveryMethods.map((dm: { name?: string }) => dm?.name ?? "").filter(Boolean).join(", ") || "-"
@@ -193,6 +233,28 @@ export default function TicketReserves() {
                                         />
                                     ) : (
                                         reserve.amount
+                                    )}
+                                </td>
+
+                                {/* Max Tickets */}
+                                <td className="px-4 py-3 text-sm text-gray-500">
+                                    {isEditing ? (
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max={remainingCount}
+                                            value={editData?.maxTickets ?? maxTickets ?? ""}
+                                            onChange={(e) => {
+                                                const value = e.target.value === "" ? 0 : parseInt(e.target.value) || 0;
+                                                // Clamp value to remaining tickets (available for purchase)
+                                                const clampedValue = Math.min(value, remainingCount);
+                                                handleFieldChange('maxTickets', clampedValue);
+                                            }}
+                                            className="w-20 px-3 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                            title={`Maximum verfügbar: ${remainingCount} (von ${reserve.amount} insgesamt)`}
+                                        />
+                                    ) : (
+                                        maxTickets
                                     )}
                                 </td>
 

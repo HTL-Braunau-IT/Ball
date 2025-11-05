@@ -68,6 +68,8 @@ model buyerGroups {
   id             Int              @id @default(autoincrement())
   name           String
   maxTickets     Int              @default(2)
+  updatedAt      DateTime         @default(now()) @updatedAt
+  updatedBy      String           @default("System")
   buyers         Buyers[]
   ticketReserves ticketReserves[]
 }

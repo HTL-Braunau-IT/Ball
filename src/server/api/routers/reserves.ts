@@ -6,7 +6,16 @@ export const reservesRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
     const reserves = await ctx.db.ticketReserves.findMany({
       include: { 
-        type: true, 
+        type: {
+          orderBy: {
+            name: 'asc'
+          },
+          select: {
+            id: true,
+            name: true,
+            maxTickets: true
+          }
+        }, 
         deliveryMethods: true,
         soldTickets: {
           select: {
@@ -17,9 +26,17 @@ export const reservesRouter = createTRPCRouter({
         }
       }
     });
-    return reserves.map(({ id, type, amount, price, updatedAt, updatedBy, deliveryMethods, soldTickets }) => ({ 
+    
+    // Sort reserves by type name (first type's name)
+    const sortedReserves = reserves.sort((a, b) => {
+      const aTypeName = a.type[0]?.name || '';
+      const bTypeName = b.type[0]?.name || '';
+      return aTypeName.localeCompare(bTypeName);
+    });
+    
+    return sortedReserves.map(({ id, type, amount, price, updatedAt, updatedBy, deliveryMethods, soldTickets }) => ({ 
       id,
-      type, 
+      type: type.map(t => ({ id: t.id, name: t.name, maxTickets: t.maxTickets })), 
       amount, 
       price, 
       updatedAt, 
