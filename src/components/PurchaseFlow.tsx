@@ -67,14 +67,25 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
     }
   };
 
-  const selectedDeliveryMethod = deliveryMethods?.find(dm => 
-    dm.name.toLowerCase().includes(deliveryMethod === "shipping" ? "versand" : "abholung")
+  // Find shipping and self-pickup delivery methods separately
+  const shippingDeliveryMethod = deliveryMethods?.find(dm => 
+    dm.name.toLowerCase().includes("versand")
   );
+  const selfPickupDeliveryMethod = deliveryMethods?.find(dm => 
+    dm.name.toLowerCase().includes("abholung")
+  );
+  
+  // Use the selected delivery method when available, otherwise fall back to shipping
+  const selectedDeliveryMethod = deliveryMethod === "shipping" 
+    ? shippingDeliveryMethod 
+    : deliveryMethod === "self-pickup" 
+    ? selfPickupDeliveryMethod 
+    : null;
 
   const maxQuantity = availableTicket?.maxTickets ?? 2;
   const availableAmount = availableTicket?.amount ?? 0;
   const totalPrice = availableTicket && quantity ? 
-    (availableTicket.price * quantity) + (deliveryMethod === "shipping" ? (selectedDeliveryMethod?.surcharge ?? 0) : 0) : 0;
+    (availableTicket.price * quantity) + (deliveryMethod === "shipping" ? ((shippingDeliveryMethod?.surcharge ?? 0) / 100) : 0) : 0;
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -139,7 +150,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-semibold" style={{ color: "var(--color-gold-light)" }}>
-                    +{selectedDeliveryMethod?.surcharge ?? 0}€
+                    +{((shippingDeliveryMethod?.surcharge ?? 0) / 100).toFixed(2)}€
                   </p>
                 </div>
               </div>
@@ -185,7 +196,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
           selectedTicket={availableTicket}
           quantity={quantity}
           deliveryMethod={deliveryMethod!}
-          shippingFee={selectedDeliveryMethod?.surcharge ?? 0}
+          shippingFee={(shippingDeliveryMethod?.surcharge ?? 0) / 100}
           totalPrice={totalPrice}
           onPurchase={handlePurchase}
           onBack={() => setCurrentStep(3)}
@@ -539,14 +550,14 @@ function PaymentSummary({
         {deliveryMethod === "shipping" && shippingFee > 0 && (
           <div className="flex justify-between">
             <span style={{ color: "var(--color-text-primary)" }}>Versandkosten</span>
-            <span style={{ color: "var(--color-text-primary)" }}>{shippingFee}€</span>
+            <span style={{ color: "var(--color-text-primary)" }}>{shippingFee.toFixed(2)}€</span>
           </div>
         )}
         
         <div className="border-t pt-4">
           <div className="flex justify-between text-lg font-semibold">
             <span style={{ color: "var(--color-text-primary)" }}>Gesamt</span>
-            <span style={{ color: "var(--color-gold-light)" }}>{totalPrice}€</span>
+            <span style={{ color: "var(--color-gold-light)" }}>{totalPrice.toFixed(2)}€</span>
           </div>
         </div>
       </div>

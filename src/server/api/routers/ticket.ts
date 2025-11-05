@@ -226,8 +226,8 @@ export const ticketRouter = createTRPCRouter({
         throw new Error("Delivery method not found");
       }
 
-      // Calculate shipping fee
-      const shippingFee = deliveryMethod === "shipping" ? (deliveryMethodInfo.surcharge ?? 0) : 0;
+      // Calculate shipping fee (in cents - database stores surcharge in cents)
+      const shippingFeeInCents = deliveryMethod === "shipping" ? (deliveryMethodInfo.surcharge ?? 0) : 0;
 
       // Check if buyer already has tickets (prevent multiple purchases)
       const existingBuyer = await ctx.db.buyers.findUnique({
@@ -299,7 +299,7 @@ export const ticketRouter = createTRPCRouter({
           transref: "", // Will be updated after payment
           buyerId: buyer.id,
           reserveId: ticketReserve.id,
-          soldPrice: ticketReserve.price + shippingFee,
+          soldPrice: ticketReserve.price + shippingFeeInCents,
         })),
       });
 
@@ -333,7 +333,7 @@ export const ticketRouter = createTRPCRouter({
             },
             quantity: quantity,
           },
-          ...(shippingFee > 0
+          ...(shippingFeeInCents > 0
             ? [
                 {
                   price_data: {
@@ -342,7 +342,7 @@ export const ticketRouter = createTRPCRouter({
                       name: "Versandkosten",
                       description: "Versand der Tickets",
                     },
-                    unit_amount: shippingFee * 100,
+                    unit_amount: shippingFeeInCents, // Already in cents, no conversion needed
                   },
                   quantity: 1,
                 },
