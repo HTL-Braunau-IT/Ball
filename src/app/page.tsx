@@ -134,7 +134,7 @@ export default async function Home() {
                 BALL DER TESTER
               </h2>
               <p className="text-2xl mb-16" style={{ color: 'var(--color-text-secondary)' }}>
-                Ein eleganter Abend im Zeichen von DUNE
+                Ein eleganter Abend im Zeichen von TEST
               </p>
             </div>
             
