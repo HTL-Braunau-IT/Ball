@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { api } from "~/trpc/react";
 import TicketProgressBar from "./TicketProgressBar";
 
@@ -15,16 +15,28 @@ interface EditableReserve {
 export default function TicketReserves() {
     const { data, isLoading, isError, error, refetch } = api.reserves.all.useQuery();
     const { data: deliveryMethods } = api.reserves.getDeliveryMethods.useQuery();
+    
+    const [editingId, setEditingId] = useState<number | null>(null);
+    const [editData, setEditData] = useState<EditableReserve | null>(null);
+    const [originalTypeId, setOriginalTypeId] = useState<number | null>(null);
+    const originalDataRef = useRef<EditableReserve | null>(null);
+
     const updateMutation = api.reserves.update.useMutation({
         onSuccess: () => {
             setEditingId(null);
             setEditData(null);
+            originalDataRef.current = null;
             void refetch();
         },
         onError: (error) => {
             console.error("Update failed:", error);
-            // Reset to original data on error
-            setEditData(null);
+            // Restore original data on error
+            if (originalDataRef.current) {
+                setEditData(originalDataRef.current);
+            }
+            // Display error message to user
+            const message = error.message || "Fehler beim Speichern";
+            window.alert(message);
         }
     });
     const updateBuyerGroupMutation = api.buyerGroups.update.useMutation({
@@ -37,12 +49,8 @@ export default function TicketReserves() {
         }
     });
 
-    const [editingId, setEditingId] = useState<number | null>(null);
-    const [editData, setEditData] = useState<EditableReserve | null>(null);
-    const [originalTypeId, setOriginalTypeId] = useState<number | null>(null);
     const [originalMaxTickets, setOriginalMaxTickets] = useState<number | null>(null);
     const [buyerGroupId, setBuyerGroupId] = useState<number | null>(null);
-
     const handleEdit = useCallback((reserve: any) => {
         const deliveryMethodIds = Array.isArray(reserve.deliveryMethods) 
             ? reserve.deliveryMethods.map((dm: any) => dm.id as number)
@@ -55,13 +63,16 @@ export default function TicketReserves() {
             ? reserve.type[0]?.id
             : null;
 
-        setEditData({
+        const initialData = {
             id: reserve.id,
             amount: reserve.amount,
             price: reserve.price,
             deliveryMethodIds,
             maxTickets
-        });
+        };
+
+        setEditData(initialData);
+        originalDataRef.current = initialData; // Store original for error recovery
         setOriginalTypeId(typeId || 1);
         setOriginalMaxTickets(maxTickets);
         setBuyerGroupId(bgId);
@@ -69,7 +80,26 @@ export default function TicketReserves() {
     }, []);
 
     const handleSave = useCallback(() => {
-        if (!editData) return;
+        if (!editData || !data) return;
+        
+        // Find the current reserve to get sold tickets count
+        const currentReserve = data.find(r => r.id === editData.id);
+        if (!currentReserve) return;
+
+        const soldCount = currentReserve.soldTickets?.length || 0;
+
+        // Client-side validation
+        if (editData.amount < soldCount) {
+            window.alert(
+                `Die Anzahl kann nicht kleiner sein als die bereits verkauften Tickets (${soldCount}).`
+            );
+            return;
+        }
+
+        if (editData.deliveryMethodIds.length === 0) {
+            window.alert("Mindestens eine Versandmethode muss gewählt werden.");
+            return;
+        }
         
         // Update reserve fields
         updateMutation.mutate({
@@ -88,11 +118,12 @@ export default function TicketReserves() {
                 reserveId: editData.id // Pass reserveId for validation
             });
         }
-    }, [editData, originalTypeId, originalMaxTickets, buyerGroupId, updateMutation, updateBuyerGroupMutation]);
+    }, [editData, originalTypeId, originalMaxTickets, buyerGroupId, updateMutation, updateBuyerGroupMutation, data]);
 
     const handleCancel = useCallback(() => {
         setEditingId(null);
         setEditData(null);
+        originalDataRef.current = null;
         setOriginalTypeId(null);
         setOriginalMaxTickets(null);
         setBuyerGroupId(null);
@@ -195,7 +226,7 @@ export default function TicketReserves() {
                                     {isEditing ? (
                                         <input
                                             type="number"
-                                            min="0"
+                                            min={soldCount}
                                             value={editData?.amount || 0}
                                             onChange={(e) => handleFieldChange('amount', parseInt(e.target.value) || 0)}
                                             className="w-18 px-3 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
