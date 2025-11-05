@@ -9,6 +9,11 @@ export const reservesRouter = createTRPCRouter({
         type: {
           orderBy: {
             name: 'asc'
+          },
+          select: {
+            id: true,
+            name: true,
+            maxTickets: true
           }
         }, 
         deliveryMethods: true,
@@ -31,7 +36,7 @@ export const reservesRouter = createTRPCRouter({
     
     return sortedReserves.map(({ id, type, amount, price, updatedAt, updatedBy, deliveryMethods, soldTickets }) => ({ 
       id,
-      type, 
+      type: type.map(t => ({ id: t.id, name: t.name, maxTickets: t.maxTickets })), 
       amount, 
       price, 
       updatedAt, 
