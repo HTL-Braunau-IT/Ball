@@ -155,7 +155,7 @@ export default function TicketReserves() {
                                     {isEditing ? (
                                         <input
                                             type="number"
-                                            min="0"
+                                            min={soldCount}
                                             value={editData?.amount || 0}
                                             onChange={(e) => handleFieldChange('amount', parseInt(e.target.value) || 0)}
                                             className="w-18 px-3 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
