@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { api } from "~/trpc/react";
 import TicketProgressBar from "./TicketProgressBar";
 
@@ -14,22 +14,30 @@ interface EditableReserve {
 export default function TicketReserves() {
     const { data, isLoading, isError, error, refetch } = api.reserves.all.useQuery();
     const { data: deliveryMethods } = api.reserves.getDeliveryMethods.useQuery();
+    
+    const [editingId, setEditingId] = useState<number | null>(null);
+    const [editData, setEditData] = useState<EditableReserve | null>(null);
+    const [originalTypeId, setOriginalTypeId] = useState<number | null>(null);
+    const originalDataRef = useRef<EditableReserve | null>(null);
+
     const updateMutation = api.reserves.update.useMutation({
         onSuccess: () => {
             setEditingId(null);
             setEditData(null);
+            originalDataRef.current = null;
             void refetch();
         },
         onError: (error) => {
             console.error("Update failed:", error);
-            // Reset to original data on error
-            setEditData(null);
+            // Restore original data on error
+            if (originalDataRef.current) {
+                setEditData(originalDataRef.current);
+            }
+            // Display error message to user
+            const message = error.message || "Fehler beim Speichern";
+            window.alert(message);
         }
     });
-
-    const [editingId, setEditingId] = useState<number | null>(null);
-    const [editData, setEditData] = useState<EditableReserve | null>(null);
-    const [originalTypeId, setOriginalTypeId] = useState<number | null>(null);
 
     const handleEdit = useCallback((reserve: any) => {
         const deliveryMethodIds = Array.isArray(reserve.deliveryMethods) 
@@ -37,18 +45,40 @@ export default function TicketReserves() {
             : [];
         const typeId = Array.isArray(reserve.type) ? reserve.type[0]?.id : reserve.type?.id;
 
-        setEditData({
+        const initialData = {
             id: reserve.id,
             amount: reserve.amount,
             price: reserve.price,
             deliveryMethodIds
-        });
+        };
+
+        setEditData(initialData);
+        originalDataRef.current = initialData; // Store original for error recovery
         setOriginalTypeId(typeId || 1);
         setEditingId(reserve.id);
     }, []);
 
     const handleSave = useCallback(() => {
-        if (!editData) return;
+        if (!editData || !data) return;
+        
+        // Find the current reserve to get sold tickets count
+        const currentReserve = data.find(r => r.id === editData.id);
+        if (!currentReserve) return;
+
+        const soldCount = currentReserve.soldTickets?.length || 0;
+
+        // Client-side validation
+        if (editData.amount < soldCount) {
+            window.alert(
+                `Die Anzahl kann nicht kleiner sein als die bereits verkauften Tickets (${soldCount}).`
+            );
+            return;
+        }
+
+        if (editData.deliveryMethodIds.length === 0) {
+            window.alert("Mindestens eine Versandmethode muss gewählt werden.");
+            return;
+        }
         
         updateMutation.mutate({
             id: editData.id,
@@ -57,11 +87,12 @@ export default function TicketReserves() {
             typeId: originalTypeId || 1, // Keep existing type, don't allow editing
             deliveryMethodIds: editData.deliveryMethodIds
         });
-    }, [editData, originalTypeId, updateMutation]);
+    }, [editData, originalTypeId, updateMutation, data]);
 
     const handleCancel = useCallback(() => {
         setEditingId(null);
         setEditData(null);
+        originalDataRef.current = null;
         setOriginalTypeId(null);
     }, []);
 
