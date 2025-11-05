@@ -12,9 +12,10 @@ export const env = createEnv({
     NEXTAUTH_SECRET: z.string(),
     EMAIL_FROM: z.string(),
     // Microsoft Graph API Configuration
-    CLIENT_ID: z.string(),
-    TENANT_ID: z.string(),
-    APP_SECRET: z.string(),
+    // Optional during build, but required at runtime
+    CLIENT_ID: z.string().optional(),
+    TENANT_ID: z.string().optional(),
+    APP_SECRET: z.string().optional(),
     STRIPE_SECRET_KEY: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])

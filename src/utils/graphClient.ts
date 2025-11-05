@@ -6,10 +6,16 @@ let msalApp: ConfidentialClientApplication | null = null;
 
 /**
  * Get MSAL application instance (reused across calls)
+ * Only initializes at runtime, not during build
  */
 function getMsalApp(): ConfidentialClientApplication {
   if (msalApp) {
     return msalApp;
+  }
+
+  // Validate required environment variables
+  if (!env.CLIENT_ID || !env.TENANT_ID || !env.APP_SECRET) {
+    throw new Error("Microsoft Graph API credentials are not configured. Please set CLIENT_ID, TENANT_ID, and APP_SECRET environment variables.");
   }
 
   const msalConfig = {
@@ -27,8 +33,20 @@ function getMsalApp(): ConfidentialClientApplication {
 /**
  * Get an authenticated Microsoft Graph client using client credentials flow
  * The token is fetched fresh on each call to handle expiration
+ * This function should only be called at runtime, not during build
  */
 export async function getGraphClient(): Promise<Client> {
+  // Prevent initialization during build time
+  if (process.env.NEXT_PHASE === "phase-production-build" || 
+      process.env.NEXT_PHASE === "phase-development-build") {
+    throw new Error("Graph client cannot be initialized during build time. This function should only be called at runtime.");
+  }
+
+  // Validate environment variables are available
+  if (!env.CLIENT_ID || !env.TENANT_ID || !env.APP_SECRET) {
+    throw new Error("Microsoft Graph API credentials are not configured. Please set CLIENT_ID, TENANT_ID, and APP_SECRET environment variables.");
+  }
+
   const cca = getMsalApp();
 
   // Get access token (MSAL handles caching internally)

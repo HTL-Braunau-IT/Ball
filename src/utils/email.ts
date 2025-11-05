@@ -1,4 +1,3 @@
-import { getGraphClient } from './graphClient';
 import { env } from '~/env';
 
 /**
@@ -74,6 +73,8 @@ export async function sendConfirmationEmail(data: EmailData): Promise<void> {
   }
 
   try {
+    // Dynamic import to avoid loading graphClient during build
+    const { getGraphClient } = await import('./graphClient');
     const graphClient = await getGraphClient();
     const fromEmail = extractEmailAddress(env.EMAIL_FROM);
 
@@ -108,6 +109,8 @@ export async function sendShippingNotificationEmail(data: ShippingNotificationDa
   const htmlContent = generateShippingNotificationHTML({ name, code, address });
 
   try {
+    // Dynamic import to avoid loading graphClient during build
+    const { getGraphClient } = await import('./graphClient');
     const graphClient = await getGraphClient();
     const fromEmail = extractEmailAddress(env.EMAIL_FROM);
 
@@ -142,6 +145,8 @@ export async function sendPickupNotificationEmail(data: PickupNotificationData):
   const htmlContent = generatePickupNotificationHTML({ name, code });
 
   try {
+    // Dynamic import to avoid loading graphClient during build
+    const { getGraphClient } = await import('./graphClient');
     const graphClient = await getGraphClient();
     const fromEmail = extractEmailAddress(env.EMAIL_FROM);
 
