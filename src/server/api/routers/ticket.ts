@@ -6,9 +6,15 @@ import { generatePickupCode } from "~/utils/generatePickupCode";
 import { shippingAddressSchema, selfPickupSchema, type ShippingAddress } from "~/utils/validateAddress";
 import { sendConfirmationEmail, sendShippingNotificationEmail } from "~/utils/email";
 
-const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2025-09-30.clover",
-});
+// Lazy initialization of Stripe client to avoid build-time errors
+const getStripe = () => {
+  if (!env.STRIPE_SECRET_KEY) {
+    throw new Error("STRIPE_SECRET_KEY is not configured. Please set the STRIPE_SECRET_KEY environment variable.");
+  }
+  return new Stripe(env.STRIPE_SECRET_KEY, {
+    apiVersion: "2025-09-30.clover",
+  });
+};
 
 export const ticketRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
@@ -312,6 +318,7 @@ export const ticketRouter = createTRPCRouter({
       }
 
       // Create Stripe checkout session
+      const stripe = getStripe();
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         line_items: [
@@ -367,6 +374,7 @@ export const ticketRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       console.log(`[confirmPayment] Processing session: ${input.sessionId}`);
       
+      const stripe = getStripe();
       const session = await stripe.checkout.sessions.retrieve(input.sessionId);
 
       if (session.payment_status !== "paid") {

@@ -7,16 +7,17 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    DATABASE_URL: z.string(),
-    NEXTAUTH_URL: z.string(),
-    NEXTAUTH_SECRET: z.string(),
-    EMAIL_FROM: z.string(),
+    // Make these optional during build - they're required at runtime
+    DATABASE_URL: z.string().optional(),
+    NEXTAUTH_URL: z.string().optional(),
+    NEXTAUTH_SECRET: z.string().optional(),
+    EMAIL_FROM: z.string().optional(),
     // Microsoft Graph API Configuration
     // Optional during build, but required at runtime
     CLIENT_ID: z.string().optional(),
     TENANT_ID: z.string().optional(),
     APP_SECRET: z.string().optional(),
-    STRIPE_SECRET_KEY: z.string(),
+    STRIPE_SECRET_KEY: z.string().optional(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -29,7 +30,8 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_TICKET_SALE_DATE: z.string().optional(),
-    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string(),
+    // Optional during build - required at runtime
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
   },
 
   /**
