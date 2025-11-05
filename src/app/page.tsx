@@ -131,7 +131,7 @@ export default async function Home() {
                 HTL BRAUNAU
               </h1>
               <h2 className="text-5xl font-semibold mb-8" style={{ color: 'var(--color-text-primary)' }}>
-                BALL DER AUSERWÄHLTEN
+                BALL DER TESTER
               </h2>
               <p className="text-2xl mb-16" style={{ color: 'var(--color-text-secondary)' }}>
                 Ein eleganter Abend im Zeichen von DUNE
