@@ -58,6 +58,31 @@ export const reservesRouter = createTRPCRouter({
       id: z.number()
     })
   ).mutation(async ({ ctx, input }) => {
+    // First, fetch the current reserve with sold tickets count
+    const currentReserve = await ctx.db.ticketReserves.findUnique({
+      where: { id: input.id },
+      include: {
+        soldTickets: {
+          select: {
+            id: true
+          }
+        }
+      }
+    });
+
+    if (!currentReserve) {
+      throw new Error("Kontingent nicht gefunden");
+    }
+
+    const soldTicketsCount = currentReserve.soldTickets.length;
+
+    // Validate that new amount is not less than sold tickets
+    if (input.amount < soldTicketsCount) {
+      throw new Error(
+        `Die Anzahl kann nicht kleiner sein als die bereits verkauften Tickets (${soldTicketsCount}).`
+      );
+    }
+
     return ctx.db.ticketReserves.update({
       where: { id: input.id },
       data: {
