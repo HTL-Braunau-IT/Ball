@@ -73,6 +73,9 @@ export async function sendConfirmationEmail(data: EmailData): Promise<void> {
   }
 
   try {
+    if (!env.EMAIL_FROM) {
+      throw new Error('EMAIL_FROM is not configured');
+    }
     // Dynamic import to avoid loading graphClient during build
     const { getGraphClient } = await import('./graphClient');
     const graphClient = await getGraphClient();
@@ -109,6 +112,9 @@ export async function sendShippingNotificationEmail(data: ShippingNotificationDa
   const htmlContent = generateShippingNotificationHTML({ name, code, address });
 
   try {
+    if (!env.EMAIL_FROM) {
+      throw new Error('EMAIL_FROM is not configured');
+    }
     // Dynamic import to avoid loading graphClient during build
     const { getGraphClient } = await import('./graphClient');
     const graphClient = await getGraphClient();
@@ -145,6 +151,9 @@ export async function sendPickupNotificationEmail(data: PickupNotificationData):
   const htmlContent = generatePickupNotificationHTML({ name, code });
 
   try {
+    if (!env.EMAIL_FROM) {
+      throw new Error('EMAIL_FROM is not configured');
+    }
     // Dynamic import to avoid loading graphClient during build
     const { getGraphClient } = await import('./graphClient');
     const graphClient = await getGraphClient();
