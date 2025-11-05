@@ -96,7 +96,9 @@ export default function TicketReserves() {
     }
 
     return (
-        <div className="overflow-x-auto">
+        <div className="space-y-4">
+            <h2 className="text-lg font-semibold text-gray-900">Kontingente</h2>
+            <div className="overflow-x-auto">
                 <table className="">
                 <thead className="">
                     <tr>
@@ -289,6 +291,7 @@ export default function TicketReserves() {
                     })}
                 </tbody>
             </table>
+            </div>
         </div>
     );
 }
