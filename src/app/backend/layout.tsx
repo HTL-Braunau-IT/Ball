@@ -10,7 +10,7 @@ import { FilteredDataProvider } from "~/contexts/FilteredDataContext";
 
 const navigationItems = [
   { name: "Dashboard", href: "/backend" },
-  { name: "Kontingente u. Gruppen", href: "/backend/reserves" },
+  { name: "Kontingente", href: "/backend/reserves" },
   { name: "Liefermethoden", href: "/backend/delivery-methods" },
   { name: "Käufer", href: "/backend/buyers" },
   { name: "Absolventen Import", href: "/backend/import-alumni" },

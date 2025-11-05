@@ -19,7 +19,7 @@ type Section = {
 const sections: ReadonlyArray<Section> = [
     {
       title: "Kontingente",
-      description: "Verwalte Karten-Kontingente",
+      description: "Verwalte Karten-Kontingente und Begrenzungen",
       href: "/backend/reserves",
       hoverBg: "hover:bg-blue-50",
       iconBg: "bg-blue-500 hover:bg-blue-600",
