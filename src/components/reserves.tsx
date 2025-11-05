@@ -33,6 +33,7 @@ export default function TicketReserves() {
         },
         onError: (error) => {
             console.error("Update buyerGroup failed:", error);
+            alert(error.message || "Fehler beim Aktualisieren der Max. Tickets");
         }
     });
 
@@ -83,7 +84,8 @@ export default function TicketReserves() {
         if (editData.maxTickets !== undefined && editData.maxTickets !== originalMaxTickets && buyerGroupId) {
             updateBuyerGroupMutation.mutate({
                 id: buyerGroupId,
-                maxTickets: editData.maxTickets
+                maxTickets: editData.maxTickets,
+                reserveId: editData.id // Pass reserveId for validation
             });
         }
     }, [editData, originalTypeId, originalMaxTickets, buyerGroupId, updateMutation, updateBuyerGroupMutation]);
@@ -193,7 +195,7 @@ export default function TicketReserves() {
                                     {isEditing ? (
                                         <input
                                             type="number"
-                                            min="1"
+                                            min="0"
                                             value={editData?.amount || 0}
                                             onChange={(e) => handleFieldChange('amount', parseInt(e.target.value) || 0)}
                                             className="w-18 px-3 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -208,13 +210,17 @@ export default function TicketReserves() {
                                     {isEditing ? (
                                         <input
                                             type="number"
-                                            min="1"
+                                            min="0"
+                                            max={remainingCount}
                                             value={editData?.maxTickets ?? maxTickets ?? ""}
                                             onChange={(e) => {
                                                 const value = e.target.value === "" ? 0 : parseInt(e.target.value) || 0;
-                                                handleFieldChange('maxTickets', value);
+                                                // Clamp value to remaining tickets (available for purchase)
+                                                const clampedValue = Math.min(value, remainingCount);
+                                                handleFieldChange('maxTickets', clampedValue);
                                             }}
                                             className="w-20 px-3 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                            title={`Maximum verfügbar: ${remainingCount} (von ${reserve.amount} insgesamt)`}
                                         />
                                     ) : (
                                         maxTickets

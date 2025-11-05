@@ -36,10 +36,36 @@ export const buyerGroupsRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.number(),
-        maxTickets: z.number().min(1),
+        maxTickets: z.number().min(0),
+        reserveId: z.number().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // If reserveId is provided, validate maxTickets against remaining tickets (available)
+      if (input.reserveId) {
+        const reserve = await ctx.db.ticketReserves.findUnique({
+          where: { id: input.reserveId },
+          include: {
+            soldTickets: {
+              select: {
+                id: true
+              }
+            }
+          }
+        });
+
+        if (!reserve) {
+          throw new Error("Reserve not found");
+        }
+
+        const soldCount = reserve.soldTickets?.length || 0;
+        const remainingCount = reserve.amount - soldCount;
+
+        if (input.maxTickets > remainingCount) {
+          throw new Error(`Max Tickets (${input.maxTickets}) cannot exceed available tickets (${remainingCount} von ${reserve.amount} insgesamt)`);
+        }
+      }
+
       return ctx.db.buyerGroups.update({
         where: { id: input.id },
         data: {
