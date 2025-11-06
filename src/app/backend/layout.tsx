@@ -29,6 +29,7 @@ export default function BackendLayout({
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [hasAccess, setHasAccess] = useState(false);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,17 +54,27 @@ export default function BackendLayout({
         return;
       }
 
-      // Check if user is backend user
+      // Check if user is backend user AND authenticated via credentials provider
       try {
         const response = await fetch("/api/check-backend-user");
-        const data = await response.json() as { isBackendUser: boolean };
+        const data = await response.json() as { 
+          isBackendUser: boolean;
+          isCredentialsProvider: boolean;
+          hasAccess: boolean;
+          provider?: string;
+        };
         
-        if (!data.isBackendUser) {
+        setHasAccess(data.hasAccess);
+        
+        // Only show error if user is authenticated via credentials but not a backend user
+        // Don't show error for email provider users - they'll just see the login form
+        if (!data.hasAccess && data.isCredentialsProvider && !data.isBackendUser) {
           setErrorMessage("You are not authorized. Please login with backend credentials.");
         }
       } catch (error) {
         console.error("Error checking backend user:", error);
         setErrorMessage("Error checking authorization. Please try again.");
+        setHasAccess(false);
       }
       
       setIsChecking(false);
@@ -85,8 +96,8 @@ export default function BackendLayout({
     );
   }
 
-  // Show login form if no session or if session exists but user is not backend user
-  if (!session || (session && errorMessage)) {
+  // Show login form if no session or if session exists but user doesn't have access
+  if (!session || (session && !hasAccess)) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="max-w-md w-full mx-auto p-8">
