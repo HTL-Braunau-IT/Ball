@@ -16,6 +16,12 @@ declare module "next-auth" {
   }
 }
 
+declare module "next-auth/jwt" {
+  interface JWT {
+    provider?: string;
+  }
+}
+
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
@@ -151,9 +157,19 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    jwt: async ({ user, token }) => {
+    jwt: async ({ user, token, account }) => {
       if (user) {
         token.uid = user.id;
+      }
+      // Store provider type in token
+      // For CredentialsProvider, account is null, so we set it explicitly
+      if (account) {
+        // EmailProvider creates an account, so account.provider will be "email"
+        token.provider = account.provider;
+      } else if (user) {
+        // If account is null but user exists, it's credentials provider
+        // (CredentialsProvider doesn't create account records)
+        token.provider = "credentials";
       }
       return token;
     },
