@@ -565,7 +565,7 @@ function PaymentSummary({
   isLoading: boolean;
 }) {
   const shippingAddress = deliveryMethod === "shipping" && contactInfo && "address" in contactInfo 
-    ? contactInfo as ShippingAddress 
+    ? contactInfo 
     : null;
 
   return (
