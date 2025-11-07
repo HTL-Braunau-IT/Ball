@@ -263,6 +263,38 @@ h4 {
   border-color: var(--color-bronze);
 }
 
+/* Content Box (similar to countdown-box) */
+.content-box {
+  background: linear-gradient(135deg, var(--color-bg-card), var(--color-bg-accent));
+  border: 2px solid var(--color-accent-warm);
+  border-radius: 1rem;
+  padding: var(--spacing-2xl);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.content-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.content-box:hover::before {
+  left: 100%;
+}
+
+.content-box:hover {
+  border-color: var(--color-bronze);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
 /* Collapsible Section Styles */
 .collapsible-section {
   background: var(--color-bg-card);
