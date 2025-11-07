@@ -7,8 +7,8 @@ export const buyersRouter = createTRPCRouter({
     const buyers = await ctx.db.buyers.findMany({
       include: { group: true, tickets: true }
     });
-    return buyers.map(({ id, name, email, address, postal, province, country, verified, group, tickets }) => ({ 
-      id, name, email, address, postal, province, country, verified, group, tickets 
+    return buyers.map(({ id, name, email, address, postal, city, country, verified, group, tickets }) => ({ 
+      id, name, email, address, postal, city, country, verified, group, tickets 
     }));
   }),
 
@@ -91,7 +91,7 @@ export const buyersRouter = createTRPCRouter({
                 phone: "",
                 address: "",
                 postal: 0,
-                province: "",
+                city: "",
                 country: "",
                 verified: false,
                 groupId: alumniGroup.id,
@@ -173,7 +173,7 @@ export const buyersRouter = createTRPCRouter({
             address: {
               street: buyer.address,
               postal: buyer.postal,
-              city: buyer.province,
+              city: buyer.city,
               country: buyer.country === "AT" ? "Österreich" : "Deutschland",
             },
           };

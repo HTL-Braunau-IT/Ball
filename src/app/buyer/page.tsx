@@ -34,7 +34,7 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
   shippingSurcharge: number;
   buyerAddress?: string;
   buyerPostal?: number;
-  buyerProvince?: string;
+  buyerCity?: string;
   buyerCountry?: string;
 }> }) {
   const [showDetails, setShowDetails] = useState(false);
@@ -192,7 +192,7 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
                     }}>
                       <p className="text-sm font-medium leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
                         {firstTicket.buyerAddress}<br />
-                        {firstTicket.buyerPostal} {firstTicket.buyerProvince}<br />
+                        {firstTicket.buyerPostal} {firstTicket.buyerCity}<br />
                         {firstTicket.buyerCountry === 'AT' ? 'Österreich' : firstTicket.buyerCountry === 'DE' ? 'Deutschland' : firstTicket.buyerCountry}
                       </p>
                     </div>
