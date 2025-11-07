@@ -4,6 +4,7 @@ import { type Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { Providers } from "~/components/providers";
+import Footer from "~/components/Footer";
 
 export const metadata: Metadata = {
   title: "HTL Braunau - Ball der Auserwählten 2026",
@@ -23,7 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable}`}>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
