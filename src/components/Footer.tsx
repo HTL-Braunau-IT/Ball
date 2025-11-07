@@ -1,6 +1,16 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+  
+  // Don't display footer in backend routes
+  if (pathname?.startsWith("/backend")) {
+    return null;
+  }
+
   return (
     <footer
       className="bottom-0 left-0 right-0 z-40 border-t"
