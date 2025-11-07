@@ -517,13 +517,22 @@ export default function Buyers() {
                                         </div>
                             </td>
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 h-10">
-                                {buyer.address}
+                                {(() => {
+                                    const delivery = buyer.tickets[0]?.delivery?.toLowerCase() ?? '';
+                                    return delivery.includes('abholung') ? '-' : buyer.address;
+                                })()}
                             </td>
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 h-10">
-                                {buyer.postal}
+                                {(() => {
+                                    const delivery = buyer.tickets[0]?.delivery?.toLowerCase() ?? '';
+                                    return delivery.includes('abholung') ? '-' : buyer.postal;
+                                })()}
                             </td>
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 h-10">
-                                {buyer.province}
+                                {(() => {
+                                    const delivery = buyer.tickets[0]?.delivery?.toLowerCase() ?? '';
+                                    return delivery.includes('abholung') ? '-' : buyer.province;
+                                })()}
                             </td>
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
                                         <div className="flex items-center justify-center h-full">
