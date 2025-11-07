@@ -431,7 +431,7 @@ export default function BuyerPage() {
                 if (!acc[code]) {
                   acc[code] = [];
                 }
-                acc[code]!.push(ticket);
+                acc[code].push(ticket);
                 return acc;
               }, {} as Record<string, typeof userTickets>);
 

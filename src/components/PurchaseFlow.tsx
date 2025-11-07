@@ -67,20 +67,10 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
     }
   };
 
-  // Find shipping and self-pickup delivery methods separately
+  // Find shipping delivery method
   const shippingDeliveryMethod = deliveryMethods?.find(dm => 
     dm.name.toLowerCase().includes("versand")
   );
-  const selfPickupDeliveryMethod = deliveryMethods?.find(dm => 
-    dm.name.toLowerCase().includes("abholung")
-  );
-  
-  // Use the selected delivery method when available, otherwise fall back to shipping
-  const selectedDeliveryMethod = deliveryMethod === "shipping" 
-    ? shippingDeliveryMethod 
-    : deliveryMethod === "self-pickup" 
-    ? selfPickupDeliveryMethod 
-    : null;
 
   const maxQuantity = availableTicket?.maxTickets ?? 2;
   const availableAmount = availableTicket?.amount ?? 0;
