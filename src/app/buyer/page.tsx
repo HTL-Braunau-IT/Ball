@@ -20,6 +20,152 @@ const formatDateForDisplay = (dateString: string) => {
   });
 };
 
+// Order Card Component
+function OrderCard({ orderTickets }: { orderTickets: Array<{
+  id: number;
+  delivery: string;
+  code: string | null;
+  paid: boolean | null;
+  sent: boolean | null;
+  transref: string;
+  timestamp: Date;
+  soldPrice: number;
+  ticketPrice: number;
+  shippingSurcharge: number;
+}> }) {
+  const [showDetails, setShowDetails] = useState(false);
+  const firstTicket = orderTickets[0]!;
+  const ticketCount = orderTickets.length;
+  const ticketPrice = firstTicket.ticketPrice ?? 0;
+  const shippingFee = firstTicket.delivery.toLowerCase().includes('versand') 
+    ? (firstTicket.shippingSurcharge ?? 0) / 100 
+    : 0;
+  const totalPaid = (ticketPrice * ticketCount) + shippingFee;
+
+  return (
+    <div className="mt-8 card">
+      <div className="flex justify-between items-start">
+        <div className="flex-1">
+          <div className="flex items-center gap-4 mb-2">
+            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+              firstTicket.paid 
+                ? 'bg-green-100 text-green-800' 
+                : 'bg-yellow-100 text-yellow-800'
+            }`}>
+              {firstTicket.paid ? 'Bezahlt' : 'Ausstehend'}
+            </span>
+            <span className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+              {ticketCount} {ticketCount === 1 ? 'Ticket' : 'Tickets'}
+            </span>
+          </div>
+          <p className="text-lg font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
+            {firstTicket.delivery}
+          </p>
+          
+          {/* Shipping status for delivery methods that include shipping */}
+          {firstTicket.delivery.toLowerCase().includes('versand') && (
+            <div className="mt-2 mb-2">
+              {firstTicket.sent ? (
+                <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  ✓ Versendet
+                </span>
+              ) : (
+                <span className="px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                  ⏳ Wird vorbereitet
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Details Dropdown */}
+          <div className="mt-4">
+            <button
+              onClick={() => setShowDetails(!showDetails)}
+              className="flex items-center gap-2 text-sm font-medium"
+              style={{ color: 'var(--color-gold-light)' }}
+            >
+              <span>{showDetails ? '▼' : '▶'}</span>
+              {showDetails ? 'Weniger anzeigen' : 'Mehr Informationen'}
+            </button>
+            
+            {showDetails && (
+              <div className="mt-3 p-4 rounded-lg border" style={{ 
+                background: 'var(--color-bg-secondary)',
+                borderColor: 'var(--color-accent-warm)'
+              }}>
+                <div className="space-y-2">
+                  <div>
+                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+                      Kaufdatum:
+                    </span>
+                    <p className="text-sm mt-1" style={{ color: 'var(--color-text-primary)' }}>
+                      {formatDateForDisplay(firstTicket.timestamp.toISOString())}
+                    </p>
+                  </div>
+                  
+                  {firstTicket.code && (
+                    <div>
+                      <span className="text-sm font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
+                        Abholcode:
+                      </span>
+                      <p className="text-sm mt-1 font-mono font-semibold" style={{ color: 'var(--color-gold-light)' }}>
+                        {firstTicket.code}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="pt-2 border-t" style={{ borderColor: 'var(--color-accent-warm)' }}>
+                    <p className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>
+                      Preisaufstellung:
+                    </p>
+                    <div className="space-y-1 text-sm">
+                      <div className="flex justify-between">
+                        <span style={{ color: 'var(--color-text-secondary)' }}>
+                          Ticket × {ticketCount}
+                        </span>
+                        <span style={{ color: 'var(--color-text-primary)' }}>
+                          {ticketPrice.toFixed(2)}€ × {ticketCount}
+                        </span>
+                      </div>
+                      {shippingFee > 0 && (
+                        <div className="flex justify-between">
+                          <span style={{ color: 'var(--color-text-secondary)' }}>
+                            Versandkosten
+                          </span>
+                          <span style={{ color: 'var(--color-text-primary)' }}>
+                            {shippingFee.toFixed(2)}€
+                          </span>
+                        </div>
+                      )}
+                      <div className="flex justify-between pt-2 border-t font-semibold" style={{ borderColor: 'var(--color-accent-warm)' }}>
+                        <span style={{ color: 'var(--color-text-primary)' }}>
+                          Gesamt
+                        </span>
+                        <span style={{ color: 'var(--color-gold-light)' }}>
+                          {totalPaid.toFixed(2)}€
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="text-right">
+          <div className="w-3 h-3 rounded-full" style={{ 
+            background: firstTicket.paid 
+              ? (firstTicket.delivery.toLowerCase().includes('versand') 
+                  ? (firstTicket.sent ? 'var(--color-success)' : 'var(--color-warning)')
+                  : 'var(--color-success)')
+              : 'var(--color-warning)' 
+          }}></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function BuyerPage() {
   const { data: session, status } = useSession();
   const [email, setEmail] = useState("");
@@ -194,74 +340,32 @@ export default function BuyerPage() {
             )}
 
             {/* User's Purchased Tickets */}
-            {userTickets && userTickets.length > 0 && (
-              <div className="mb-8">
-                <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                  Ihre Tickets
-                </h2>
-                <div className="space-y-4">
-                  {userTickets.map((ticket) => (
-                    <div key={ticket.id} className="card">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-4 mb-2">
-                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                              ticket.paid 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-yellow-100 text-yellow-800'
-                            }`}>
-                              {ticket.paid ? 'Bezahlt' : 'Ausstehend'}
-                            </span>
-                            <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                              {formatDateForDisplay(ticket.timestamp.toISOString())}
-                            </span>
-                          </div>
-                          <p className="text-lg font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                            {ticket.delivery}
-                          </p>
-                          {ticket.code && (
-                            <p className="text-sm mt-1" style={{ color: 'var(--color-text-secondary)' }}>
-                              Code: <span className="font-mono font-semibold">{ticket.code}</span>
-                            </p>
-                          )}
-                          {/* Shipping status for delivery methods that include shipping */}
-                          {ticket.delivery.toLowerCase().includes('versand') && (
-                            <div className="mt-2">
-                              {ticket.sent ? (
-                                <div className="space-y-2">
-                                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                    ✓ Versendet
-                                  </span>
-                                  <div className="p-3 rounded-lg bg-green-50 border border-green-200">
-                                    <p className="text-sm text-green-800 font-medium">
-                                      Ihre Tickets sind unterwegs!
-                                    </p>
-                                    
-                                  </div>
-                                </div>
-                              ) : (
-                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                  ⏳ Wird vorbereitet
-                                </span>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                        <div className="text-right">
-                          <div className="w-3 h-3 rounded-full" style={{ 
-                            background: ticket.paid 
-                              ? (ticket.delivery.toLowerCase().includes('versand') 
-                                  ? (ticket.sent ? 'var(--color-success)' : 'var(--color-warning)')
-                                  : 'var(--color-success)')
-                              : 'var(--color-warning)' 
-                          }}></div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+            {userTickets && userTickets.length > 0 && (() => {
+              // Group tickets by code (all tickets in same order share same code)
+              const groupedTickets = userTickets.reduce((acc, ticket) => {
+                const code = ticket.code || 'unknown';
+                if (!acc[code]) {
+                  acc[code] = [];
+                }
+                acc[code]!.push(ticket);
+                return acc;
+              }, {} as Record<string, typeof userTickets>);
+
+              const orders = Object.values(groupedTickets);
+
+              return (
+                <div className="mb-8">
+                  <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+                    Ihre Tickets
+                  </h2>
+                  <div className="space-y-4">
+                    {orders.map((orderTickets) => (
+                      <OrderCard key={orderTickets[0]!.code || orderTickets[0]!.id} orderTickets={orderTickets} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
 
             {/* Show message if no tickets purchased yet */}
             {userTickets?.length === 0 && (
