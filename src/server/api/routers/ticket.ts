@@ -135,11 +135,12 @@ export const ticketRouter = createTRPCRouter({
             deliveryMethods: true,
           },
         },
+        buyer: true,
       },
       orderBy: { timestamp: 'desc' },
     });
 
-    return tickets.map(({ id, delivery, code, paid, sent, transref, timestamp, soldPrice, reserve }) => {
+    return tickets.map(({ id, delivery, code, paid, sent, transref, timestamp, soldPrice, reserve, buyer }) => {
       const isShipping = delivery.toLowerCase().includes('versand');
       const matchingDeliveryMethod = reserve.deliveryMethods.find(dm => 
         isShipping 
@@ -158,6 +159,10 @@ export const ticketRouter = createTRPCRouter({
         soldPrice,
         ticketPrice: reserve.price,
         shippingSurcharge: matchingDeliveryMethod?.surcharge ?? 0,
+        buyerAddress: buyer.address,
+        buyerPostal: buyer.postal,
+        buyerProvince: buyer.province,
+        buyerCountry: buyer.country,
       };
     });
   }),

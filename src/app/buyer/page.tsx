@@ -32,6 +32,10 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
   soldPrice: number;
   ticketPrice: number;
   shippingSurcharge: number;
+  buyerAddress?: string;
+  buyerPostal?: number;
+  buyerProvince?: string;
+  buyerCountry?: string;
 }> }) {
   const [showDetails, setShowDetails] = useState(false);
   const firstTicket = orderTickets[0]!;
@@ -164,6 +168,22 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
                     </div>
                   )}
                 </div>
+
+                {/* Shipping Address - only show for versand delivery */}
+                {firstTicket.delivery.toLowerCase().includes('versand') && firstTicket.buyerAddress && (
+                  <div className="pt-4 border-t-2" style={{ borderColor: 'var(--color-accent-warm)' }}>
+                    <p className="text-xs uppercase tracking-wider font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+                      Versandadresse
+                    </p>
+                    <div className="p-3 rounded-md" style={{ background: 'rgba(255, 255, 255, 0.6)' }}>
+                      <p className="text-sm font-medium leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
+                        {firstTicket.buyerAddress}<br />
+                        {firstTicket.buyerPostal} {firstTicket.buyerProvince}<br />
+                        {firstTicket.buyerCountry === 'AT' ? 'Österreich' : firstTicket.buyerCountry === 'DE' ? 'Deutschland' : firstTicket.buyerCountry}
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 <div className="pt-4 border-t-2" style={{ borderColor: 'var(--color-accent-warm)' }}>
                   <p className="text-xs uppercase tracking-wider font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>
