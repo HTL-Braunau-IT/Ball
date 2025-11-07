@@ -56,7 +56,7 @@ model Buyers {
   phone      String
   address    String
   postal     Int
-  province   String
+  city       String
   country    String
   verified   Boolean
   groupId    Int

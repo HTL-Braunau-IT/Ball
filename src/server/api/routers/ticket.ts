@@ -35,7 +35,7 @@ export const ticketRouter = createTRPCRouter({
         phone: buyer.phone,
         address: buyer.address,
         postal: buyer.postal,
-        province: buyer.province,
+        city: buyer.city,
         country: buyer.country,
         verified: buyer.verified,
         groupId: buyer.groupId,
@@ -161,7 +161,7 @@ export const ticketRouter = createTRPCRouter({
         shippingSurcharge: matchingDeliveryMethod?.surcharge ?? 0,
         buyerAddress: buyer.address,
         buyerPostal: buyer.postal,
-        buyerProvince: buyer.province,
+        buyerCity: buyer.city,
         buyerCountry: buyer.country,
       };
     });
@@ -281,7 +281,7 @@ export const ticketRouter = createTRPCRouter({
             phone: contactInfo.phone, 
             address: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).address : "",
             postal: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).postal : 0,
-            province: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).province : "",
+            city: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).city : "",
             country: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).country : "",
             verified: true,
             groupId: publicGroup.id,
@@ -297,7 +297,7 @@ export const ticketRouter = createTRPCRouter({
             phone: contactInfo.phone, // TODO: Fix Prisma schema issue
             address: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).address : buyer.address,
             postal: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).postal : buyer.postal,
-            province: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).province : buyer.province,
+            city: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).city : buyer.city,
             country: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).country : buyer.country,
           },
           include: { group: true },
@@ -488,7 +488,7 @@ export const ticketRouter = createTRPCRouter({
           address: soldTicket.delivery.toLowerCase().includes('versand') ? {
             street: soldTicket.buyer.address,
             postal: soldTicket.buyer.postal,
-            city: soldTicket.buyer.province,
+            city: soldTicket.buyer.city,
             country: soldTicket.buyer.country === "AT" ? "Österreich" : "Deutschland",
           } : undefined,
         };
@@ -573,7 +573,7 @@ export const ticketRouter = createTRPCRouter({
           address: {
             street: ticket.buyer.address,
             postal: ticket.buyer.postal,
-            city: ticket.buyer.province,
+            city: ticket.buyer.city,
             country: ticket.buyer.country === "AT" ? "Österreich" : "Deutschland",
           },
         };

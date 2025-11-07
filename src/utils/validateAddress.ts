@@ -26,7 +26,7 @@ export const shippingAddressSchema = z.object({
   phone: z.string().min(8, "Telefonnummer muss mindestens 8 Zeichen lang sein"),
   address: z.string().min(5, "Adresse muss mindestens 5 Zeichen lang sein"),
   postal: z.union([austrianPostalCodeSchema, germanPostalCodeSchema]),
-  province: z.string().min(2, "Bundesland/Stadt muss mindestens 2 Zeichen lang sein"),
+  city: z.string().min(2, "Stadt muss mindestens 2 Zeichen lang sein"),
   country: z.enum(["AT", "DE"], "Nur Österreich (AT) und Deutschland (DE) werden unterstützt"),
 });
 

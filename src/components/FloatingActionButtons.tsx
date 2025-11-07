@@ -173,7 +173,7 @@ export default function FloatingActionButtons() {
         buyer.email,
         buyer.address,
         buyer.postal,
-        buyer.province,
+        buyer.city,
         buyer.country,
         buyer.verified ? "Ja" : "Nein",
         buyer.group?.name ?? "-"

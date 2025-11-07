@@ -4,7 +4,7 @@ import { api } from "~/trpc/react";
 import { useEffect, useState, useMemo } from "react";
 import { useFilteredData } from "~/contexts/FilteredDataContext";
 
-type SortColumn = 'id' | 'name' | 'email' | 'address' | 'postal' | 'province' | 'country' | 'verified' | 'group' | 'tickets' | 'pickupCode' | null;
+type SortColumn = 'id' | 'name' | 'email' | 'address' | 'postal' | 'city' | 'country' | 'verified' | 'group' | 'tickets' | 'pickupCode' | null;
 type SortDirection = 'asc' | 'desc' | null;
 
 export default function Buyers() {
@@ -103,12 +103,12 @@ export default function Buyers() {
             const matchesBuyerId = filterBuyerId === null || 
                 buyer.id.toString() === filterBuyerId;
             
-            // Search filter (name, email, address, province, postal, pickup code) - use debounced search
+            // Search filter (name, email, address, city, postal, pickup code) - use debounced search
             const matchesSearch = debouncedSearchText === "" || 
                 buyer.name.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
                 buyer.email.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
                 buyer.address.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
-                buyer.province.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
+                buyer.city.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
                 buyer.postal.toString().includes(debouncedSearchText) ||
                 buyer.tickets[0]?.code?.toLowerCase().includes(debouncedSearchText.toLowerCase());
             
@@ -161,9 +161,9 @@ export default function Buyers() {
                     aValue = a.postal;
                     bValue = b.postal;
                     break;
-                case 'province':
-                    aValue = a.province;
-                    bValue = b.province;
+                case 'city':
+                    aValue = a.city;
+                    bValue = b.city;
                     break;
                 case 'country':
                     aValue = a.country;
@@ -279,7 +279,7 @@ export default function Buyers() {
                         <div className="flex items-center border-r border-gray-200 px-3 py-2 flex-1 relative">
                             <input
                                 type="text"
-                                placeholder="Name, E-Mail, Adresse, PLZ, Bundesland oder Abholcode..."
+                                placeholder="Name, E-Mail, Adresse, PLZ, Stadt oder Abholcode..."
                                 value={searchText}
                                 onChange={(e) => {
                                     setSearchText(e.target.value);
@@ -455,11 +455,11 @@ export default function Buyers() {
                         </th>
                         <th 
                             className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                            onClick={() => handleSort('province')}
+                            onClick={() => handleSort('city')}
                         >
                             <div className="flex items-center justify-center gap-2">
-                                Bundesland
-                                {sortColumn === 'province' && (
+                                Stadt
+                                {sortColumn === 'city' && (
                                     <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>
                                 )}
                             </div>
@@ -531,7 +531,7 @@ export default function Buyers() {
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 h-10">
                                 {(() => {
                                     const delivery = buyer.tickets[0]?.delivery?.toLowerCase() ?? '';
-                                    return delivery.includes('abholung') ? '-' : buyer.province;
+                                    return delivery.includes('abholung') ? '-' : buyer.city;
                                 })()}
                             </td>
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">

@@ -8,7 +8,7 @@ type BuyerData = {
   email: string;
   address: string;
   postal: number;
-  province: string;
+  city: string;
   country: string;
   verified: boolean;
   group?: { name: string } | null;

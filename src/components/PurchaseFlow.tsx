@@ -336,8 +336,8 @@ function ContactForm({
                 </label>
                 <input
                   type="text"
-                  value={formData.province || ""}
-                  onChange={(e) => handleInputChange("province", e.target.value)}
+                  value={formData.city || ""}
+                  onChange={(e) => handleInputChange("city", e.target.value)}
                   required
                   className="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2"
                   style={{

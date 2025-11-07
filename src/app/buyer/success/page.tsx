@@ -233,7 +233,7 @@ function SuccessPageContent() {
                   </div>
                   <div className="text-right" style={{ color: "var(--color-text-primary)" }}>
                     <div>{soldTicket.buyer.address}</div>
-                    <div>{soldTicket.buyer.postal} {soldTicket.buyer.province}</div>
+                    <div>{soldTicket.buyer.postal} {soldTicket.buyer.city}</div>
                     <div>{soldTicket.buyer.country}</div>
                   </div>
                 </div>
