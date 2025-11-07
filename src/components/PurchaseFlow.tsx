@@ -194,6 +194,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
           deliveryMethod={deliveryMethod!}
           shippingFee={(shippingDeliveryMethod?.surcharge ?? 0) / 100}
           totalPrice={totalPrice}
+          contactInfo={contactInfo}
           onPurchase={handlePurchase}
           onBack={() => setCurrentStep(3)}
           isLoading={createPurchase.isPending}
@@ -548,6 +549,7 @@ function PaymentSummary({
   deliveryMethod,
   shippingFee,
   totalPrice,
+  contactInfo,
   onPurchase,
   onBack,
   isLoading,
@@ -557,10 +559,15 @@ function PaymentSummary({
   deliveryMethod: DeliveryMethod;
   shippingFee: number;
   totalPrice: number;
+  contactInfo: ShippingAddress | SelfPickupInfo | null;
   onPurchase: () => void;
   onBack: () => void;
   isLoading: boolean;
 }) {
+  const shippingAddress = deliveryMethod === "shipping" && contactInfo && "address" in contactInfo 
+    ? contactInfo as ShippingAddress 
+    : null;
+
   return (
     <div className="card">
       <h2 className="text-2xl font-semibold gradient-text text-center" style={{ marginBottom: '2rem' }}>
@@ -587,6 +594,26 @@ function PaymentSummary({
           </div>
         </div>
       </div>
+
+      {deliveryMethod === "shipping" && shippingAddress && (
+        <div className="mb-6 p-4 rounded-lg border" style={{ 
+          borderColor: "var(--color-accent-warm)",
+          background: "var(--color-bg-accent)"
+        }}>
+          <h3 className="text-lg font-semibold mb-3" style={{ color: "var(--color-text-primary)" }}>
+            Lieferadresse
+          </h3>
+          <div className="space-y-1" style={{ color: "var(--color-text-secondary)" }}>
+            <p>{shippingAddress.name}</p>
+            <p>{shippingAddress.address}</p>
+            <p>{shippingAddress.postal} {shippingAddress.city}</p>
+            <p>{shippingAddress.country === "AT" ? "Österreich" : "Deutschland"}</p>
+            <p className="mt-2 pt-2 border-t" style={{ borderColor: "var(--color-accent-warm)" }}>
+              Tel: {shippingAddress.phone}
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="flex gap-4">
         <button onClick={onBack} className="btn btn-secondary flex-1">
