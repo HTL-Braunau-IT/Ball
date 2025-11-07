@@ -20,6 +20,236 @@ const formatDateForDisplay = (dateString: string) => {
   });
 };
 
+// Order Card Component
+function OrderCard({ orderTickets }: { orderTickets: Array<{
+  id: number;
+  delivery: string;
+  code: string | null;
+  paid: boolean | null;
+  sent: boolean | null;
+  transref: string;
+  timestamp: Date;
+  soldPrice: number;
+  ticketPrice: number;
+  shippingSurcharge: number;
+  buyerAddress?: string;
+  buyerPostal?: number;
+  buyerProvince?: string;
+  buyerCountry?: string;
+}> }) {
+  const [showDetails, setShowDetails] = useState(false);
+  const firstTicket = orderTickets[0]!;
+  const ticketCount = orderTickets.length;
+  const ticketPrice = firstTicket.ticketPrice ?? 0;
+  const shippingFee = firstTicket.delivery.toLowerCase().includes('versand') 
+    ? (firstTicket.shippingSurcharge ?? 0) / 100 
+    : 0;
+  const totalPaid = (ticketPrice * ticketCount) + shippingFee;
+
+  return (
+    <div className="mt-6 card overflow-hidden" style={{ 
+      border: '1px solid var(--color-accent-warm)',
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
+    }}>
+      <div className="p-6">
+        {/* Header Section */}
+        <div className="pb-5 mb-5 border-b" style={{ borderColor: 'var(--color-accent-warm)' }}>
+          <div className="flex items-start justify-between gap-4">
+            {/* Ticket Count Display */}
+            <div className="flex-1">
+              <div className="inline-flex items-center gap-3">
+                <div className="flex items-center justify-center w-16 h-16 rounded-xl flex-shrink-0" style={{ 
+                  background: 'linear-gradient(135deg, var(--color-gold-light), var(--color-bronze))',
+                  boxShadow: '0 4px 12px rgba(193, 122, 58, 0.25)'
+                }}>
+                  <span className="text-2xl font-bold text-white">{ticketCount}</span>
+                </div>
+                <div className="flex flex-col justify-center">
+                  <p className="text-xs uppercase tracking-widest font-medium leading-tight" style={{ color: 'var(--color-text-muted)', letterSpacing: '0.15em' }}>
+                    {ticketCount === 1 ? 'Karte' : 'Karten'}
+                  </p>
+                  <p className="text-lg font-semibold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+                    {ticketCount === 1 ? 'Gekauft' : 'Gekauft'}
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Status Badge */}
+            <div className="flex-shrink-0">
+              <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                firstTicket.paid 
+                  ? 'bg-green-50 text-green-700 border border-green-200' 
+                  : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+              }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+                <span className="text-sm">{firstTicket.paid ? '✓' : '⏳'}</span>
+                <span>{firstTicket.paid ? 'Bezahlt' : 'Ausstehend'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Delivery Section */}
+        <div className="flex items-start justify-between pb-4 mb-4 border-b" style={{ borderColor: 'var(--color-accent-warm)' }}>
+          <div className="flex-1 pr-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-sm" style={{ color: 'var(--color-gold-light)' }}>📦</span>
+              <p className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                {firstTicket.delivery}
+              </p>
+            </div>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+              {firstTicket.delivery.toLowerCase().includes('versand') 
+                ? (firstTicket.sent 
+                    ? 'Ihre Tickets wurden per Post versendet und sind auf dem Weg zu Ihnen.'
+                    : 'Ihre Tickets werden bald per Post an die angegebene Adresse versendet.')
+                : (firstTicket.sent
+                    ? 'Ihre Tickets sind bereit zur Abholung am Veranstaltungsort mit dem Abholcode.'
+                    : 'Ihre Tickets werden vorbereitet und können am Veranstaltungsort mit dem Abholcode abgeholt werden.')}
+            </p>
+          </div>
+          {/* Status badge for delivery methods */}
+          <div className="flex-shrink-0">
+            {firstTicket.delivery.toLowerCase().includes('versand') ? (
+              <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                firstTicket.sent 
+                  ? 'bg-green-50 text-green-700 border border-green-200' 
+                  : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+              }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+                <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
+                <span>{firstTicket.sent ? 'Versendet' : 'Wird vorbereitet'}</span>
+              </div>
+            ) : (
+              <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                firstTicket.sent 
+                  ? 'bg-green-50 text-green-700 border border-green-200' 
+                  : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+              }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+                <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
+                <span>{firstTicket.sent ? 'Bereit zur Abholung' : 'Wird vorbereitet'}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Details Dropdown */}
+        <div>
+          <button
+            onClick={() => setShowDetails(!showDetails)}
+            className="flex items-center gap-2 text-sm font-medium transition-all hover:opacity-80 w-full text-left"
+            style={{ color: 'var(--color-gold-light)' }}
+          >
+            <span className="transition-transform" style={{ transform: showDetails ? 'rotate(90deg)' : 'rotate(0deg)' }}>
+              ▶
+            </span>
+            <span>{showDetails ? 'Weniger anzeigen' : 'Mehr Informationen'}</span>
+          </button>
+          
+          {showDetails && (
+            <div className="mt-4 p-4 rounded-lg border transition-all" style={{ 
+              background: 'var(--color-bg-secondary)',
+              borderColor: 'var(--color-accent-warm)',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
+            }}>
+              <div className="space-y-4">
+                <div className={firstTicket.code && !firstTicket.delivery.toLowerCase().includes('versand') ? "grid grid-cols-2 gap-3" : ""}>
+                  <div className="p-3 rounded-lg border" style={{ 
+                    background: 'var(--color-bg-card)',
+                    borderColor: 'var(--color-accent-warm)'
+                  }}>
+                    <span className="text-xs uppercase tracking-wider font-semibold block mb-1.5" style={{ color: 'var(--color-text-muted)' }}>
+                      Kaufdatum
+                    </span>
+                    <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                      {formatDateForDisplay(firstTicket.timestamp.toISOString())}
+                    </p>
+                  </div>
+                  
+                  {firstTicket.code && !firstTicket.delivery.toLowerCase().includes('versand') && (
+                    <div className="p-3 rounded-lg border" style={{ 
+                      background: 'var(--color-bg-card)',
+                      borderColor: 'var(--color-accent-warm)'
+                    }}>
+                      <span className="text-xs uppercase tracking-wider font-semibold block mb-1.5" style={{ color: 'var(--color-text-muted)' }}>
+                        Abholcode
+                      </span>
+                      <p className="text-sm font-mono font-bold" style={{ color: 'var(--color-gold-light)', letterSpacing: '0.1em' }}>
+                        {firstTicket.code}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Shipping Address - only show for versand delivery */}
+                {firstTicket.delivery.toLowerCase().includes('versand') && firstTicket.buyerAddress && (
+                  <div className="pt-4 border-t" style={{ borderColor: 'var(--color-accent-warm)' }}>
+                    <p className="text-xs uppercase tracking-wider font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+                      Versandadresse
+                    </p>
+                    <div className="p-3 rounded-lg border" style={{ 
+                      background: 'var(--color-bg-card)',
+                      borderColor: 'var(--color-accent-warm)'
+                    }}>
+                      <p className="text-sm font-medium leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
+                        {firstTicket.buyerAddress}<br />
+                        {firstTicket.buyerPostal} {firstTicket.buyerProvince}<br />
+                        {firstTicket.buyerCountry === 'AT' ? 'Österreich' : firstTicket.buyerCountry === 'DE' ? 'Deutschland' : firstTicket.buyerCountry}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                <div className="pt-4 border-t" style={{ borderColor: 'var(--color-accent-warm)' }}>
+                  <p className="text-xs uppercase tracking-wider font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+                    Preisaufstellung
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center py-2 px-3 rounded-lg border" style={{ 
+                      background: 'var(--color-bg-card)',
+                      borderColor: 'var(--color-accent-warm)'
+                    }}>
+                      <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                        Ticket × {ticketCount}
+                      </span>
+                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                        {ticketPrice.toFixed(2)}€ × {ticketCount}
+                      </span>
+                    </div>
+                    {shippingFee > 0 && (
+                      <div className="flex justify-between items-center py-2 px-3 rounded-lg border" style={{ 
+                        background: 'var(--color-bg-card)',
+                        borderColor: 'var(--color-accent-warm)'
+                      }}>
+                        <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                          Versandkosten
+                        </span>
+                        <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                          {shippingFee.toFixed(2)}€
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center py-2.5 px-3 rounded-lg border-2 mt-3" style={{ 
+                      background: 'var(--color-bg-card)',
+                      borderColor: 'var(--color-gold-light)'
+                    }}>
+                      <span className="text-sm font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-primary)' }}>
+                        Gesamt
+                      </span>
+                      <span className="text-base font-bold" style={{ color: 'var(--color-gold-light)' }}>
+                        {totalPaid.toFixed(2)}€
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function BuyerPage() {
   const { data: session, status } = useSession();
   const [email, setEmail] = useState("");
@@ -194,74 +424,32 @@ export default function BuyerPage() {
             )}
 
             {/* User's Purchased Tickets */}
-            {userTickets && userTickets.length > 0 && (
-              <div className="mb-8">
-                <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                  Ihre Tickets
-                </h2>
-                <div className="space-y-4">
-                  {userTickets.map((ticket) => (
-                    <div key={ticket.id} className="card">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-4 mb-2">
-                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                              ticket.paid 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-yellow-100 text-yellow-800'
-                            }`}>
-                              {ticket.paid ? 'Bezahlt' : 'Ausstehend'}
-                            </span>
-                            <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                              {formatDateForDisplay(ticket.timestamp.toISOString())}
-                            </span>
-                          </div>
-                          <p className="text-lg font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                            {ticket.delivery}
-                          </p>
-                          {ticket.code && (
-                            <p className="text-sm mt-1" style={{ color: 'var(--color-text-secondary)' }}>
-                              Code: <span className="font-mono font-semibold">{ticket.code}</span>
-                            </p>
-                          )}
-                          {/* Shipping status for delivery methods that include shipping */}
-                          {ticket.delivery.toLowerCase().includes('versand') && (
-                            <div className="mt-2">
-                              {ticket.sent ? (
-                                <div className="space-y-2">
-                                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                    ✓ Versendet
-                                  </span>
-                                  <div className="p-3 rounded-lg bg-green-50 border border-green-200">
-                                    <p className="text-sm text-green-800 font-medium">
-                                      Ihre Tickets sind unterwegs!
-                                    </p>
-                                    
-                                  </div>
-                                </div>
-                              ) : (
-                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                  ⏳ Wird vorbereitet
-                                </span>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                        <div className="text-right">
-                          <div className="w-3 h-3 rounded-full" style={{ 
-                            background: ticket.paid 
-                              ? (ticket.delivery.toLowerCase().includes('versand') 
-                                  ? (ticket.sent ? 'var(--color-success)' : 'var(--color-warning)')
-                                  : 'var(--color-success)')
-                              : 'var(--color-warning)' 
-                          }}></div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+            {userTickets && userTickets.length > 0 && (() => {
+              // Group tickets by code (all tickets in same order share same code)
+              const groupedTickets = userTickets.reduce((acc, ticket) => {
+                const code = ticket.code || 'unknown';
+                if (!acc[code]) {
+                  acc[code] = [];
+                }
+                acc[code].push(ticket);
+                return acc;
+              }, {} as Record<string, typeof userTickets>);
+
+              const orders = Object.values(groupedTickets);
+
+              return (
+                <div className="mb-8">
+                  <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+                    Ihre Tickets
+                  </h2>
+                  <div className="space-y-4">
+                    {orders.map((orderTickets) => (
+                      <OrderCard key={orderTickets[0]!.code || orderTickets[0]!.id} orderTickets={orderTickets} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
 
             {/* Show message if no tickets purchased yet */}
             {userTickets?.length === 0 && (

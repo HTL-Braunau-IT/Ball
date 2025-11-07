@@ -129,18 +129,42 @@ export const ticketRouter = createTRPCRouter({
 
     const tickets = await ctx.db.soldTickets.findMany({
       where: { buyerId: buyer.id },
+      include: {
+        reserve: {
+          include: {
+            deliveryMethods: true,
+          },
+        },
+        buyer: true,
+      },
       orderBy: { timestamp: 'desc' },
     });
 
-    return tickets.map(({ id, delivery, code, paid, sent, transref, timestamp }) => ({
-      id,
-      delivery,
-      code,
-      paid,
-      sent,
-      transref,
-      timestamp,
-    }));
+    return tickets.map(({ id, delivery, code, paid, sent, transref, timestamp, soldPrice, reserve, buyer }) => {
+      const isShipping = delivery.toLowerCase().includes('versand');
+      const matchingDeliveryMethod = reserve.deliveryMethods.find(dm => 
+        isShipping 
+          ? dm.name.toLowerCase().includes('versand')
+          : dm.name.toLowerCase().includes('abholung')
+      );
+      
+      return {
+        id,
+        delivery,
+        code,
+        paid,
+        sent,
+        transref,
+        timestamp,
+        soldPrice,
+        ticketPrice: reserve.price,
+        shippingSurcharge: matchingDeliveryMethod?.surcharge ?? 0,
+        buyerAddress: buyer.address,
+        buyerPostal: buyer.postal,
+        buyerProvince: buyer.province,
+        buyerCountry: buyer.country,
+      };
+    });
   }),
 
   // Check contingent for specific ticket type
