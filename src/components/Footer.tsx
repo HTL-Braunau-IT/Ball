@@ -13,7 +13,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="bottom-0 left-0 right-0 z-40 border-t"
+      className="sticky bottom-0 left-0 right-0 z-40 border-t"
       style={{
         borderColor: "var(--color-accent-warm)",
         background: "rgba(254, 254, 254, 0.85)",
