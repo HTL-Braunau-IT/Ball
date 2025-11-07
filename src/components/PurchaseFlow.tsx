@@ -129,7 +129,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
       {/* Step 2: Delivery Method Selection */}
       {currentStep === 2 && (
         <div className="card">
-          <h2 className="text-2xl font-semibold mb-6 gradient-text text-center">
+          <h2 className="text-2xl font-semibold gradient-text text-center" style={{ marginBottom: '2rem' }}>
             Versandart wählen
           </h2>
           
@@ -176,6 +176,12 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                   </p>
                 </div>
               </div>
+            </button>
+          </div>
+
+          <div className="flex gap-4 mt-6">
+            <button onClick={() => setCurrentStep(1)} className="btn btn-secondary flex-1">
+              Zurück
             </button>
           </div>
         </div>
@@ -250,7 +256,7 @@ function ContactForm({
 
   return (
     <div className="card">
-      <h2 className="text-2xl font-semibold mb-6 gradient-text text-center">
+      <h2 className="text-2xl font-semibold gradient-text text-center" style={{ marginBottom: '2rem' }}>
         Kontaktdaten
       </h2>
 
@@ -453,17 +459,13 @@ function QuantitySelection({
 
   return (
     <div className="card">
-      <h2 className="text-2xl font-semibold mb-2 gradient-text text-center">
+      <h2 className="text-2xl font-semibold gradient-text text-center" style={{ marginBottom: '2rem' }}>
         Anzahl der Tickets wählen
       </h2>
-      
-      {/* Show ticket type info */}
-      <p className="text-center mb-6" style={{ color: "var(--color-text-secondary)" }}>
-        {availableTicket.type} Ticket
-      </p>
+    
 
       {/* Quantity selection cards */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-2 gap-4 mb-6 mt-4">
         {quantityOptions.map((qty) => {
           const totalPrice = ticketPrice * qty;
           const isDisabled = qty > availableAmount;
@@ -474,25 +476,59 @@ function QuantitySelection({
               key={qty}
               onClick={() => !isDisabled && onQuantitySelect(qty)}
               disabled={isDisabled}
-              className={`p-6 border-2 rounded-lg text-left transition-colors ${
+              className={`p-6 border-2 rounded-lg transition-all ${
                 isSelected
                   ? "border-[var(--color-gold-light)] bg-[var(--color-bg-accent)]"
                   : isDisabled
                   ? "opacity-50 cursor-not-allowed border-gray-300"
-                  : "border-[var(--color-accent-warm)] hover:border-[var(--color-bronze)]"
+                  : "border-[var(--color-accent-warm)] hover:border-[var(--color-bronze)] hover:shadow-lg hover:scale-[1.02]"
               }`}
+              style={{
+                boxShadow: isSelected ? '0 4px 12px rgba(193, 122, 58, 0.25)' : '0 2px 8px rgba(0, 0, 0, 0.04)'
+              }}
             >
-              <div className="flex flex-col items-center text-center">
-                <h3 className="text-lg font-semibold mb-2" style={{ color: "var(--color-text-primary)" }}>
-                  {qty} {qty === 1 ? "Ticket" : "Tickets"}
-                </h3>
-                <p className="text-xl font-bold" style={{ color: "var(--color-gold-light)" }}>
-                  €{totalPrice}
-                </p>
+              <div className="flex flex-col">
+                {/* Icon, Label, and Price - horizontal layout */}
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 flex-1">
+                    {/* Icon display similar to OrderCard */}
+                    <div className="flex items-center justify-center w-16 h-16 rounded-xl flex-shrink-0" style={{ 
+                      background: isDisabled 
+                        ? 'linear-gradient(135deg, #e5e7eb, #9ca3af)'
+                        : 'linear-gradient(135deg, var(--color-gold-light), var(--color-bronze))',
+                      boxShadow: isDisabled 
+                        ? '0 2px 6px rgba(0, 0, 0, 0.1)'
+                        : '0 4px 12px rgba(193, 122, 58, 0.25)'
+                    }}>
+                      <span className="text-2xl font-bold text-white">{qty}</span>
+                    </div>
+                    
+                    {/* Label */}
+                    <div className="flex flex-col justify-center">
+                      <p className="text-sm font-semibold uppercase leading-tight" style={{ 
+                        color: 'var(--color-text-secondary)', 
+                        letterSpacing: '0.05em' 
+                      }}>
+                        {qty === 1 ? 'KARTE' : 'KARTEN'}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Price */}
+                  <div className="flex-shrink-0">
+                    <p className="text-xl font-bold" style={{ color: "var(--color-gold-light)" }}>
+                      €{totalPrice}
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Disabled message */}
                 {isDisabled && (
-                  <p className="text-xs mt-2" style={{ color: "var(--color-text-muted)" }}>
-                    Nicht verfügbar
-                  </p>
+                  <div className="mt-3 text-center">
+                    <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>
+                      Nicht verfügbar
+                    </p>
+                  </div>
                 )}
               </div>
             </button>
@@ -537,13 +573,13 @@ function PaymentSummary({
 }) {
   return (
     <div className="card">
-      <h2 className="text-2xl font-semibold mb-6 gradient-text text-center">
+      <h2 className="text-2xl font-semibold gradient-text text-center" style={{ marginBottom: '2rem' }}>
         Bestellübersicht
       </h2>
 
       <div className="space-y-4 mb-6">
         <div className="flex justify-between">
-          <span style={{ color: "var(--color-text-primary)" }}>Ticket: {selectedTicket.type}</span>
+          <span style={{ color: "var(--color-text-primary)" }}>Ticket × {quantity}</span>
           <span style={{ color: "var(--color-text-primary)" }}>{selectedTicket.price}€ × {quantity}</span>
         </div>
         
