@@ -100,13 +100,17 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
             </div>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
               {firstTicket.delivery.toLowerCase().includes('versand') 
-                ? 'Ihre Tickets werden per Post an die angegebene Adresse versendet.'
-                : 'Sie können Ihre Tickets am Veranstaltungsort mit dem Abholcode abholen.'}
+                ? (firstTicket.sent 
+                    ? 'Ihre Tickets wurden per Post versendet und sind auf dem Weg zu Ihnen.'
+                    : 'Ihre Tickets werden bald per Post an die angegebene Adresse versendet.')
+                : (firstTicket.sent
+                    ? 'Ihre Tickets sind bereit zur Abholung am Veranstaltungsort mit dem Abholcode.'
+                    : 'Ihre Tickets werden vorbereitet und können am Veranstaltungsort mit dem Abholcode abgeholt werden.')}
             </p>
           </div>
-          {/* Shipping status for delivery methods that include shipping */}
-          {firstTicket.delivery.toLowerCase().includes('versand') && (
-            <div className="flex-shrink-0">
+          {/* Status badge for delivery methods */}
+          <div className="flex-shrink-0">
+            {firstTicket.delivery.toLowerCase().includes('versand') ? (
               <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
                 firstTicket.sent 
                   ? 'bg-green-50 text-green-700 border border-green-200' 
@@ -115,8 +119,17 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
                 <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
                 <span>{firstTicket.sent ? 'Versendet' : 'Wird vorbereitet'}</span>
               </div>
-            </div>
-          )}
+            ) : (
+              <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                firstTicket.sent 
+                  ? 'bg-green-50 text-green-700 border border-green-200' 
+                  : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+              }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+                <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
+                <span>{firstTicket.sent ? 'Bereit zur Abholung' : 'Wird vorbereitet'}</span>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Details Dropdown */}
