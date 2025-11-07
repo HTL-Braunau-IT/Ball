@@ -77,12 +77,12 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
             
             {/* Status Badge */}
             <div className="flex-shrink-0">
-              <div className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm ${
+              <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
                 firstTicket.paid 
-                  ? 'bg-green-50 text-green-700 border-2 border-green-200' 
-                  : 'bg-yellow-50 text-yellow-700 border-2 border-yellow-200'
-              }`}>
-                <span className="text-base">{firstTicket.paid ? '✓' : '⏳'}</span>
+                  ? 'bg-green-50 text-green-700 border border-green-200' 
+                  : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+              }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+                <span className="text-sm">{firstTicket.paid ? '✓' : '⏳'}</span>
                 <span>{firstTicket.paid ? 'Bezahlt' : 'Ausstehend'}</span>
               </div>
             </div>
@@ -107,22 +107,14 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
           {/* Shipping status for delivery methods that include shipping */}
           {firstTicket.delivery.toLowerCase().includes('versand') && (
             <div className="flex-shrink-0">
-              {firstTicket.sent ? (
-                <div className="flex flex-col items-end gap-1">
-                  <span className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-green-50 text-green-700 border border-green-200 shadow-sm">
-                    ✓ Versendet
-                  </span>
-                  <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                    Unterwegs
-                  </span>
-                </div>
-              ) : (
-                <div className="flex flex-col items-end gap-1">
-                  <span className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-yellow-50 text-yellow-700 border border-yellow-200 shadow-sm">
-                    ⏳ Wird vorbereitet
-                  </span>
-                </div>
-              )}
+              <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                firstTicket.sent 
+                  ? 'bg-green-50 text-green-700 border border-green-200' 
+                  : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+              }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+                <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
+                <span>{firstTicket.sent ? 'Versendet' : 'Wird vorbereitet'}</span>
+              </div>
             </div>
           )}
         </div>
@@ -141,15 +133,18 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
           </button>
           
           {showDetails && (
-            <div className="mt-4 p-5 rounded-lg border-2 transition-all" style={{ 
-              background: 'linear-gradient(to bottom, var(--color-bg-secondary), var(--color-bg-accent))',
+            <div className="mt-4 p-4 rounded-lg border transition-all" style={{ 
+              background: 'var(--color-bg-secondary)',
               borderColor: 'var(--color-accent-warm)',
-              boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.02)'
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
             }}>
               <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-3 rounded-md" style={{ background: 'rgba(255, 255, 255, 0.6)' }}>
-                    <span className="text-xs uppercase tracking-wider font-semibold block mb-1" style={{ color: 'var(--color-text-muted)' }}>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 rounded-lg border" style={{ 
+                    background: 'var(--color-bg-card)',
+                    borderColor: 'var(--color-accent-warm)'
+                  }}>
+                    <span className="text-xs uppercase tracking-wider font-semibold block mb-1.5" style={{ color: 'var(--color-text-muted)' }}>
                       Kaufdatum
                     </span>
                     <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
@@ -158,8 +153,11 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
                   </div>
                   
                   {firstTicket.code && (
-                    <div className="p-3 rounded-md" style={{ background: 'rgba(255, 255, 255, 0.6)' }}>
-                      <span className="text-xs uppercase tracking-wider font-semibold block mb-1" style={{ color: 'var(--color-text-muted)' }}>
+                    <div className="p-3 rounded-lg border" style={{ 
+                      background: 'var(--color-bg-card)',
+                      borderColor: 'var(--color-accent-warm)'
+                    }}>
+                      <span className="text-xs uppercase tracking-wider font-semibold block mb-1.5" style={{ color: 'var(--color-text-muted)' }}>
                         Abholcode
                       </span>
                       <p className="text-sm font-mono font-bold" style={{ color: 'var(--color-gold-light)', letterSpacing: '0.1em' }}>
@@ -171,11 +169,14 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
 
                 {/* Shipping Address - only show for versand delivery */}
                 {firstTicket.delivery.toLowerCase().includes('versand') && firstTicket.buyerAddress && (
-                  <div className="pt-4 border-t-2" style={{ borderColor: 'var(--color-accent-warm)' }}>
+                  <div className="pt-4 border-t" style={{ borderColor: 'var(--color-accent-warm)' }}>
                     <p className="text-xs uppercase tracking-wider font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>
                       Versandadresse
                     </p>
-                    <div className="p-3 rounded-md" style={{ background: 'rgba(255, 255, 255, 0.6)' }}>
+                    <div className="p-3 rounded-lg border" style={{ 
+                      background: 'var(--color-bg-card)',
+                      borderColor: 'var(--color-accent-warm)'
+                    }}>
                       <p className="text-sm font-medium leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
                         {firstTicket.buyerAddress}<br />
                         {firstTicket.buyerPostal} {firstTicket.buyerProvince}<br />
@@ -185,12 +186,15 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
                   </div>
                 )}
 
-                <div className="pt-4 border-t-2" style={{ borderColor: 'var(--color-accent-warm)' }}>
+                <div className="pt-4 border-t" style={{ borderColor: 'var(--color-accent-warm)' }}>
                   <p className="text-xs uppercase tracking-wider font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>
                     Preisaufstellung
                   </p>
                   <div className="space-y-2">
-                    <div className="flex justify-between items-center py-1.5 px-2 rounded-md" style={{ background: 'rgba(255, 255, 255, 0.4)' }}>
+                    <div className="flex justify-between items-center py-2 px-3 rounded-lg border" style={{ 
+                      background: 'var(--color-bg-card)',
+                      borderColor: 'var(--color-accent-warm)'
+                    }}>
                       <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                         Ticket × {ticketCount}
                       </span>
@@ -199,7 +203,10 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
                       </span>
                     </div>
                     {shippingFee > 0 && (
-                      <div className="flex justify-between items-center py-1.5 px-2 rounded-md" style={{ background: 'rgba(255, 255, 255, 0.4)' }}>
+                      <div className="flex justify-between items-center py-2 px-3 rounded-lg border" style={{ 
+                        background: 'var(--color-bg-card)',
+                        borderColor: 'var(--color-accent-warm)'
+                      }}>
                         <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                           Versandkosten
                         </span>
@@ -208,14 +215,14 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
                         </span>
                       </div>
                     )}
-                    <div className="flex justify-between items-center py-2.5 px-3 rounded-md mt-3 border-2" style={{ 
-                      background: 'transparent',
+                    <div className="flex justify-between items-center py-2.5 px-3 rounded-lg border-2 mt-3" style={{ 
+                      background: 'var(--color-bg-card)',
                       borderColor: 'var(--color-gold-light)'
                     }}>
-                      <span className="text-base font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-primary)' }}>
+                      <span className="text-sm font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-primary)' }}>
                         Gesamt
                       </span>
-                      <span className="text-lg font-bold" style={{ color: 'var(--color-gold-light)' }}>
+                      <span className="text-base font-bold" style={{ color: 'var(--color-gold-light)' }}>
                         {totalPaid.toFixed(2)}€
                       </span>
                     </div>
