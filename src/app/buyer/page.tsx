@@ -43,123 +43,167 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
   const totalPaid = (ticketPrice * ticketCount) + shippingFee;
 
   return (
-    <div className="mt-8 card">
-      <div className="flex justify-between items-start">
-        <div className="flex-1">
-          <div className="flex items-center gap-4 mb-2">
-            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-              firstTicket.paid 
-                ? 'bg-green-100 text-green-800' 
-                : 'bg-yellow-100 text-yellow-800'
-            }`}>
-              {firstTicket.paid ? 'Bezahlt' : 'Ausstehend'}
-            </span>
-            <span className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-              {ticketCount} {ticketCount === 1 ? 'Ticket' : 'Tickets'}
-            </span>
+    <div className="mt-6 card overflow-hidden" style={{ 
+      border: '1px solid var(--color-accent-warm)',
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
+    }}>
+      <div className="p-6">
+        {/* Header Section */}
+        <div className="pb-5 mb-5 border-b" style={{ borderColor: 'var(--color-accent-warm)' }}>
+          <div className="flex items-start justify-between gap-4">
+            {/* Ticket Count Display */}
+            <div className="flex-1">
+              <div className="inline-flex items-center gap-3">
+                <div className="flex items-center justify-center w-16 h-16 rounded-xl flex-shrink-0" style={{ 
+                  background: 'linear-gradient(135deg, var(--color-gold-light), var(--color-bronze))',
+                  boxShadow: '0 4px 12px rgba(193, 122, 58, 0.25)'
+                }}>
+                  <span className="text-2xl font-bold text-white">{ticketCount}</span>
+                </div>
+                <div className="flex flex-col justify-center">
+                  <p className="text-xs uppercase tracking-widest font-medium leading-tight" style={{ color: 'var(--color-text-muted)', letterSpacing: '0.15em' }}>
+                    {ticketCount === 1 ? 'Karte' : 'Karten'}
+                  </p>
+                  <p className="text-lg font-semibold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+                    {ticketCount === 1 ? 'Gekauft' : 'Gekauft'}
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Status Badge */}
+            <div className="flex-shrink-0">
+              <div className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm ${
+                firstTicket.paid 
+                  ? 'bg-green-50 text-green-700 border-2 border-green-200' 
+                  : 'bg-yellow-50 text-yellow-700 border-2 border-yellow-200'
+              }`}>
+                <span className="text-base">{firstTicket.paid ? '✓' : '⏳'}</span>
+                <span>{firstTicket.paid ? 'Bezahlt' : 'Ausstehend'}</span>
+              </div>
+            </div>
           </div>
-          <p className="text-lg font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
-            {firstTicket.delivery}
-          </p>
-          
+        </div>
+
+        {/* Delivery Section */}
+        <div className="flex items-start justify-between pb-4 mb-4 border-b" style={{ borderColor: 'var(--color-accent-warm)' }}>
+          <div className="flex-1 pr-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-sm" style={{ color: 'var(--color-gold-light)' }}>📦</span>
+              <p className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                {firstTicket.delivery}
+              </p>
+            </div>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+              {firstTicket.delivery.toLowerCase().includes('versand') 
+                ? 'Ihre Tickets werden per Post an die angegebene Adresse versendet.'
+                : 'Sie können Ihre Tickets am Veranstaltungsort mit dem Abholcode abholen.'}
+            </p>
+          </div>
           {/* Shipping status for delivery methods that include shipping */}
           {firstTicket.delivery.toLowerCase().includes('versand') && (
-            <div className="mt-2 mb-2">
+            <div className="flex-shrink-0">
               {firstTicket.sent ? (
-                <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                  ✓ Versendet
-                </span>
+                <div className="flex flex-col items-end gap-1">
+                  <span className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-green-50 text-green-700 border border-green-200 shadow-sm">
+                    ✓ Versendet
+                  </span>
+                  <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                    Unterwegs
+                  </span>
+                </div>
               ) : (
-                <span className="px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                  ⏳ Wird vorbereitet
-                </span>
+                <div className="flex flex-col items-end gap-1">
+                  <span className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-yellow-50 text-yellow-700 border border-yellow-200 shadow-sm">
+                    ⏳ Wird vorbereitet
+                  </span>
+                </div>
               )}
             </div>
           )}
+        </div>
 
-          {/* Details Dropdown */}
-          <div className="mt-4">
-            <button
-              onClick={() => setShowDetails(!showDetails)}
-              className="flex items-center gap-2 text-sm font-medium"
-              style={{ color: 'var(--color-gold-light)' }}
-            >
-              <span>{showDetails ? '▼' : '▶'}</span>
-              {showDetails ? 'Weniger anzeigen' : 'Mehr Informationen'}
-            </button>
-            
-            {showDetails && (
-              <div className="mt-3 p-4 rounded-lg border" style={{ 
-                background: 'var(--color-bg-secondary)',
-                borderColor: 'var(--color-accent-warm)'
-              }}>
-                <div className="space-y-2">
-                  <div>
-                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
-                      Kaufdatum:
+        {/* Details Dropdown */}
+        <div>
+          <button
+            onClick={() => setShowDetails(!showDetails)}
+            className="flex items-center gap-2 text-sm font-medium transition-all hover:opacity-80 w-full text-left"
+            style={{ color: 'var(--color-gold-light)' }}
+          >
+            <span className="transition-transform" style={{ transform: showDetails ? 'rotate(90deg)' : 'rotate(0deg)' }}>
+              ▶
+            </span>
+            <span>{showDetails ? 'Weniger anzeigen' : 'Mehr Informationen'}</span>
+          </button>
+          
+          {showDetails && (
+            <div className="mt-4 p-5 rounded-lg border-2 transition-all" style={{ 
+              background: 'linear-gradient(to bottom, var(--color-bg-secondary), var(--color-bg-accent))',
+              borderColor: 'var(--color-accent-warm)',
+              boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.02)'
+            }}>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-3 rounded-md" style={{ background: 'rgba(255, 255, 255, 0.6)' }}>
+                    <span className="text-xs uppercase tracking-wider font-semibold block mb-1" style={{ color: 'var(--color-text-muted)' }}>
+                      Kaufdatum
                     </span>
-                    <p className="text-sm mt-1" style={{ color: 'var(--color-text-primary)' }}>
+                    <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
                       {formatDateForDisplay(firstTicket.timestamp.toISOString())}
                     </p>
                   </div>
                   
                   {firstTicket.code && (
-                    <div>
-                      <span className="text-sm font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
-                        Abholcode:
+                    <div className="p-3 rounded-md" style={{ background: 'rgba(255, 255, 255, 0.6)' }}>
+                      <span className="text-xs uppercase tracking-wider font-semibold block mb-1" style={{ color: 'var(--color-text-muted)' }}>
+                        Abholcode
                       </span>
-                      <p className="text-sm mt-1 font-mono font-semibold" style={{ color: 'var(--color-gold-light)' }}>
+                      <p className="text-sm font-mono font-bold" style={{ color: 'var(--color-gold-light)', letterSpacing: '0.1em' }}>
                         {firstTicket.code}
                       </p>
                     </div>
                   )}
+                </div>
 
-                  <div className="pt-2 border-t" style={{ borderColor: 'var(--color-accent-warm)' }}>
-                    <p className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>
-                      Preisaufstellung:
-                    </p>
-                    <div className="space-y-1 text-sm">
-                      <div className="flex justify-between">
-                        <span style={{ color: 'var(--color-text-secondary)' }}>
-                          Ticket × {ticketCount}
+                <div className="pt-4 border-t-2" style={{ borderColor: 'var(--color-accent-warm)' }}>
+                  <p className="text-xs uppercase tracking-wider font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+                    Preisaufstellung
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center py-1.5 px-2 rounded-md" style={{ background: 'rgba(255, 255, 255, 0.4)' }}>
+                      <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                        Ticket × {ticketCount}
+                      </span>
+                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                        {ticketPrice.toFixed(2)}€ × {ticketCount}
+                      </span>
+                    </div>
+                    {shippingFee > 0 && (
+                      <div className="flex justify-between items-center py-1.5 px-2 rounded-md" style={{ background: 'rgba(255, 255, 255, 0.4)' }}>
+                        <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                          Versandkosten
                         </span>
-                        <span style={{ color: 'var(--color-text-primary)' }}>
-                          {ticketPrice.toFixed(2)}€ × {ticketCount}
-                        </span>
-                      </div>
-                      {shippingFee > 0 && (
-                        <div className="flex justify-between">
-                          <span style={{ color: 'var(--color-text-secondary)' }}>
-                            Versandkosten
-                          </span>
-                          <span style={{ color: 'var(--color-text-primary)' }}>
-                            {shippingFee.toFixed(2)}€
-                          </span>
-                        </div>
-                      )}
-                      <div className="flex justify-between pt-2 border-t font-semibold" style={{ borderColor: 'var(--color-accent-warm)' }}>
-                        <span style={{ color: 'var(--color-text-primary)' }}>
-                          Gesamt
-                        </span>
-                        <span style={{ color: 'var(--color-gold-light)' }}>
-                          {totalPaid.toFixed(2)}€
+                        <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                          {shippingFee.toFixed(2)}€
                         </span>
                       </div>
+                    )}
+                    <div className="flex justify-between items-center py-2.5 px-3 rounded-md mt-3 border-2" style={{ 
+                      background: 'transparent',
+                      borderColor: 'var(--color-gold-light)'
+                    }}>
+                      <span className="text-base font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-primary)' }}>
+                        Gesamt
+                      </span>
+                      <span className="text-lg font-bold" style={{ color: 'var(--color-gold-light)' }}>
+                        {totalPaid.toFixed(2)}€
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-        </div>
-        <div className="text-right">
-          <div className="w-3 h-3 rounded-full" style={{ 
-            background: firstTicket.paid 
-              ? (firstTicket.delivery.toLowerCase().includes('versand') 
-                  ? (firstTicket.sent ? 'var(--color-success)' : 'var(--color-warning)')
-                  : 'var(--color-success)')
-              : 'var(--color-warning)' 
-          }}></div>
+            </div>
+          )}
         </div>
       </div>
     </div>
