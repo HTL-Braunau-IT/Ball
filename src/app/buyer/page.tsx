@@ -152,7 +152,7 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
             }}>
               <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
+                <div className={firstTicket.code && !firstTicket.delivery.toLowerCase().includes('versand') ? "grid grid-cols-2 gap-3" : ""}>
                   <div className="p-3 rounded-lg border" style={{ 
                     background: 'var(--color-bg-card)',
                     borderColor: 'var(--color-accent-warm)'
@@ -165,7 +165,7 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
                     </p>
                   </div>
                   
-                  {firstTicket.code && (
+                  {firstTicket.code && !firstTicket.delivery.toLowerCase().includes('versand') && (
                     <div className="p-3 rounded-lg border" style={{ 
                       background: 'var(--color-bg-card)',
                       borderColor: 'var(--color-accent-warm)'
