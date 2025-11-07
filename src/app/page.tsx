@@ -128,13 +128,10 @@ export default async function Home() {
           <div className="relative z-10 flex flex-col items-center justify-center w-full">
             <div className="mb-12">
               <h1 className="text-7xl font-bold mb-6 gradient-text">
-                HTL BRAUNAU
+                DUNE - Ball der HTL BRAUNAU
               </h1>
-              <h2 className="text-5xl font-semibold mb-8" style={{ color: 'var(--color-text-primary)' }}>
-                BALL DER TESTER
-              </h2>
               <p className="text-2xl mb-16" style={{ color: 'var(--color-text-secondary)' }}>
-                Ein eleganter Abend im Zeichen von TEST
+                Ein eleganter Abend im Zeichen von DUNE
               </p>
             </div>
             
