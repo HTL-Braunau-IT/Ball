@@ -208,48 +208,35 @@ export default async function Home() {
                 <div className="flex items-center gap-4 p-4 rounded-lg" style={{ background: 'var(--color-bg-secondary)' }}>
                   <div className="text-2xl font-bold" style={{ color: 'var(--color-gold-light)' }}>18:00</div>
                   <div>
-                    <h5 className="font-semibold">Einlass & Begrüßung</h5>
-                    <p style={{ color: 'var(--color-text-muted)' }}>Empfang der Gäste mit Willkommensgetränk</p>
+                    <h5 className="font-semibold">Einlass</h5>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-4 p-4 rounded-lg" style={{ background: 'var(--color-bg-secondary)' }}>
-                  <div className="text-2xl font-bold" style={{ color: 'var(--color-gold-light)' }}>19:00</div>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--color-gold-light)' }}>20:30</div>
                   <div>
-                    <h5 className="font-semibold">Eröffnung & Grußworte</h5>
-                    <p style={{ color: 'var(--color-text-muted)' }}>Offizielle Eröffnung durch die Schulleitung</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-4 p-4 rounded-lg" style={{ background: 'var(--color-bg-secondary)' }}>
-                  <div className="text-2xl font-bold" style={{ color: 'var(--color-gold-light)' }}>19:30</div>
-                  <div>
-                    <h5 className="font-semibold">Dinner & Buffet</h5>
-                    <p style={{ color: 'var(--color-text-muted)' }}>Kulinarische Köstlichkeiten im DUNE-Stil</p>
+                    <h5 className="font-semibold">Eröffnungstanz</h5>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-4 p-4 rounded-lg" style={{ background: 'var(--color-bg-secondary)' }}>
                   <div className="text-2xl font-bold" style={{ color: 'var(--color-gold-light)' }}>21:00</div>
                   <div>
-                    <h5 className="font-semibold">Tanz & Unterhaltung</h5>
-                    <p style={{ color: 'var(--color-text-muted)' }}>Live-Musik und Tanz bis in die Nacht</p>
+                    <h5 className="font-semibold">Beginn Live Musik</h5>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-4 p-4 rounded-lg" style={{ background: 'var(--color-bg-secondary)' }}>
-                  <div className="text-2xl font-bold" style={{ color: 'var(--color-gold-light)' }}>24:00</div>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--color-gold-light)' }}>00:00</div>
                   <div>
-                    <h5 className="font-semibold">Mitternachts-Snack</h5>
-                    <p style={{ color: 'var(--color-text-muted)' }}>Kleine Köstlichkeiten für die späten Stunden</p>
+                    <h5 className="font-semibold">Mitternachtseinlage</h5>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-4 p-4 rounded-lg" style={{ background: 'var(--color-bg-secondary)' }}>
-                  <div className="text-2xl font-bold" style={{ color: 'var(--color-gold-light)' }}>02:00</div>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--color-gold-light)' }}>03:00</div>
                   <div>
                     <h5 className="font-semibold">Ende der Veranstaltung</h5>
-                    <p style={{ color: 'var(--color-text-muted)' }}>Abschied und Heimreise</p>
                   </div>
                 </div>
               </div>
@@ -310,42 +297,48 @@ export default async function Home() {
                   <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
                     Wann startet der Ticketverkauf?
                   </h5>
-                  <p>Der Ticketverkauf startet am 15. März 2026 um 18:00 Uhr. Der Countdown oben zeigt die verbleibende Zeit an.</p>
+                  <p>Der Ticketverkauf startet am 19.12.2025 um 12 Uhr. Der Countdown oben zeigt die verbleibende Zeit an. </p>
                 </div>
                 
-                <div>
-                  <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
-                    Wie viel kosten die Tickets?
-                  </h5>
-                  <p>Die genauen Preise werden beim Start des Ticketverkaufs bekannt gegeben. Es wird verschiedene Kategorien geben.</p>
-                </div>
                 
                 <div>
                   <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
                     Gibt es Altersbeschränkungen?
                   </h5>
-                  <p>Der Ball ist für alle Altersgruppen ab 16 Jahren geeignet. Unter 18-Jährige benötigen eine Einverständniserklärung der Eltern.</p>
+                  <p>
+                    Der Ball ist grundsätzlich ab 18 Jahren. Minderjährige können jedoch mit einer 
+                    Einverständniserklärung der Eltern und in Begleitung einer volljährigen Person 
+                    teilnehmen. Die Einverständniserklärung finden Sie hier:&nbsp;  
+                    <Link href="/einverstaendniserklaerung" className="text-gold-light hover:underline" style={{ color: 'var(--color-gold-light)' }}>
+                       Einverständniserklärung herunterladen
+                    </Link>
+                  </p>
+                </div>
+                <div>
+                  <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
+                  Wie kommt man am besten hin? 
+                  </h5>
+                  <p>
+                    Wir bieten einen Shuttle-Service von einem großen Parkplatz an. 
+                    Weitere Informationen finden Sie hier:&nbsp; 
+                    <Link href="/anfahrt" className="text-gold-light hover:underline" style={{ color: 'var(--color-gold-light)' }}>
+                      Anfahrt & Shuttle-Service
+                    </Link>
+                  </p>
                 </div>
                 
                 <div>
                   <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
-                    Ist das Dressing optional?
+                  Gibt es eine Gaderobe? 
                   </h5>
-                  <p>Ja, der Dresscode ist nicht zwingend, aber elegant gekleidete Gäste tragen zur besonderen Atmosphäre bei.</p>
+                  <p>Ja, wir bieten eine bewachte Gaderobe an. </p>
                 </div>
                 
                 <div>
                   <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
-                    Gibt es Parkplätze?
+                  Ist der Eintritt nur mit Ticket möglich? 
                   </h5>
-                  <p>Ja, ausreichend Parkplätze sind auf dem Schulgelände verfügbar. Die genaue Anfahrtsbeschreibung folgt mit den Tickets.</p>
-                </div>
-                
-                <div>
-                  <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
-                    Können Tickets storniert werden?
-                  </h5>
-                  <p>Stornierungen sind bis 7 Tage vor der Veranstaltung möglich. Details finden Sie in den AGB.</p>
+                  <p>Zugang nur mit im Vorfeld gekauftem Ticket möglich. Es gibt keine Abendkasse</p>
                 </div>
           </div>
         </div>

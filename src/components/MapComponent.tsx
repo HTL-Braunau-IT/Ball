@@ -12,7 +12,7 @@ export default function MapComponent() {
     if (!mapRef.current || mapInstanceRef.current) return;
 
     // Initialize map centered on HTL Braunau
-    const map = L.map(mapRef.current).setView([48.2569, 13.0433], 15);
+    const map = L.map(mapRef.current).setView([48.24807, 13.03953], 14);
 
     // Add OpenStreetMap tile layer
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -31,12 +31,35 @@ export default function MapComponent() {
       shadowSize: [41, 41],
     });
 
-    L.marker([48.2569, 13.0433], { icon })
+    L.marker([48.24358, 13.02902], { icon })
       .addTo(map)
       .bindPopup(
         "<strong>HTL Braunau am Inn</strong><br>Osternberger Straße 55<br>5280 Braunau am Inn"
       )
-      .openPopup();
+      .bindTooltip(
+        "<strong>HTL Braunau am Inn</strong><br>Osternberger Straße 55<br>5280 Braunau am Inn",
+        { 
+          permanent: true, 
+          direction: 'top', 
+          className: 'custom-tooltip',
+          offset: [0, -45]
+        }
+      );
+
+    L.marker([48.25034, 13.04636], { icon })
+      .addTo(map)
+      .bindPopup(
+        "<strong>Parkplatz Interspar Braunau</strong><br>Erlachweg 13<br>5280 Braunau am Inn"
+      )
+      .bindTooltip(
+        "<strong>Parkplatz Interspar Braunau</strong><br>Erlachweg 13<br>5280 Braunau am Inn",
+        { 
+          permanent: true, 
+          direction: 'top', 
+          className: 'custom-tooltip',
+          offset: [0, -45]
+        }
+      );
 
     mapInstanceRef.current = map;
 

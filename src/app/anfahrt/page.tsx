@@ -49,7 +49,7 @@ export default function AnfahrtPage() {
           <section className="pb-6">
             <h2 className="text-2xl font-semibold mb-6" style={{ color: "var(--color-bronze)" }}>
               Veranstaltungsort
-            </h2>
+            </h2><br />
             <p className="text-lg leading-relaxed">
               HTL Braunau am Inn
               <br />
@@ -74,42 +74,22 @@ export default function AnfahrtPage() {
 
           <section className="pb-6">
             <h2 className="text-2xl font-semibold mb-6" style={{ color: "var(--color-bronze)" }}>
-              Anreise mit dem Auto
-            </h2>
+              Anreise mit dem Auto - Parkplätze und Schutteldienst bei Interspaar Braunau 
+            </h2><br />
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold mb-3">Von Linz:</h3>
+                <h3 className="text-xl font-semibold mb-3">Shuttle-Service:</h3>
                 <p className="leading-relaxed">
-                  A8 Richtung Passau bis zur Ausfahrt Ort im Innkreis, dann über die B148 nach Braunau am Inn.
+                  Unser kostenloser Shuttle-Service bringt Sie bequem vom Interspar-Parkplatz 
+                  zur HTL Braunau und wieder zurück. Der Shuttle verkehrt in zwei Zeitfenstern: 
+                  von 18:00 bis 21:00 Uhr für die Anreise und von 00:30 bis 03:30 Uhr für die Rückfahrt.
                 </p>
               </div>
               <div>
                 <h3 className="text-xl font-semibold mb-3">Parkplätze:</h3>
                 <p className="leading-relaxed">
-                  Ausreichend Parkplätze sind auf dem Schulgelände verfügbar. Bitte folgen Sie der
-                  Beschilderung.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <section className="pb-6">
-            <h2 className="text-2xl font-semibold mb-6" style={{ color: "var(--color-bronze)" }}>
-              Anreise mit öffentlichen Verkehrsmitteln
-            </h2>
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-semibold mb-3">Mit dem Zug:</h3>
-                <p className="leading-relaxed">
-                  Der nächste Bahnhof ist Braunau am Inn. Von dort erreichen Sie die HTL zu Fuß in
-                  ca. 15 Minuten oder mit dem Bus.
-                </p>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-3">Mit dem Bus:</h3>
-                <p className="leading-relaxed">
-                  Verschiedene Buslinien halten in der Nähe der HTL. Bitte informieren Sie sich
-                  über die aktuellen Verbindungen auf der Website der Verkehrsbetriebe.
+                  Sie können Ihr Fahrzeug kostenlos auf dem gesamten Interspar-Parkplatz abstellen. 
+                  Von dort aus bringt Sie der Shuttle-Service direkt zur Veranstaltung.
                 </p>
               </div>
             </div>
