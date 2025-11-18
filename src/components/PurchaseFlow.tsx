@@ -161,7 +161,10 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                     Tickets werden vor Ort abgeholt
                   </p>
                   {env.NEXT_PUBLIC_PICKUP_DATE_1 && env.NEXT_PUBLIC_PICKUP_DATE_2 && (
-                    <div className="text-sm space-y-1" style={{ color: "var(--color-text-secondary)" }}>
+                    <div className="text-sm mt-1" style={{ color: "var(--color-text-secondary)" }}>
+                      <p className="text-xs font-medium mb-0.5" style={{ color: "var(--color-text-secondary)" }}>
+                        Mögliche Abholzeiten:
+                      </p>
                       {(() => {
                         const formatPickupDate = (dateStr: string, startTime?: string, endTime?: string) => {
                           try {
@@ -194,10 +197,10 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                         );
                         
                         return (
-                          <>
+                          <div className="space-y-0.5">
                             <p>{date1}</p>
                             <p>{date2}</p>
-                          </>
+                          </div>
                         );
                       })()}
                     </div>
