@@ -92,9 +92,20 @@ export const ticketRouter = createTRPCRouter({
       return null;
     }
 
+    // Count paid sold tickets for this reserve
+    const soldTicketsCount = await ctx.db.soldTickets.count({
+      where: {
+        reserveId: matchingReserve.id,
+        paid: true,
+      },
+    });
+
+    // Calculate available tickets: reserve amount minus sold tickets
+    const availableAmount = Math.max(0, matchingReserve.amount - soldTicketsCount);
+
     return {
       id: matchingReserve.id,
-      amount: matchingReserve.amount,
+      amount: availableAmount,
       price: matchingReserve.price,
       type: matchingReserve.type[0]?.name || "Unknown",
       groupId: matchingReserve.type[0]?.id || 0,
