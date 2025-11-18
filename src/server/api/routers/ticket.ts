@@ -86,18 +86,32 @@ export const ticketRouter = createTRPCRouter({
     });
 
     // Return the first matching reserve (should be only one)
-    const matchingReserve = filteredReserves[0];
+    let matchingReserve = filteredReserves[0];
+
+    // Alumni fallback: use public reserve if alumni reserve is empty
+    if (userGroupName === "Absolventen" && matchingReserve) {
+      const soldCount = await ctx.db.soldTickets.count({
+        where: { reserveId: matchingReserve.id, paid: true },
+      });
+      if (matchingReserve.amount - soldCount === 0) {
+        const publicReserve = reserves.find(({ type }) => type[0]?.name === "Öffentlich");
+        if (publicReserve) {
+          matchingReserve = publicReserve;
+          const publicGroup = await ctx.db.buyerGroups.findFirst({ where: { name: "Öffentlich" } });
+          if (publicGroup) {
+            maxTickets = (publicGroup as unknown as { maxTickets: number }).maxTickets ?? 2;
+          }
+        }
+      }
+    }
 
     if (!matchingReserve) {
       return null;
     }
 
-    // Count paid sold tickets for this reserve
+    // Count paid sold tickets for the selected reserve
     const soldTicketsCount = await ctx.db.soldTickets.count({
-      where: {
-        reserveId: matchingReserve.id,
-        paid: true,
-      },
+      where: { reserveId: matchingReserve.id, paid: true },
     });
 
     // Calculate available tickets: reserve amount minus sold tickets
