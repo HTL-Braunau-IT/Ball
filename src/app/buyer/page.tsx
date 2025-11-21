@@ -262,6 +262,9 @@ export default function BuyerPage() {
     { enabled: !!session }
   );
 
+  // Retry payment mutation
+  const retryPayment = api.ticket.retryPayment.useMutation();
+
   // Check if ticket sale has started
   const ticketSaleDate = env.NEXT_PUBLIC_TICKET_SALE_DATE ? new Date(env.NEXT_PUBLIC_TICKET_SALE_DATE) : new Date();
   const now = new Date();
@@ -420,6 +423,45 @@ export default function BuyerPage() {
                 <p className="text-center">
                   Die Zahlung wurde abgebrochen. Sie können jederzeit erneut versuchen, Tickets zu kaufen.
                 </p>
+              </div>
+            )}
+
+            {/* Show retry payment button if user has unpaid tickets */}
+            {userTickets && userTickets.some(t => !t.paid) && (
+              <div className="mb-6 p-4 rounded-lg border-2" style={{ 
+                borderColor: 'var(--color-warning)',
+                background: 'var(--color-bg-accent)'
+              }}>
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                      Ausstehende Zahlung
+                    </h3>
+                    <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                      Sie haben unbezahlte Tickets. Klicken Sie auf den Button, um die Zahlung erneut zu versuchen.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      retryPayment.mutate(undefined, {
+                        onSuccess: (data) => {
+                          if (data.checkoutUrl) {
+                            window.location.href = data.checkoutUrl;
+                          }
+                        },
+                        onError: (error) => {
+                          console.error("Retry payment error:", error);
+                          alert("Fehler beim Erstellen der Zahlungsseite: " + error.message);
+                        },
+                      });
+                    }}
+                    disabled={retryPayment.isPending}
+                    className="btn btn-primary flex-shrink-0"
+                    style={{ opacity: retryPayment.isPending ? 0.6 : 1 }}
+                  >
+                    {retryPayment.isPending ? "Wird vorbereitet..." : "Zahlung erneut versuchen"}
+                  </button>
+                </div>
               </div>
             )}
 
