@@ -244,10 +244,8 @@ export default async function Home() {
                   </h5>
                   <ul className="space-y-2">
                     <li>• Elegante Abendkleider</li>
-                    <li>• Cocktailkleider</li>
-                    <li>• Hochhackige Schuhe</li>
-                    <li>• Schmuck und Accessoires</li>
-                    <li>• DUNE-inspirierte Farben (Gold, Bronze, Sand)</li>
+                    <li>• Lange, schicke Cocktailkleider</li>
+                    <li>• Hohe Schuhe (auch Wechselschuhe erlaubt)</li>
                   </ul>
                 </div>
                 
@@ -257,19 +255,9 @@ export default async function Home() {
                   </h5>
                   <ul className="space-y-2">
                     <li>• Anzug oder Smoking</li>
-                    <li>• Hemd mit Krawatte oder Fliege</li>
-                    <li>• Elegante Schuhe</li>
-                    <li>• Einstecktuch</li>
-                    <li>• DUNE-inspirierte Accessoires</li>
+                    <li>• Elegante Schuhe (auch sauber geputzte Sneaker erlaubt)</li>
                   </ul>
                 </div>
-              </div>
-              
-              <div className="mt-6 p-4 rounded-lg" style={{ background: 'var(--color-bg-secondary)' }}>
-                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                  <strong>Hinweis:</strong> Der Dresscode ist nicht zwingend, aber elegant gekleidete Gäste 
-                  tragen zur besonderen Atmosphäre des Abends bei. DUNE-inspirierte Elemente sind sehr willkommen!
-                </p>
               </div>
             </div>
           </CollapsibleSection>
