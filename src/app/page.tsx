@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { HydrateClient } from "~/trpc/server";
+import { HydrateClient, api } from "~/trpc/server";
 import Countdown from "~/components/Countdown";
 import CollapsibleSection from "~/components/CollapsibleSection";
 import { env } from "~/env";
@@ -21,10 +21,13 @@ const formatDateForDisplay = (dateString: string) => {
 };
 
 export default async function Home() {
+  // Check kill switch from backend
+  const salesEnabled = await api.systemSettings.getSalesEnabled();
+  
   // Check if ticket sale has started
   const ticketSaleDate = TICKET_SALE_DATE ? new Date(TICKET_SALE_DATE) : new Date();
   const now = new Date();
-  const hasTicketSaleStarted = now >= ticketSaleDate;
+  const hasTicketSaleStarted = salesEnabled && now >= ticketSaleDate;
 
   return (
     <HydrateClient>
