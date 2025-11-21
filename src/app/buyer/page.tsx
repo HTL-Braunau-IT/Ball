@@ -265,10 +265,13 @@ export default function BuyerPage() {
   // Retry payment mutation
   const retryPayment = api.ticket.retryPayment.useMutation();
 
+  // Check kill switch from backend
+  const { data: salesEnabled } = api.systemSettings.getSalesEnabled.useQuery();
+
   // Check if ticket sale has started
   const ticketSaleDate = env.NEXT_PUBLIC_TICKET_SALE_DATE ? new Date(env.NEXT_PUBLIC_TICKET_SALE_DATE) : new Date();
   const now = new Date();
-  const hasTicketSaleStarted = now >= ticketSaleDate;
+  const hasTicketSaleStarted = (salesEnabled ?? true) && now >= ticketSaleDate;
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
