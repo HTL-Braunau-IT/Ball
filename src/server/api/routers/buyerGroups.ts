@@ -47,6 +47,9 @@ export const buyerGroupsRouter = createTRPCRouter({
           where: { id: input.reserveId },
           include: {
             soldTickets: {
+              where: {
+                paid: true
+              },
               select: {
                 id: true
               }

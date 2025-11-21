@@ -4,6 +4,7 @@ import { useState } from "react";
 import { api } from "~/trpc/react";
 import { shippingAddressSchema, selfPickupSchema } from "~/utils/validateAddress";
 import type { ShippingAddress, SelfPickupInfo } from "~/utils/validateAddress";
+import { env } from "~/env";
 
 type DeliveryMethod = "shipping" | "self-pickup";
 
@@ -159,6 +160,51 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                   <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
                     Tickets werden vor Ort abgeholt
                   </p>
+                  {env.NEXT_PUBLIC_PICKUP_DATE_1 && env.NEXT_PUBLIC_PICKUP_DATE_2 && (
+                    <div className="text-sm mt-1" style={{ color: "var(--color-text-secondary)" }}>
+                      <p className="text-xs font-medium mb-0.5" style={{ color: "var(--color-text-secondary)" }}>
+                        Mögliche Abholzeiten:
+                      </p>
+                      {(() => {
+                        const formatPickupDate = (dateStr: string, startTime?: string, endTime?: string) => {
+                          try {
+                            const date = new Date(dateStr);
+                            const formattedDate = date.toLocaleDateString('de-DE', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric'
+                            });
+                            if (startTime && endTime) {
+                              return `${formattedDate}, ${startTime} - ${endTime} Uhr`;
+                            } else if (startTime) {
+                              return `${formattedDate}, ab ${startTime} Uhr`;
+                            }
+                            return formattedDate;
+                          } catch {
+                            return dateStr;
+                          }
+                        };
+                        
+                        const date1 = formatPickupDate(
+                          env.NEXT_PUBLIC_PICKUP_DATE_1,
+                          env.NEXT_PUBLIC_PICKUP_DATE_1_START_TIME,
+                          env.NEXT_PUBLIC_PICKUP_DATE_1_END_TIME
+                        );
+                        const date2 = formatPickupDate(
+                          env.NEXT_PUBLIC_PICKUP_DATE_2,
+                          env.NEXT_PUBLIC_PICKUP_DATE_2_START_TIME,
+                          env.NEXT_PUBLIC_PICKUP_DATE_2_END_TIME
+                        );
+                        
+                        return (
+                          <div className="space-y-0.5">
+                            <p>{date1}</p>
+                            <p>{date2}</p>
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  )}
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-semibold" style={{ color: "var(--color-success)" }}>

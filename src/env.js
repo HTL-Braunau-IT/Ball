@@ -30,6 +30,12 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_TICKET_SALE_DATE: z.string().optional(),
+    NEXT_PUBLIC_PICKUP_DATE_1: z.string().optional(),
+    NEXT_PUBLIC_PICKUP_DATE_1_START_TIME: z.string().optional(),
+    NEXT_PUBLIC_PICKUP_DATE_1_END_TIME: z.string().optional(),
+    NEXT_PUBLIC_PICKUP_DATE_2: z.string().optional(),
+    NEXT_PUBLIC_PICKUP_DATE_2_START_TIME: z.string().optional(),
+    NEXT_PUBLIC_PICKUP_DATE_2_END_TIME: z.string().optional(),
     // Optional during build - required at runtime
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
   },
@@ -49,6 +55,12 @@ export const env = createEnv({
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_TICKET_SALE_DATE: process.env.NEXT_PUBLIC_TICKET_SALE_DATE,
+    NEXT_PUBLIC_PICKUP_DATE_1: process.env.NEXT_PUBLIC_PICKUP_DATE_1,
+    NEXT_PUBLIC_PICKUP_DATE_1_START_TIME: process.env.NEXT_PUBLIC_PICKUP_DATE_1_START_TIME,
+    NEXT_PUBLIC_PICKUP_DATE_1_END_TIME: process.env.NEXT_PUBLIC_PICKUP_DATE_1_END_TIME,
+    NEXT_PUBLIC_PICKUP_DATE_2: process.env.NEXT_PUBLIC_PICKUP_DATE_2,
+    NEXT_PUBLIC_PICKUP_DATE_2_START_TIME: process.env.NEXT_PUBLIC_PICKUP_DATE_2_START_TIME,
+    NEXT_PUBLIC_PICKUP_DATE_2_END_TIME: process.env.NEXT_PUBLIC_PICKUP_DATE_2_END_TIME,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
   },
   /**

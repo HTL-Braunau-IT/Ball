@@ -86,7 +86,7 @@ export default function TicketReserves() {
         const currentReserve = data.find(r => r.id === editData.id);
         if (!currentReserve) return;
 
-        const soldCount = currentReserve.soldTickets?.length || 0;
+        const soldCount = currentReserve.soldTickets?.filter(t => t.paid === true).length || 0;
 
         // Client-side validation
         if (editData.amount < soldCount) {
@@ -208,7 +208,7 @@ export default function TicketReserves() {
                             ? reserve.deliveryMethods.map((dm: { name?: string }) => dm?.name ?? "").filter(Boolean).join(", ") || "-"
                             : "-";
 
-                        const soldCount = reserve.soldTickets?.length || 0;
+                        const soldCount = reserve.soldTickets?.filter(t => t.paid === true).length || 0;
                         const remainingCount = reserve.amount - soldCount;
                         const isEditing = editingId === reserve.id;
 
