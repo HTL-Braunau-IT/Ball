@@ -411,6 +411,18 @@ export const ticketRouter = createTRPCRouter({
         },
       });
 
+      // Store Stripe session ID in transref for unpaid tickets
+      await ctx.db.soldTickets.updateMany({
+        where: {
+          buyerId: buyer.id,
+          code: pickupCode,
+          paid: false,
+        },
+        data: {
+          transref: session.id,
+        },
+      });
+
       return {
         checkoutUrl: session.url,
         soldTicketId: firstTicket.id,
