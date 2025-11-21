@@ -265,10 +265,13 @@ export default function BuyerPage() {
   // Retry payment mutation
   const retryPayment = api.ticket.retryPayment.useMutation();
 
+  // Check kill switch from backend
+  const { data: salesEnabled } = api.systemSettings.getSalesEnabled.useQuery();
+
   // Check if ticket sale has started
   const ticketSaleDate = env.NEXT_PUBLIC_TICKET_SALE_DATE ? new Date(env.NEXT_PUBLIC_TICKET_SALE_DATE) : new Date();
   const now = new Date();
-  const hasTicketSaleStarted = now >= ticketSaleDate;
+  const hasTicketSaleStarted = (salesEnabled ?? true) && now >= ticketSaleDate;
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -505,7 +508,7 @@ export default function BuyerPage() {
               </div>
             )}
             
-            {!(userTickets && userTickets.length > 0) && (
+            {!(userTickets && userTickets.length > 0) && salesEnabled && (
               <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-lg border" style={{ 
                 borderColor: 'var(--color-accent-warm)',
                 background: 'var(--color-bg-accent)'
@@ -576,10 +579,9 @@ export default function BuyerPage() {
           <h1 className="text-3xl font-bold mb-6 gradient-text text-center">
             Anmelden
           </h1>
-          <p className="text-center mb-8" style={{ color: 'var(--color-text-secondary)' }}>
-            Melden Sie sich an, um Tickets für den HTL Ball 2026 zu kaufen
-          </p>
-          
+          <p className="text-center mb-6" style={{ color: 'var(--color-text-secondary)' }}>
+          Melden Sie sich an, um Ihre Tickets zu sehen oder neue zu kaufen.
+          </p>          
           <form onSubmit={handleSignIn} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>

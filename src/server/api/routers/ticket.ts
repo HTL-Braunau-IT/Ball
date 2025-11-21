@@ -16,6 +16,15 @@ const getStripe = () => {
   });
 };
 
+// Helper function to check if sales are enabled
+async function isSalesEnabled(ctx: { db: any }): Promise<boolean> {
+  const setting = await ctx.db.systemSettings.findUnique({
+    where: { id: 1 },
+  });
+  // Default to true if row doesn't exist (backward compatible)
+  return (setting?.salesEnabled as boolean | undefined) ?? true;
+}
+
 export const ticketRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
     const tickets = await ctx.db.soldTickets.findMany({
@@ -45,6 +54,12 @@ export const ticketRouter = createTRPCRouter({
 
   // Get available ticket types for the user's group
   getAvailableTickets: protectedProcedure.query(async ({ ctx }) => {
+    // Check kill switch
+    const salesEnabled = await isSalesEnabled(ctx);
+    if (!salesEnabled) {
+      return null; // Return null when sales are disabled
+    }
+
     // Check if user exists in Buyers table to determine their group
     const buyer = await ctx.db.buyers.findUnique({
       where: { email: ctx.session.user.email! },
@@ -117,6 +132,24 @@ export const ticketRouter = createTRPCRouter({
     // Calculate available tickets: reserve amount minus sold tickets
     const availableAmount = Math.max(0, matchingReserve.amount - soldTicketsCount);
 
+    // Filter delivery methods: only include non-expired methods
+    // Methods with expiresAt = null are considered never expired (always valid)
+    const now = new Date();
+    const validDeliveryMethods = matchingReserve.deliveryMethods
+      .filter((method) => {
+        // If expiresAt is null, method never expires (always valid)
+        if (method.expiresAt === null) {
+          return true;
+        }
+        // If expiresAt is set, check if it's in the future
+        return new Date(method.expiresAt) > now;
+      })
+      .map(({ id, name, surcharge }) => ({
+        id,
+        name,
+        surcharge: surcharge ?? 0,
+      }));
+
     return {
       id: matchingReserve.id,
       amount: availableAmount,
@@ -124,11 +157,7 @@ export const ticketRouter = createTRPCRouter({
       type: matchingReserve.type[0]?.name || "Unknown",
       groupId: matchingReserve.type[0]?.id || 0,
       maxTickets: maxTickets,
-      deliveryMethods: matchingReserve.deliveryMethods.map(({ id, name, surcharge }) => ({
-        id,
-        name,
-        surcharge: surcharge ?? 0,
-      })),
+      deliveryMethods: validDeliveryMethods,
     };
   }),
 
@@ -224,6 +253,12 @@ export const ticketRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Check kill switch
+      const salesEnabled = await isSalesEnabled(ctx);
+      if (!salesEnabled) {
+        throw new Error("Der Ticketverkauf ist derzeit deaktiviert.");
+      }
+
       const { deliveryMethod, contactInfo, ticketTypeId, quantity } = input;
 
       // Get buyer's group first to check maxTickets
@@ -558,6 +593,12 @@ export const ticketRouter = createTRPCRouter({
   // Retry payment for unpaid tickets
   retryPayment: protectedProcedure
     .mutation(async ({ ctx }) => {
+      // Check kill switch
+      const salesEnabled = await isSalesEnabled(ctx);
+      if (!salesEnabled) {
+        throw new Error("Der Ticketverkauf ist derzeit deaktiviert.");
+      }
+
       // Find buyer with unpaid tickets
       const buyer = await ctx.db.buyers.findUnique({
         where: { email: ctx.session.user.email! },

@@ -44,6 +44,7 @@ model deliveryMethods {
   id             Int              @id @default(autoincrement())
   name           String
   surcharge      Int?
+  expiresAt      DateTime?
   updatedAt      DateTime         @default(now()) @updatedAt
   updatedBy      String           @default("System")
   ticketReserves ticketReserves[]
@@ -132,4 +133,11 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model systemSettings {
+  id          Int      @id @default(1)
+  salesEnabled Boolean  @default(true)
+  updatedAt   DateTime @default(now()) @updatedAt
+  updatedBy   String   @default("System")
 }

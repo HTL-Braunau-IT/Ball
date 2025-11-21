@@ -15,6 +15,7 @@ export const deliveryMethodsRouter = createTRPCRouter({
       z.object({
         id: z.number(),
         surcharge: z.number().min(0),
+        expiresAt: z.date().nullable().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -22,6 +23,7 @@ export const deliveryMethodsRouter = createTRPCRouter({
         where: { id: input.id },
         data: {
           surcharge: input.surcharge,
+          expiresAt: input.expiresAt ?? null,
           updatedBy: ctx.session.user.name ?? "Unbekannt"
         },
       });

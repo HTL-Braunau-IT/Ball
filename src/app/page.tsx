@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { HydrateClient } from "~/trpc/server";
+import { HydrateClient, api } from "~/trpc/server";
 import Countdown from "~/components/Countdown";
 import CollapsibleSection from "~/components/CollapsibleSection";
 import { env } from "~/env";
@@ -8,23 +8,14 @@ import { env } from "~/env";
 // Get ticket sale date from environment variable
 const TICKET_SALE_DATE = env.NEXT_PUBLIC_TICKET_SALE_DATE;
 
-// Format date for display
-const formatDateForDisplay = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('de-DE', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-};
-
 export default async function Home() {
+  // Check kill switch from backend
+  const salesEnabled = await api.systemSettings.getSalesEnabled();
+  
   // Check if ticket sale has started
   const ticketSaleDate = TICKET_SALE_DATE ? new Date(TICKET_SALE_DATE) : new Date();
   const now = new Date();
-  const hasTicketSaleStarted = now >= ticketSaleDate;
+  const hasTicketSaleStarted = salesEnabled && now >= ticketSaleDate;
 
   return (
     <HydrateClient>
@@ -48,14 +39,9 @@ export default async function Home() {
               href="/buyer"
               className="btn btn-primary"
               id="ticket-button"
-              style={hasTicketSaleStarted ? {} : { 
-                opacity: 0.4, 
-                cursor: 'not-allowed',
-                pointerEvents: 'none'
-              }}
-              title={hasTicketSaleStarted ? "Jetzt Tickets kaufen" : `Ticketverkauf startet am ${TICKET_SALE_DATE ? formatDateForDisplay(TICKET_SALE_DATE) : 'bald'}`}
+              title="Zu Ihrem Konto"
             >
-              {hasTicketSaleStarted ? "Jetzt Tickets kaufen" : "Ticketverkauf"}
+              Mein Konto
             </Link>
           </div>
         </header>
@@ -136,25 +122,27 @@ export default async function Home() {
             </div>
             
             {/* Countdown or Sale Active */}
-            <div className="w-full max-w-2xl">
-              {hasTicketSaleStarted ? (
-                <div className="countdown-box text-center">
-                  <h3 className="countdown-title" style={{ color: 'var(--color-gold-light)' }}>
-                    Ticketverkauf ist gestartet!
-                  </h3>
-                  <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-                    Sichern Sie sich jetzt Ihre Tickets für den HTL Ball 2026
-                  </p>
-                  <Link href="/buyer" className="btn btn-primary text-lg px-8 py-4">
-                    Jetzt Tickets kaufen
-                  </Link>
-                </div>
-              ) : (
-                <Countdown 
-                  targetDate={TICKET_SALE_DATE ?? new Date().toISOString()}
-                />
-              )}
-            </div>
+            {salesEnabled && (
+              <div className="w-full max-w-2xl">
+                {hasTicketSaleStarted ? (
+                  <div className="countdown-box text-center">
+                    <h3 className="countdown-title" style={{ color: 'var(--color-gold-light)' }}>
+                      Ticketverkauf ist gestartet!
+                    </h3>
+                    <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
+                      Sichern Sie sich jetzt Ihre Tickets für den HTL Ball 2026
+                    </p>
+                    <Link href="/buyer" className="btn btn-primary text-lg px-8 py-4">
+                      Jetzt Tickets kaufen
+                    </Link>
+                  </div>
+                ) : (
+                  <Countdown 
+                    targetDate={TICKET_SALE_DATE ?? new Date().toISOString()}
+                  />
+                )}
+              </div>
+            )}
           </div>
         </section>
 
@@ -162,37 +150,110 @@ export default async function Home() {
         <section className="max-w-6xl mx-auto px-6 pb-16 pt-12" style={{ background: 'var(--color-bg-primary)' }}>
           <CollapsibleSection title="Lageplan & Bars" defaultOpen={true}>
             <div className="space-y-6">
-              <h4 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
-                Veranstaltungsort
-              </h4>
-              <p className="text-lg mb-4">
-                Der Ball findet in den eleganten Räumlichkeiten der HTL Braunau statt. 
-                Unser Hauptsaal bietet Platz für 300 Gäste und wird in ein atemberaubendes 
-                DUNE-Universum verwandelt.
-              </p>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
-                    Bar-Standorte
-                  </h5>
-                  <ul className="space-y-2">
-                    <li>• Hauptbar - Zentrale Position im Hauptsaal</li>
-                    <li>• Cocktail-Bar - Elegante Drinks im Foyer</li>
-                    <li>• Wein-Bar - Ausgewählte Weine im Nebenraum</li>
-                    <li>• Softdrink-Station - Für alle Altersgruppen</li>
-                  </ul>
-                </div>
-                <div>
-                  <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
-                    Besondere Bereiche
-                  </h5>
-                  <ul className="space-y-2">
-                    <li>• Tanzfläche - Professionelle Tanzfläche</li>
-                    <li>• Lounge-Bereich - Entspannung und Gespräche</li>
-                    <li>• Fotoecke - Erinnerungen für die Ewigkeit</li>
-                    <li>• Garderobe - Sichere Aufbewahrung</li>
-                  </ul>
+              <div className="mb-6">
+                <a
+                  href="/lageplaene/Lageplaene.pdf"
+                  download="Lageplan.pdf"
+                  className="inline-flex items-center gap-2 text-lg font-semibold hover:underline"
+                  style={{ color: 'var(--color-gold-light)' }}
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                    />
+                  </svg>
+                  Lageplan herunterladen (PDF)
+                </a>
+              </div>
+              <div>
+                <h4 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
+                  Lageplan
+                </h4>
+              </div>
+              <div className="space-y-8">
+                <div className="grid grid-cols-2 gap-6">
+                  <div style={{ width: 'calc(100% - 12px)', minWidth: '100px' }}>
+                    <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
+                      Keller
+                    </h5>
+                    <p className="mb-4">Rockbar und Bierbar</p>
+                    <div className="mb-4">
+                      <img
+                        src="/lageplaene/keller/rockbar_bierbar.png"
+                        alt="Lageplan Keller"
+                        style={{ width: '30%', height: 'auto' }}
+                        className="rounded-lg"
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ width: 'calc(100% - 12px)', minWidth: '100px' }}>
+                    <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
+                      Erdgeschoss
+                    </h5>
+                    <p className="mb-4">Aulabar und Bottle-Bar</p>
+                    <div className="mb-4">
+                      <img
+                        src="/lageplaene/erdgeschoss/aulabar_bottlebar.png"
+                        alt="Lageplan Erdgeschoss"
+                        style={{ width: '90%', height: 'auto' }}
+                        className="rounded-lg"
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ width: 'calc(100% - 12px)', minWidth: '100px' }}>
+                    <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
+                      1. Stock
+                    </h5>
+                    <p className="mb-4">Wein & Sekt, Laborbar und Absolventenbar</p>
+                    <div className="mb-4">
+                      <img
+                        src="/lageplaene/1_stock/weinsekt_laborbar_absolventenbar.png"
+                        alt="Lageplan 1. Stock"
+                        style={{ width: '90%', height: 'auto' }}
+                        className="rounded-lg"
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ width: 'calc(100% - 12px)', minWidth: '100px' }}>
+                    <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
+                      2. Stock
+                    </h5>
+                    <p className="mb-4">CUbar und Bluesbar</p>
+                    <div className="mb-4">
+                      <img
+                        src="/lageplaene/2_stock/cubar_bluesbar.png"
+                        alt="Lageplan 2. Stock"
+                        style={{ width: '90%', height: 'auto' }}
+                        className="rounded-lg"
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ width: 'calc(100% - 12px)', minWidth: '100px' }}>
+                    <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
+                      3. Stock
+                    </h5>
+                    <p className="mb-4">Mottobar 1, Mottobar 2 und Mottobar 3</p>
+                    <div className="mb-4">
+                      <img
+                        src="/lageplaene/3_stock/mottobar1_2_3.png"
+                        alt="Lageplan 3. Stock"
+                        style={{ width: '90%', height: 'auto' }}
+                        className="rounded-lg"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -256,10 +317,8 @@ export default async function Home() {
                   </h5>
                   <ul className="space-y-2">
                     <li>• Elegante Abendkleider</li>
-                    <li>• Cocktailkleider</li>
-                    <li>• Hochhackige Schuhe</li>
-                    <li>• Schmuck und Accessoires</li>
-                    <li>• DUNE-inspirierte Farben (Gold, Bronze, Sand)</li>
+                    <li>• Lange, schicke Cocktailkleider</li>
+                    <li>• Hohe Schuhe (auch Wechselschuhe erlaubt)</li>
                   </ul>
                 </div>
                 
@@ -269,19 +328,9 @@ export default async function Home() {
                   </h5>
                   <ul className="space-y-2">
                     <li>• Anzug oder Smoking</li>
-                    <li>• Hemd mit Krawatte oder Fliege</li>
-                    <li>• Elegante Schuhe</li>
-                    <li>• Einstecktuch</li>
-                    <li>• DUNE-inspirierte Accessoires</li>
+                    <li>• Elegante Schuhe (auch sauber geputzte Sneaker erlaubt)</li>
                   </ul>
                 </div>
-              </div>
-              
-              <div className="mt-6 p-4 rounded-lg" style={{ background: 'var(--color-bg-secondary)' }}>
-                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                  <strong>Hinweis:</strong> Der Dresscode ist nicht zwingend, aber elegant gekleidete Gäste 
-                  tragen zur besonderen Atmosphäre des Abends bei. DUNE-inspirierte Elemente sind sehr willkommen!
-                </p>
               </div>
             </div>
           </CollapsibleSection>

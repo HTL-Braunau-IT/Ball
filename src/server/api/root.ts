@@ -4,6 +4,7 @@ import { reservesRouter } from "~/server/api/routers/reserves";
 import { buyersRouter } from "~/server/api/routers/buyers";
 import { deliveryMethodsRouter } from "~/server/api/routers/deliveryMethods";
 import { buyerGroupsRouter } from "~/server/api/routers/buyerGroups";
+import { systemSettingsRouter } from "~/server/api/routers/systemSettings";
 
 
 /**
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   buyers: buyersRouter,
   deliveryMethods: deliveryMethodsRouter,
   buyerGroups: buyerGroupsRouter,
+  systemSettings: systemSettingsRouter,
 });
 
 // export type definition of API
