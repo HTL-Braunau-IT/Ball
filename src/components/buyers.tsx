@@ -577,9 +577,36 @@ export default function Buyers() {
                                                             }
                                                         }}
                                                         disabled={markAsSentMutation.isPending}
-                                                        className="px-2 py-0.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        className="px-2 py-0.5 text-xs font-medium text-black bg-yellow-400 hover:bg-yellow-500 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
                                                     >
-                                                        {markAsSentMutation.isPending ? '...' : 'Erledigt'}
+                                                        {markAsSentMutation.isPending ? (
+                                                            '...'
+                                                        ) : (
+                                                            <>
+                                                                {isShipping ? (
+                                                                    <>
+                                                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                                                                        </svg>
+                                                                        Versendet
+                                                                    </>
+                                                                ) : isPickup ? (
+                                                                    <>
+                                                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                                                        </svg>
+                                                                        Abgeholt
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                                        </svg>
+                                                                        Erledigt
+                                                                    </>
+                                                                )}
+                                                            </>
+                                                        )}
                                                     </button>
                                                 );
                                             }
