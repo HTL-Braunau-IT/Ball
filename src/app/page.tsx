@@ -150,37 +150,111 @@ export default async function Home() {
         <section className="max-w-6xl mx-auto px-6 pb-16 pt-12" style={{ background: 'var(--color-bg-primary)' }}>
           <CollapsibleSection title="Lageplan & Bars" defaultOpen={true}>
             <div className="space-y-6">
-              <h4 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
-                Veranstaltungsort
-              </h4>
-              <p className="text-lg mb-4">
-                Der Ball findet in den eleganten Räumlichkeiten der HTL Braunau statt. 
-                Unser Hauptsaal bietet Platz für 300 Gäste und wird in ein atemberaubendes 
-                DUNE-Universum verwandelt.
-              </p>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
-                    Bar-Standorte
-                  </h5>
-                  <ul className="space-y-2">
-                    <li>• Hauptbar - Zentrale Position im Hauptsaal</li>
-                    <li>• Cocktail-Bar - Elegante Drinks im Foyer</li>
-                    <li>• Wein-Bar - Ausgewählte Weine im Nebenraum</li>
-                    <li>• Softdrink-Station - Für alle Altersgruppen</li>
-                  </ul>
-                </div>
-                <div>
-                  <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
-                    Besondere Bereiche
-                  </h5>
-                  <ul className="space-y-2">
-                    <li>• Tanzfläche - Professionelle Tanzfläche</li>
-                    <li>• Lounge-Bereich - Entspannung und Gespräche</li>
-                    <li>• Fotoecke - Erinnerungen für die Ewigkeit</li>
-                    <li>• Garderobe - Sichere Aufbewahrung</li>
-                  </ul>
+              <div className="mb-6">
+                <a
+                  href="/Lagepläne.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-lg font-semibold hover:underline"
+                  style={{ color: 'var(--color-gold-light)' }}
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                    />
+                  </svg>
+                  Lageplan herunterladen (PDF)
+                </a>
+              </div>
+              <div>
+                <h4 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
+                  Lageplan
+                </h4>
+              </div>
+              <div className="space-y-8">
+                <div className="grid grid-cols-2 gap-6">
+                  <div style={{ width: 'calc(100% - 12px)', minWidth: '100px' }}>
+                    <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
+                      Keller
+                    </h5>
+                    <p className="mb-4">Rockbar und Bierbar</p>
+                    <div className="mb-4">
+                      <img
+                        src="/lageplaene/keller/rockbar_bierbar.png"
+                        alt="Lageplan Keller"
+                        style={{ width: '30%', height: 'auto' }}
+                        className="rounded-lg"
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ width: 'calc(100% - 12px)', minWidth: '100px' }}>
+                    <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
+                      Erdgeschoss
+                    </h5>
+                    <p className="mb-4">Aulabar und Bottle-Bar</p>
+                    <div className="mb-4">
+                      <img
+                        src="/lageplaene/erdgeschoss/aulabar_bottlebar.png"
+                        alt="Lageplan Erdgeschoss"
+                        style={{ width: '90%', height: 'auto' }}
+                        className="rounded-lg"
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ width: 'calc(100% - 12px)', minWidth: '100px' }}>
+                    <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
+                      1. Stock
+                    </h5>
+                    <p className="mb-4">Wein & Sekt, Laborbar und Absolventenbar</p>
+                    <div className="mb-4">
+                      <img
+                        src="/lageplaene/1_stock/weinsekt_laborbar_absolventenbar.png"
+                        alt="Lageplan 1. Stock"
+                        style={{ width: '90%', height: 'auto' }}
+                        className="rounded-lg"
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ width: 'calc(100% - 12px)', minWidth: '100px' }}>
+                    <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
+                      2. Stock
+                    </h5>
+                    <p className="mb-4">CUbar und Bluesbar</p>
+                    <div className="mb-4">
+                      <img
+                        src="/lageplaene/2_stock/cubar_bluesbar.png"
+                        alt="Lageplan 2. Stock"
+                        style={{ width: '90%', height: 'auto' }}
+                        className="rounded-lg"
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ width: 'calc(100% - 12px)', minWidth: '100px' }}>
+                    <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
+                      3. Stock
+                    </h5>
+                    <p className="mb-4">Mottobar 1, Mottobar 2 und Mottobar 3</p>
+                    <div className="mb-4">
+                      <img
+                        src="/lageplaene/3_stock/mottobar1_2_3.png"
+                        alt="Lageplan 3. Stock"
+                        style={{ width: '90%', height: 'auto' }}
+                        className="rounded-lg"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
