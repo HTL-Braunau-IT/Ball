@@ -150,6 +150,9 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                         <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
                           Tickets werden an Ihre Adresse versendet
                         </p>
+                        <p className="text-xs font-medium mt-1 px-0.5" style={{ color: "var(--color-text-secondary)" }}>
+                        Keine Haftung bei Verlust per Postversand.
+                        </p>
                       </div>
                       <div className="text-right">
                         <p className="text-sm font-semibold" style={{ color: "var(--color-gold-light)" }}>
