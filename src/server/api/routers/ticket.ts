@@ -117,6 +117,24 @@ export const ticketRouter = createTRPCRouter({
     // Calculate available tickets: reserve amount minus sold tickets
     const availableAmount = Math.max(0, matchingReserve.amount - soldTicketsCount);
 
+    // Filter delivery methods: only include non-expired methods
+    // Methods with expiresAt = null are considered never expired (always valid)
+    const now = new Date();
+    const validDeliveryMethods = matchingReserve.deliveryMethods
+      .filter((method) => {
+        // If expiresAt is null, method never expires (always valid)
+        if (method.expiresAt === null) {
+          return true;
+        }
+        // If expiresAt is set, check if it's in the future
+        return new Date(method.expiresAt) > now;
+      })
+      .map(({ id, name, surcharge }) => ({
+        id,
+        name,
+        surcharge: surcharge ?? 0,
+      }));
+
     return {
       id: matchingReserve.id,
       amount: availableAmount,
@@ -124,11 +142,7 @@ export const ticketRouter = createTRPCRouter({
       type: matchingReserve.type[0]?.name || "Unknown",
       groupId: matchingReserve.type[0]?.id || 0,
       maxTickets: maxTickets,
-      deliveryMethods: matchingReserve.deliveryMethods.map(({ id, name, surcharge }) => ({
-        id,
-        name,
-        surcharge: surcharge ?? 0,
-      })),
+      deliveryMethods: validDeliveryMethods,
     };
   }),
 
