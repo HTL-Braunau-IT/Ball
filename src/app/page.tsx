@@ -153,8 +153,7 @@ export default async function Home() {
               <div className="mb-6">
                 <a
                   href="/lageplaene/Lageplaene.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  download="Lageplan.pdf"
                   className="inline-flex items-center gap-2 text-lg font-semibold hover:underline"
                   style={{ color: 'var(--color-gold-light)' }}
                 >
