@@ -8,18 +8,6 @@ import { env } from "~/env";
 // Get ticket sale date from environment variable
 const TICKET_SALE_DATE = env.NEXT_PUBLIC_TICKET_SALE_DATE;
 
-// Format date for display
-const formatDateForDisplay = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('de-DE', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-};
-
 export default async function Home() {
   // Check kill switch from backend
   const salesEnabled = await api.systemSettings.getSalesEnabled();

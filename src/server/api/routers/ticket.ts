@@ -22,7 +22,7 @@ async function isSalesEnabled(ctx: { db: any }): Promise<boolean> {
     where: { id: 1 },
   });
   // Default to true if row doesn't exist (backward compatible)
-  return setting?.salesEnabled ?? true;
+  return (setting?.salesEnabled as boolean | undefined) ?? true;
 }
 
 export const ticketRouter = createTRPCRouter({
