@@ -6,6 +6,7 @@ import { api } from "~/trpc/react";
 interface EditableDeliveryMethod {
   id: number;
   surcharge: number | null;
+  expiresAt: Date | null;
 }
 
 export default function DeliveryMethods() {
@@ -28,7 +29,8 @@ export default function DeliveryMethods() {
     const handleEdit = useCallback((method: any) => {
         setEditData({
             id: method.id,
-            surcharge: method.surcharge
+            surcharge: method.surcharge,
+            expiresAt: method.expiresAt ? new Date(method.expiresAt) : null
         });
         setEditingId(method.id);
     }, []);
@@ -39,6 +41,7 @@ export default function DeliveryMethods() {
         updateMutation.mutate({
             id: editData.id,
             surcharge: editData.surcharge || 0,
+            expiresAt: editData.expiresAt || null,
         });
     }, [editData, updateMutation]);
 
@@ -89,6 +92,9 @@ export default function DeliveryMethods() {
                             Zuschlag
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
+                            Ablaufdatum
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
                             Geändert am
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
@@ -129,6 +135,34 @@ export default function DeliveryMethods() {
                                     ) : (
                                         <div className="flex items-center justify-center">
                                             {method.surcharge !== null ? `€${(method.surcharge / 100).toFixed(2)}` : '-'}
+                                        </div>
+                                    )}
+                                </td>
+
+                                {/* Expiration Date */}
+                                <td className="px-4 py-3 text-sm text-gray-500">
+                                    {isEditing ? (
+                                        <div className="flex flex-col">
+                                            <input
+                                                type="datetime-local"
+                                                value={editData?.expiresAt ? new Date(editData.expiresAt.getTime() - editData.expiresAt.getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    handleFieldChange('expiresAt', value ? new Date(value) : null);
+                                                }}
+                                                className="w-full px-3 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => handleFieldChange('expiresAt', null)}
+                                                className="mt-1 text-xs text-gray-500 hover:text-gray-700 underline"
+                                            >
+                                                Entfernen
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="truncate" title={method.expiresAt ? new Date(method.expiresAt).toLocaleString() : "Nie ablaufend"}>
+                                            {method.expiresAt ? new Date(method.expiresAt).toLocaleDateString() : '-'}
                                         </div>
                                     )}
                                 </td>
