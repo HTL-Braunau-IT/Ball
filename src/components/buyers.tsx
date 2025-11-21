@@ -204,6 +204,15 @@ export default function Buyers() {
         return filtered;
     }, [data, debouncedSearchText, filterDeliveryMethod, filterSentStatus, filterBuyerId, sortColumn, sortDirection]);
 
+    // Calculate base count of buyers with paid tickets (before user filters)
+    const buyersWithPaidTickets = useMemo(() => {
+        if (!data) return 0;
+        return data.filter((buyer) => {
+            const hasPaidTickets = buyer.tickets?.some(ticket => ticket.paid === true) ?? false;
+            return hasPaidTickets;
+        }).length;
+    }, [data]);
+
     // Update context with filtered data
     useEffect(() => {
         setFilteredBuyers(filteredAndSortedData.length > 0 ? filteredAndSortedData : null);
@@ -359,13 +368,13 @@ export default function Buyers() {
                                     Nichts gefunden mit eingegebenen Filtern
                                 </p>
                             </>
-                        ) : filteredAndSortedData.length === data.length && !hasActiveFilters ? (
+                        ) : filteredAndSortedData.length === buyersWithPaidTickets && !hasActiveFilters ? (
                             <>
                                 <svg className="w-5 h-5 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
                                 <p className="text-sm text-gray-700">
-                                    <span className="font-bold text-gray-900">{data.length}</span> <span className="text-gray-600">Käufer insgesamt</span>
+                                    <span className="font-bold text-gray-900">{buyersWithPaidTickets}</span> <span className="text-gray-600">Käufer insgesamt</span>
                                 </p>
                             </>
                         ) : (
@@ -374,7 +383,7 @@ export default function Buyers() {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                                 </svg>
                                 <p className="text-sm text-gray-700">
-                                    <span className="font-bold text-gray-900">{filteredAndSortedData.length}</span> von <span className="font-semibold text-gray-700">{data.length}</span> <span className="text-gray-600">Käufern{hasActiveFilters ? "" : ""}</span>
+                                    <span className="font-bold text-gray-900">{filteredAndSortedData.length}</span> von <span className="font-semibold text-gray-700">{buyersWithPaidTickets}</span> <span className="text-gray-600">Käufern{hasActiveFilters ? "" : ""}</span>
                                 </p>
                                 {hasActiveFilters && (
                                     <span className="ml-2 px-2 py-0.5 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">
