@@ -188,6 +188,7 @@ export const ticketRouter = createTRPCRouter({
         buyerPostal: buyer.postal,
         buyerCity: buyer.city,
         buyerCountry: buyer.country,
+        canRetryPayment: !paid,
       };
     });
   }),
@@ -551,6 +552,123 @@ export const ticketRouter = createTRPCRouter({
         soldTicket,
         pickupCode: soldTicket.code,
         alreadyProcessed: false,
+      };
+    }),
+
+  // Retry payment for unpaid tickets
+  retryPayment: protectedProcedure
+    .mutation(async ({ ctx }) => {
+      // Find buyer with unpaid tickets
+      const buyer = await ctx.db.buyers.findUnique({
+        where: { email: ctx.session.user.email! },
+        include: {
+          tickets: {
+            where: { 
+              paid: false,
+              transref: { not: "" },
+            },
+            include: { 
+              reserve: { 
+                include: { 
+                  type: true, 
+                  deliveryMethods: true 
+                } 
+              } 
+            },
+          },
+        },
+      });
+
+      if (!buyer || buyer.tickets.length === 0) {
+        throw new Error("Keine unbezahlten Tickets gefunden.");
+      }
+
+      // Get the first unpaid ticket to extract order details
+      const firstTicket = buyer.tickets[0]!;
+      const pickupCode = firstTicket.code;
+      
+      // Group tickets by pickup code (all tickets in same order share same code)
+      const orderTickets = buyer.tickets.filter(t => t.code === pickupCode);
+      const quantity = orderTickets.length;
+
+      // Get ticket reserve info
+      const ticketReserve = firstTicket.reserve;
+      if (!ticketReserve) {
+        throw new Error("Ticket reserve not found");
+      }
+
+      // Get delivery method info
+      const deliveryMethodInfo = ticketReserve.deliveryMethods.find(
+        (dm) => dm.name === firstTicket.delivery
+      );
+      if (!deliveryMethodInfo) {
+        throw new Error("Delivery method not found");
+      }
+
+      // Determine delivery method type
+      const isShipping = firstTicket.delivery.toLowerCase().includes("versand");
+      const deliveryMethod = isShipping ? "shipping" : "self-pickup";
+
+      // Calculate shipping fee
+      const shippingFeeInCents = isShipping ? (deliveryMethodInfo.surcharge ?? 0) : 0;
+
+      // Create new Stripe checkout session
+      const stripe = getStripe();
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "eur",
+              product_data: {
+                name: `HTL Ball 2026 - ${ticketReserve.type[0]?.name || "Ticket"}`,
+                description: `Ticket für den HTL Ball 2026 - Ball der Auserwählten`,
+              },
+              unit_amount: ticketReserve.price * 100,
+            },
+            quantity: quantity,
+          },
+          ...(shippingFeeInCents > 0
+            ? [
+                {
+                  price_data: {
+                    currency: "eur",
+                    product_data: {
+                      name: "Versandkosten",
+                      description: "Versand der Tickets",
+                    },
+                    unit_amount: shippingFeeInCents,
+                  },
+                  quantity: 1,
+                },
+              ]
+            : []),
+        ],
+        mode: "payment",
+        success_url: `${env.NEXTAUTH_URL}/buyer/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${env.NEXTAUTH_URL}/buyer?cancelled=true`,
+        metadata: {
+          soldTicketId: firstTicket.id.toString(),
+          pickupCode: pickupCode,
+          buyerId: buyer.id.toString(),
+          deliveryMethod,
+          quantity: quantity.toString(),
+          ticketType: ticketReserve.type[0]?.name || "Unknown",
+        },
+      });
+
+      // Update tickets with new session ID in transref field
+      await ctx.db.soldTickets.updateMany({
+        where: {
+          id: { in: orderTickets.map(t => t.id) },
+        },
+        data: {
+          transref: session.id,
+        },
+      });
+
+      return {
+        checkoutUrl: session.url,
       };
     }),
 
