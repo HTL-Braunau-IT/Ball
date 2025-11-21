@@ -96,8 +96,8 @@ export default function Buyers() {
 
         // Filter data
         let filtered = data.filter((buyer) => {
-            // Filter out buyers with 0 tickets
-            const hasTickets = (buyer.tickets?.length ?? 0) > 0;
+            // Filter out buyers with 0 tickets or no paid tickets
+            const hasPaidTickets = buyer.tickets?.some(ticket => ticket.paid === true) ?? false;
             
             // Buyer ID filter (for hash navigation)
             const matchesBuyerId = filterBuyerId === null || 
@@ -131,7 +131,7 @@ export default function Buyers() {
                 (filterSentStatus === "1" && isSent) ||
                 (filterSentStatus === "0" && !isSent);
             
-            return hasTickets && matchesBuyerId && matchesSearch && matchesDeliveryMethod && matchesSentStatus;
+            return hasPaidTickets && matchesBuyerId && matchesSearch && matchesDeliveryMethod && matchesSentStatus;
         });
 
     // Sort data
