@@ -126,7 +126,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
           {!availableTicket?.deliveryMethods || availableTicket.deliveryMethods.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-red-600 mb-4">
-                Keine Liefermethoden verfügbar. Bitte kontaktieren Sie den Support.
+                Keine Liefermethoden verfügbar.
               </p>
               <button onClick={() => setCurrentStep(1)} className="btn btn-secondary">
                 Zurück
