@@ -42,11 +42,11 @@ export default function DashboardStats() {
     const totalBuyers = allBuyers.size;
 
     const totalAvailable = data.reduce((sum, reserve) => sum + reserve.amount, 0);
-    const totalSold = data.reduce((sum, reserve) => sum + (reserve.soldTickets?.length || 0), 0);
+    const totalSold = data.reduce((sum, reserve) => sum + (reserve.soldTickets?.filter(t => t.paid === true).length || 0), 0);
     const totalRemaining = totalAvailable - totalSold;
     const totalPotentialRevenue = data.reduce((sum, reserve) => sum + (reserve.amount * reserve.price), 0);
     const totalActualRevenue = data.reduce((sum, reserve) => {
-        const soldRevenue = reserve.soldTickets?.reduce((ticketSum, ticket) => {
+        const soldRevenue = reserve.soldTickets?.filter(t => t.paid === true).reduce((ticketSum, ticket) => {
             return ticketSum + (ticket.soldPrice || reserve.price);
         }, 0) || 0;
         return sum + soldRevenue;

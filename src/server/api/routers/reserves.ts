@@ -21,7 +21,8 @@ export const reservesRouter = createTRPCRouter({
           select: {
             id: true,
             buyerId: true,
-            soldPrice: true
+            soldPrice: true,
+            paid: true
           }
         }
       }
@@ -80,6 +81,9 @@ export const reservesRouter = createTRPCRouter({
       where: { id: input.id },
       include: {
         soldTickets: {
+          where: {
+            paid: true
+          },
           select: {
             id: true
           }
