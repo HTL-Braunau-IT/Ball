@@ -22,7 +22,6 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
 
   // API calls - now returns single ticket object instead of array
   const { data: availableTicket, isLoading: ticketsLoading } = api.ticket.getAvailableTickets.useQuery();
-  const { data: deliveryMethods } = api.ticket.getDeliveryMethods.useQuery();
   const createPurchase = api.ticket.createPurchase.useMutation();
 
   const totalSteps = 4;
@@ -68,8 +67,8 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
     }
   };
 
-  // Find shipping delivery method
-  const shippingDeliveryMethod = deliveryMethods?.find(dm => 
+  // Find shipping delivery method from available ticket's delivery methods
+  const shippingDeliveryMethod = availableTicket?.deliveryMethods?.find(dm => 
     dm.name.toLowerCase().includes("versand")
   );
 
@@ -124,102 +123,123 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
             Versandart wählen
           </h2>
           
-          <div className="space-y-4">
-            <button
-              onClick={() => handleDeliveryMethodSelect("shipping")}
-              className="w-full p-6 border-2 rounded-lg text-left hover:border-[var(--color-bronze)] transition-colors"
-              style={{ borderColor: "var(--color-accent-warm)" }}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold" style={{ color: "var(--color-text-primary)" }}>
-                    Versand
-                  </h3>
-                  <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
-                    Tickets werden an Ihre Adresse versendet
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-semibold" style={{ color: "var(--color-gold-light)" }}>
-                    +{((shippingDeliveryMethod?.surcharge ?? 0) / 100).toFixed(2)}€
-                  </p>
-                </div>
-              </div>
-            </button>
-
-            <button
-              onClick={() => handleDeliveryMethodSelect("self-pickup")}
-              className="w-full p-6 border-2 rounded-lg text-left hover:border-[var(--color-bronze)] transition-colors"
-              style={{ borderColor: "var(--color-accent-warm)" }}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold" style={{ color: "var(--color-text-primary)" }}>
-                    Selbstabholung
-                  </h3>
-                  <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
-                    Tickets werden vor Ort abgeholt
-                  </p>
-                  {env.NEXT_PUBLIC_PICKUP_DATE_1 && env.NEXT_PUBLIC_PICKUP_DATE_2 && (
-                    <div className="text-sm mt-1" style={{ color: "var(--color-text-secondary)" }}>
-                      <p className="text-xs font-medium mb-0.5" style={{ color: "var(--color-text-secondary)" }}>
-                        Mögliche Abholzeiten:
-                      </p>
-                      {(() => {
-                        const formatPickupDate = (dateStr: string, startTime?: string, endTime?: string) => {
-                          try {
-                            const date = new Date(dateStr);
-                            const formattedDate = date.toLocaleDateString('de-DE', {
-                              day: 'numeric',
-                              month: 'long',
-                              year: 'numeric'
-                            });
-                            if (startTime && endTime) {
-                              return `${formattedDate}, ${startTime} - ${endTime} Uhr`;
-                            } else if (startTime) {
-                              return `${formattedDate}, ab ${startTime} Uhr`;
-                            }
-                            return formattedDate;
-                          } catch {
-                            return dateStr;
-                          }
-                        };
-                        
-                        const date1 = formatPickupDate(
-                          env.NEXT_PUBLIC_PICKUP_DATE_1,
-                          env.NEXT_PUBLIC_PICKUP_DATE_1_START_TIME,
-                          env.NEXT_PUBLIC_PICKUP_DATE_1_END_TIME
-                        );
-                        const date2 = formatPickupDate(
-                          env.NEXT_PUBLIC_PICKUP_DATE_2,
-                          env.NEXT_PUBLIC_PICKUP_DATE_2_START_TIME,
-                          env.NEXT_PUBLIC_PICKUP_DATE_2_END_TIME
-                        );
-                        
-                        return (
-                          <div className="space-y-0.5">
-                            <p>{date1}</p>
-                            <p>{date2}</p>
-                          </div>
-                        );
-                      })()}
+          {!availableTicket?.deliveryMethods || availableTicket.deliveryMethods.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-red-600 mb-4">
+                Keine Liefermethoden verfügbar. Bitte kontaktieren Sie den Support.
+              </p>
+              <button onClick={() => setCurrentStep(1)} className="btn btn-secondary">
+                Zurück
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="space-y-4">
+                {/* Only show shipping button if shipping method is available */}
+                {shippingDeliveryMethod && (
+                  <button
+                    onClick={() => handleDeliveryMethodSelect("shipping")}
+                    className="w-full p-6 border-2 rounded-lg text-left hover:border-[var(--color-bronze)] transition-colors"
+                    style={{ borderColor: "var(--color-accent-warm)" }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold" style={{ color: "var(--color-text-primary)" }}>
+                          Versand
+                        </h3>
+                        <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
+                          Tickets werden an Ihre Adresse versendet
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-semibold" style={{ color: "var(--color-gold-light)" }}>
+                          +{((shippingDeliveryMethod.surcharge ?? 0) / 100).toFixed(2)}€
+                        </p>
+                      </div>
                     </div>
-                  )}
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-semibold" style={{ color: "var(--color-success)" }}>
-                    Kostenlos
-                  </p>
-                </div>
-              </div>
-            </button>
-          </div>
+                  </button>
+                )}
 
-          <div className="flex gap-4 mt-6">
-            <button onClick={() => setCurrentStep(1)} className="btn btn-secondary flex-1">
-              Zurück
-            </button>
-          </div>
+                {/* Only show self-pickup button if pickup method is available */}
+                {availableTicket.deliveryMethods.some(dm => 
+                  dm.name.toLowerCase().includes("abholung") || dm.name.toLowerCase().includes("pickup")
+                ) && (
+                  <button
+                    onClick={() => handleDeliveryMethodSelect("self-pickup")}
+                    className="w-full p-6 border-2 rounded-lg text-left hover:border-[var(--color-bronze)] transition-colors"
+                    style={{ borderColor: "var(--color-accent-warm)" }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold" style={{ color: "var(--color-text-primary)" }}>
+                          Selbstabholung
+                        </h3>
+                        <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
+                          Tickets werden vor Ort abgeholt
+                        </p>
+                        {env.NEXT_PUBLIC_PICKUP_DATE_1 && env.NEXT_PUBLIC_PICKUP_DATE_2 && (
+                          <div className="text-sm mt-1" style={{ color: "var(--color-text-secondary)" }}>
+                            <p className="text-xs font-medium mb-0.5" style={{ color: "var(--color-text-secondary)" }}>
+                              Mögliche Abholzeiten:
+                            </p>
+                            {(() => {
+                              const formatPickupDate = (dateStr: string, startTime?: string, endTime?: string) => {
+                                try {
+                                  const date = new Date(dateStr);
+                                  const formattedDate = date.toLocaleDateString('de-DE', {
+                                    day: 'numeric',
+                                    month: 'long',
+                                    year: 'numeric'
+                                  });
+                                  if (startTime && endTime) {
+                                    return `${formattedDate}, ${startTime} - ${endTime} Uhr`;
+                                  } else if (startTime) {
+                                    return `${formattedDate}, ab ${startTime} Uhr`;
+                                  }
+                                  return formattedDate;
+                                } catch {
+                                  return dateStr;
+                                }
+                              };
+                              
+                              const date1 = formatPickupDate(
+                                env.NEXT_PUBLIC_PICKUP_DATE_1,
+                                env.NEXT_PUBLIC_PICKUP_DATE_1_START_TIME,
+                                env.NEXT_PUBLIC_PICKUP_DATE_1_END_TIME
+                              );
+                              const date2 = formatPickupDate(
+                                env.NEXT_PUBLIC_PICKUP_DATE_2,
+                                env.NEXT_PUBLIC_PICKUP_DATE_2_START_TIME,
+                                env.NEXT_PUBLIC_PICKUP_DATE_2_END_TIME
+                              );
+                              
+                              return (
+                                <div className="space-y-0.5">
+                                  <p>{date1}</p>
+                                  <p>{date2}</p>
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-semibold" style={{ color: "var(--color-success)" }}>
+                          Kostenlos
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+                )}
+              </div>
+
+              <div className="flex gap-4 mt-6">
+                <button onClick={() => setCurrentStep(1)} className="btn btn-secondary flex-1">
+                  Zurück
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
 
