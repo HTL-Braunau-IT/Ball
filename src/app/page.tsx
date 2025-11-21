@@ -51,14 +51,9 @@ export default async function Home() {
               href="/buyer"
               className="btn btn-primary"
               id="ticket-button"
-              style={hasTicketSaleStarted ? {} : { 
-                opacity: 0.4, 
-                cursor: 'not-allowed',
-                pointerEvents: 'none'
-              }}
-              title={hasTicketSaleStarted ? "Jetzt Tickets kaufen" : `Ticketverkauf startet am ${TICKET_SALE_DATE ? formatDateForDisplay(TICKET_SALE_DATE) : 'bald'}`}
+              title="Zu Ihrem Konto"
             >
-              {hasTicketSaleStarted ? "Jetzt Tickets kaufen" : "Ticketverkauf"}
+              Mein Konto
             </Link>
           </div>
         </header>
@@ -139,25 +134,27 @@ export default async function Home() {
             </div>
             
             {/* Countdown or Sale Active */}
-            <div className="w-full max-w-2xl">
-              {hasTicketSaleStarted ? (
-                <div className="countdown-box text-center">
-                  <h3 className="countdown-title" style={{ color: 'var(--color-gold-light)' }}>
-                    Ticketverkauf ist gestartet!
-                  </h3>
-                  <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-                    Sichern Sie sich jetzt Ihre Tickets für den HTL Ball 2026
-                  </p>
-                  <Link href="/buyer" className="btn btn-primary text-lg px-8 py-4">
-                    Jetzt Tickets kaufen
-                  </Link>
-                </div>
-              ) : (
-                <Countdown 
-                  targetDate={TICKET_SALE_DATE ?? new Date().toISOString()}
-                />
-              )}
-            </div>
+            {salesEnabled && (
+              <div className="w-full max-w-2xl">
+                {hasTicketSaleStarted ? (
+                  <div className="countdown-box text-center">
+                    <h3 className="countdown-title" style={{ color: 'var(--color-gold-light)' }}>
+                      Ticketverkauf ist gestartet!
+                    </h3>
+                    <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
+                      Sichern Sie sich jetzt Ihre Tickets für den HTL Ball 2026
+                    </p>
+                    <Link href="/buyer" className="btn btn-primary text-lg px-8 py-4">
+                      Jetzt Tickets kaufen
+                    </Link>
+                  </div>
+                ) : (
+                  <Countdown 
+                    targetDate={TICKET_SALE_DATE ?? new Date().toISOString()}
+                  />
+                )}
+              </div>
+            )}
           </div>
         </section>
 
