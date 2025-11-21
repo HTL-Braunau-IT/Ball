@@ -16,6 +16,15 @@ const getStripe = () => {
   });
 };
 
+// Helper function to check if sales are enabled
+async function isSalesEnabled(ctx: { db: any }): Promise<boolean> {
+  const setting = await ctx.db.systemSettings.findUnique({
+    where: { id: 1 },
+  });
+  // Default to true if row doesn't exist (backward compatible)
+  return setting?.salesEnabled ?? true;
+}
+
 export const ticketRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
     const tickets = await ctx.db.soldTickets.findMany({
@@ -45,6 +54,12 @@ export const ticketRouter = createTRPCRouter({
 
   // Get available ticket types for the user's group
   getAvailableTickets: protectedProcedure.query(async ({ ctx }) => {
+    // Check kill switch
+    const salesEnabled = await isSalesEnabled(ctx);
+    if (!salesEnabled) {
+      return null; // Return null when sales are disabled
+    }
+
     // Check if user exists in Buyers table to determine their group
     const buyer = await ctx.db.buyers.findUnique({
       where: { email: ctx.session.user.email! },
@@ -238,6 +253,12 @@ export const ticketRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Check kill switch
+      const salesEnabled = await isSalesEnabled(ctx);
+      if (!salesEnabled) {
+        throw new Error("Der Ticketverkauf ist derzeit deaktiviert.");
+      }
+
       const { deliveryMethod, contactInfo, ticketTypeId, quantity } = input;
 
       // Get buyer's group first to check maxTickets
@@ -572,6 +593,12 @@ export const ticketRouter = createTRPCRouter({
   // Retry payment for unpaid tickets
   retryPayment: protectedProcedure
     .mutation(async ({ ctx }) => {
+      // Check kill switch
+      const salesEnabled = await isSalesEnabled(ctx);
+      if (!salesEnabled) {
+        throw new Error("Der Ticketverkauf ist derzeit deaktiviert.");
+      }
+
       // Find buyer with unpaid tickets
       const buyer = await ctx.db.buyers.findUnique({
         where: { email: ctx.session.user.email! },
