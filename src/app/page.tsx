@@ -152,7 +152,7 @@ export default async function Home() {
             <div className="space-y-6">
               <div className="mb-6">
                 <a
-                  href="/Lagepläne.pdf"
+                  href="/lageplaene/Lageplaene.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-lg font-semibold hover:underline"
