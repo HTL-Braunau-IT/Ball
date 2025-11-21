@@ -278,10 +278,10 @@ export const ticketRouter = createTRPCRouter({
       // Calculate shipping fee (in cents - database stores surcharge in cents)
       const shippingFeeInCents = deliveryMethod === "shipping" ? (deliveryMethodInfo.surcharge ?? 0) : 0;
 
-      // Check if buyer already has tickets (prevent multiple purchases)
+      // Check if buyer already has paid tickets (prevent multiple purchases)
       const existingBuyer = await ctx.db.buyers.findUnique({
         where: { email: ctx.session.user.email! },
-        include: { tickets: true },
+        include: { tickets: { where: { paid: true } } },
       });
 
       if (existingBuyer && existingBuyer.tickets.length > 0) {
