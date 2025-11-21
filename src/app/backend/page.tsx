@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "~/server/auth";
 import DashboardStats from "~/components/DashboardStats";
+import SalesKillSwitch from "~/components/SalesKillSwitch";
 import type { CSSProperties, ReactElement } from "react";
 
 type Section = {
@@ -130,6 +131,12 @@ export default async function BackendDashboard() {
           </Link>
         ))}
       </div>
+      
+      {/* Sales Kill Switch */}
+      <div className="mt-6">
+        <SalesKillSwitch />
+      </div>
+
       {/* Dashboard Stats Overview */}
       <div className="-mt-6 py-8">
         <DashboardStats />
