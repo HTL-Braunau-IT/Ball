@@ -398,7 +398,7 @@ export default async function Home() {
                     Der Ball ist grundsätzlich ab 18 Jahren. Minderjährige können jedoch mit einer 
                     Einverständniserklärung der Eltern und in Begleitung einer volljährigen Person 
                     teilnehmen. Die Einverständniserklärung finden Sie hier:&nbsp;  
-                    <Link href="/einverstaendniserklaerung" className="text-gold-light hover:underline" style={{ color: 'var(--color-gold-light)' }}>
+                    <Link href="/einverstaendniserklaerung/einverstaendniserklaerung_muttizettel.pdf" className="text-gold-light hover:underline" style={{ color: 'var(--color-gold-light)' }} download="Einverständniserklärung_Muttizettel.pdf">
                        Einverständniserklärung herunterladen
                     </Link>
                   </p>
