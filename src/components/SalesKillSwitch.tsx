@@ -30,7 +30,7 @@ export default function SalesKillSwitch() {
   }
 
   return (
-    <div className="bg-white/40 backdrop-filter backdrop-blur-sm rounded-lg shadow-sm border border-gray-200 p-6">
+    <div className="bg-white/40 backdrop-filter backdrop-blur-sm rounded-lg p-6">
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">

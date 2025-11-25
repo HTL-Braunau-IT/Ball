@@ -315,13 +315,15 @@ export default function BuyerPage() {
           background: 'var(--color-bg-primary)'
         }}>
           <div className="flex items-center">
-            <Image
-              src="/logos/HTL-Ball-2026_Logo_Farbe.png"
-              alt="HTL Ball 2026 Logo"
-              width={200}
-              height={80}
-              className="h-16 w-auto"
-            />
+            <Link href="/">
+              <Image
+                src="/logos/HTL-Ball-2026_Logo_Farbe.png"
+                alt="HTL Ball 2026 Logo"
+                width={200}
+                height={80}
+                className="h-16 w-auto"
+              />
+            </Link>
           </div>
           <div className="flex items-center">
             <Link
@@ -353,13 +355,15 @@ export default function BuyerPage() {
             background: 'var(--color-bg-primary)'
           }}>
             <div className="flex items-center">
-              <Image
-                src="/logos/HTL-Ball-2026_Logo_Farbe.png"
-                alt="HTL Ball 2026 Logo"
-                width={200}
-                height={80}
-                className="h-16 w-auto"
-              />
+              <Link href="/">
+                <Image
+                  src="/logos/HTL-Ball-2026_Logo_Farbe.png"
+                  alt="HTL Ball 2026 Logo"
+                  width={200}
+                  height={80}
+                  className="h-16 w-auto"
+                />
+              </Link>
             </div>
             <div className="flex items-center gap-4">
               <button
@@ -394,13 +398,15 @@ export default function BuyerPage() {
           background: 'var(--color-bg-primary)'
         }}>
           <div className="flex items-center">
-            <Image
-              src="/logos/HTL-Ball-2026_Logo_Farbe.png"
-              alt="HTL Ball 2026 Logo"
-              width={200}
-              height={80}
-              className="h-16 w-auto"
-            />
+            <Link href="/">
+              <Image
+                src="/logos/HTL-Ball-2026_Logo_Farbe.png"
+                alt="HTL Ball 2026 Logo"
+                width={200}
+                height={80}
+                className="h-16 w-auto"
+              />
+            </Link>
           </div>
           <div className="flex items-center gap-4">
             <Link
@@ -571,13 +577,15 @@ export default function BuyerPage() {
         background: 'var(--color-bg-primary)'
       }}>
         <div className="flex items-center">
-          <Image
-            src="/logos/HTL-Ball-2026_Logo_Farbe.png"
-            alt="HTL Ball 2026 Logo"
-            width={200}
-            height={80}
-            className="h-16 w-auto"
-          />
+          <Link href="/">
+            <Image
+              src="/logos/HTL-Ball-2026_Logo_Farbe.png"
+              alt="HTL Ball 2026 Logo"
+              width={200}
+              height={80}
+              className="h-16 w-auto"
+            />
+          </Link>
         </div>
         <div className="flex items-center">
           <Link

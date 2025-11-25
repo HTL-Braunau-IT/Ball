@@ -42,13 +42,15 @@ function SuccessPageContent() {
           background: "var(--color-bg-primary)"
         }}>
           <div className="flex items-center">
-            <Image
-              src="/logos/HTL-Ball-2026_Logo_Farbe.png"
-              alt="HTL Ball 2026 Logo"
-              width={200}
-              height={80}
-              className="h-16 w-auto"
-            />
+            <Link href="/">
+              <Image
+                src="/logos/HTL-Ball-2026_Logo_Farbe.png"
+                alt="HTL Ball 2026 Logo"
+                width={200}
+                height={80}
+                className="h-16 w-auto"
+              />
+            </Link>
           </div>
         </header>
 
@@ -77,13 +79,15 @@ function SuccessPageContent() {
           background: "var(--color-bg-primary)"
         }}>
           <div className="flex items-center">
-            <Image
-              src="/logos/HTL-Ball-2026_Logo_Farbe.png"
-              alt="HTL Ball 2026 Logo"
-              width={200}
-              height={80}
-              className="h-16 w-auto"
-            />
+            <Link href="/">
+              <Image
+                src="/logos/HTL-Ball-2026_Logo_Farbe.png"
+                alt="HTL Ball 2026 Logo"
+                width={200}
+                height={80}
+                className="h-16 w-auto"
+              />
+            </Link>
           </div>
         </header>
 
@@ -111,13 +115,15 @@ function SuccessPageContent() {
           background: "var(--color-bg-primary)"
         }}>
           <div className="flex items-center">
-            <Image
-              src="/logos/HTL-Ball-2026_Logo_Farbe.png"
-              alt="HTL Ball 2026 Logo"
-              width={200}
-              height={80}
-              className="h-16 w-auto"
-            />
+            <Link href="/">
+              <Image
+                src="/logos/HTL-Ball-2026_Logo_Farbe.png"
+                alt="HTL Ball 2026 Logo"
+                width={200}
+                height={80}
+                className="h-16 w-auto"
+              />
+            </Link>
           </div>
         </header>
 
@@ -152,13 +158,15 @@ function SuccessPageContent() {
         background: "var(--color-bg-primary)"
       }}>
         <div className="flex items-center">
-          <Image
-            src="/logos/HTL-Ball-2026_Logo_Farbe.png"
-            alt="HTL Ball 2026 Logo"
-            width={200}
-            height={80}
-            className="h-16 w-auto"
-          />
+          <Link href="/">
+            <Image
+              src="/logos/HTL-Ball-2026_Logo_Farbe.png"
+              alt="HTL Ball 2026 Logo"
+              width={200}
+              height={80}
+              className="h-16 w-auto"
+            />
+          </Link>
         </div>
         <div className="flex items-center">
           <Link href="/buyer" className="btn btn-secondary">
@@ -181,17 +189,17 @@ function SuccessPageContent() {
             Bestellung erfolgreich!
           </h1>
           
-          <p className="text-lg mb-8" style={{ color: "var(--color-text-secondary)" }}>
+          <p className="text-lg mb-2 py-4" style={{ color: "var(--color-text-secondary)" }}>
             Vielen Dank für Ihre Bestellung. Sie erhalten eine Bestätigungs-E-Mail mit allen Details.
           </p>
 
           {/* Order Details */}
           <div className="bg-[var(--color-bg-accent)] p-6 rounded-lg mb-8" style={{ border: "1px solid var(--color-accent-warm)" }}>
-            <h2 className="text-xl font-semibold mb-4" style={{ color: "var(--color-text-primary)" }}>
+            <h2 className="text-xl font-semibold mb-8" style={{ color: "var(--color-text-primary)" }}>
               Bestelldetails
             </h2>
             
-            <div className="space-y-3 text-left">
+            <div className="space-y-3 text-left pt-4">
               <div className="flex justify-between">
                 <span style={{ color: "var(--color-text-secondary)" }}>Name:</span>
                 <span style={{ color: "var(--color-text-primary)" }}>{soldTicket.buyer.name}</span>
@@ -243,15 +251,15 @@ function SuccessPageContent() {
 
           {/* Important Notes */}
           <div className="text-left space-y-4 mb-8">
-            <h3 className="text-lg font-semibold" style={{ color: "var(--color-text-primary)" }}>
+            <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--color-text-primary)" }}>
               Wichtige Hinweise:
             </h3>
             
+            <div className="pt-4">
             {isSelfPickup ? (
               <ul className="space-y-2" style={{ color: "var(--color-text-secondary)" }}>
                 <li>• Bewahren Sie Ihren Abholcode sicher auf</li>
                 <li>• Bringen Sie einen gültigen Ausweis zur Abholung mit</li>
-                <li>• Die Abholung erfolgt am Veranstaltungstag</li>
                 <li>• Bei Fragen wenden Sie sich an: ball@htl-braunau.at</li>
               </ul>
             ) : (
@@ -261,6 +269,7 @@ function SuccessPageContent() {
                 <li>• Bei Fragen wenden Sie sich an: ball@htl-braunau.at</li>
               </ul>
             )}
+            </div>
           </div>
 
           <div className="flex gap-4">
@@ -286,13 +295,15 @@ export default function SuccessPage() {
           background: "var(--color-bg-primary)"
         }}>
           <div className="flex items-center">
-            <Image
-              src="/logos/HTL-Ball-2026_Logo_Farbe.png"
-              alt="HTL Ball 2026 Logo"
-              width={200}
-              height={80}
-              className="h-16 w-auto"
-            />
+            <Link href="/">
+              <Image
+                src="/logos/HTL-Ball-2026_Logo_Farbe.png"
+                alt="HTL Ball 2026 Logo"
+                width={200}
+                height={80}
+                className="h-16 w-auto"
+              />
+            </Link>
           </div>
         </header>
         <section className="max-w-2xl mx-auto px-6 py-12">
