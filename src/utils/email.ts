@@ -63,12 +63,14 @@ export async function sendConfirmationEmail(data: EmailData): Promise<void> {
   } else {
     // Self-pickup confirmation email
     subject = `HTL Ball 2026 - Bestätigung Ihrer Ticket-Bestellung (Abholung)`;
+    const baseUrl = env.NEXTAUTH_URL || 'http://localhost:3000';
     htmlContent = generatePickupEmailHTML({
       name,
       ticketType,
       quantity,
       totalPrice,
       pickupCode: pickupCode!,
+      baseUrl,
     });
   }
 
@@ -256,76 +258,88 @@ function generateShippingEmailHTML(data: {
   `;
 }
 
-function generatePickupEmailHTML(data: {
+export function generatePickupEmailHTML(data: {
   name: string;
   ticketType: string;
   quantity: number;
   totalPrice: number;
   pickupCode: string;
+  baseUrl?: string;
 }): string {
+  const baseUrl = data.baseUrl || (typeof process !== 'undefined' && process.env?.NEXTAUTH_URL) || 'http://localhost:3000';
+  const logoUrl = `${baseUrl}/logos/HTL-Ball-2026_Logo_Farbe_transparent.png`;
+  
   return `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
       <title>HTL Ball 2026 - Ticket Bestätigung</title>
-      <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #D4AF37, #B8860B); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
-        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
-        .ticket-info { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
-        .pickup-code { background: #e8f4fd; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
-        .code { font-size: 24px; font-weight: bold; color: #D4AF37; letter-spacing: 2px; }
-        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
-        .highlight { color: #D4AF37; font-weight: bold; }
-        .warning { background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 15px 0; }
-      </style>
     </head>
     <body>
-      <div class="container">
-        <div class="header">
-          <h1>HTL Ball 2026 - Ball der Auserwählten</h1>
-          <h2>Ihre Tickets sind reserviert!</h2>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; background-color: #f8f6f3;">
+        <div style="color: #c17a3a; padding: 15px; margin-bottom: 15px; text-align: center;">
+          <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
+            <tr>
+              <td style="vertical-align: middle; text-align: center; padding-right: 20px;">
+                <img src="${logoUrl}" alt="HTL Ball 2026 Logo" style="max-width: 120px; height: auto; display: block;" />
+              </td>
+              <td style="vertical-align: middle; width: 1px; background-color: #c17a3a; padding: 0;">
+                <div style="width: 1px; height: 80px; background-color: #c17a3a;"></div>
+              </td>
+              <td style="vertical-align: middle; text-align: left; padding-left: 20px;">
+                <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 2px; color: #c17a3a;">HTL BRAUNAU</h1>
+                <p style="margin: 8px 0 0 0; font-size: 16px; font-weight: 600; letter-spacing: 1px; color: #c17a3a;">Ball der Auserwählten 2026</p>
+              </td>
+            </tr>
+          </table>
         </div>
         
-        <div class="content">
-          <p>Liebe/r <strong>${data.name}</strong>,</p>
+        <div style="background: white; padding: 20px 25px 25px 25px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+          <p style="margin-bottom: 15px; line-height: 1.6; color: #444; font-size: 16px;">
+            Liebe/r <strong>${data.name}</strong>,
+          </p>
           
-          <p>vielen Dank für Ihre Bestellung! Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Tickets erfolgreich reserviert wurden.</p>
+          <p style="margin-bottom: 15px; line-height: 1.6; color: #444; font-size: 16px;">
+            vielen Dank für Ihre Bestellung! Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Tickets erfolgreich reserviert wurden.
+          </p>
           
-          <div class="ticket-info">
-            <h3>Bestelldetails</h3>
-            <p><strong>Anzahl:</strong> ${data.quantity} Ticket(s)</p>
-            <p><strong>Gesamtpreis:</strong> <span class="highlight">€${data.totalPrice}</span></p>
-            <p><strong>Abholart:</strong> Selbstabholung</p>
+          <div style="margin: 18px 0;">
+            <h3 style="margin: 0 0 12px 0; color: #333; font-size: 18px;">Bestelldetails</h3>
+            <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Anzahl:</strong> ${data.quantity} Ticket(s)</p>
+            <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Gesamtpreis:</strong> <span style="color: #c17a3a; font-weight: bold;">€${data.totalPrice}</span></p>
+            <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Abholart:</strong> Selbstabholung</p>
           </div>
           
-          <div class="pickup-code">
-            <h3>Ihr Abholcode</h3>
-            <div class="code">${data.pickupCode}</div>
-            <p><strong>Bewahren Sie diesen Code gut auf!</strong></p>
+          <div style="padding: 18px; margin: 18px 0; text-align: center;">
+            <h3 style="margin: 0 0 12px 0; color: #333; font-size: 18px;">Ihr Abholcode</h3>
+            <div style="font-size: 28px; font-weight: bold; color: #c17a3a; letter-spacing: 3px; font-family: monospace; margin: 12px 0;">${data.pickupCode}</div>
+            <p style="margin: 12px 0 0 0; color: #444; font-size: 16px; font-weight: 600;">Bewahren Sie diesen Code gut auf!</p>
           </div>
           
-          <div class="warning">
-            <h4>Wichtige Informationen zur Abholung:</h4>
-            <ul>
+          <div style="margin: 18px 0; font-size: 14px;">
+            <h4 style="margin: 0 0 10px 0; font-weight: 600; color: #333; font-size: 16px;">Wichtige Informationen zur Abholung:</h4>
+            <ul style="margin: 0; padding-left: 20px; color: #666; line-height: 1.8;">
               <li>Bringen Sie diesen Code zur Abholung mit</li>
               <li>Zeigen Sie einen gültigen Lichtbildausweis vor</li>
-              <li>Die Abholung erfolgt am Veranstaltungstag</li>
               <li>Weitere Details zur Abholung erhalten Sie per E-Mail</li>
             </ul>
           </div>
           
-          <p>Bei Fragen wenden Sie sich gerne an unser Team.</p>
+          <p style="margin-top: 18px; line-height: 1.6; color: #444; font-size: 16px;">
+            Bei Fragen wenden Sie sich gerne an unser Team.
+          </p>
           
-          <p>Mit freundlichen Grüßen,<br>
-          <strong>Das HTL Ball 2026 Team</strong></p>
-        </div>
-        
-        <div class="footer">
-          <p>HTL Ball 2026 - Ball der Auserwählten</p>
-          <p>Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht direkt auf diese E-Mail.</p>
+          <p style="margin-top: 15px; line-height: 1.6; color: #444; font-size: 16px;">
+            Mit freundlichen Grüßen,<br>
+            <strong style="color: #c17a3a;">Das HTL Ball 2026 Team</strong>
+          </p>
+          
+          <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+            <p style="margin: 0; font-size: 13px; color: #999; text-align: center; font-style: italic;">
+              Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht direkt auf diese E-Mail.
+            </p>
+          </div>
         </div>
       </div>
     </body>
