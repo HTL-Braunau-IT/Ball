@@ -438,7 +438,7 @@ h4 {
   padding: var(--spacing-xl);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   transition: all var(--transition-normal);
-  min-width: 400px;
+  min-width: 475px;
   text-align: center;
   position: relative;
   overflow: hidden;
