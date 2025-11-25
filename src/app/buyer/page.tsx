@@ -533,11 +533,8 @@ export default function BuyerPage() {
                     <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
                       Ticketverkauf startet bald
                     </h2>
-                    <p className="text-lg mb-4" style={{ color: 'var(--color-text-secondary)' }}>
+                    <p className="text-lm" style={{ color: 'var(--color-text-secondary)' }}>
                       Der Ticketverkauf für den HTL Ball 2026 - Ball der Auserwählten startet am {env.NEXT_PUBLIC_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_TICKET_SALE_DATE) : 'bald'}.
-                    </p>
-                    <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                      Sie werden benachrichtigt, sobald der Verkauf beginnt. Bereiten Sie sich auf einen unvergesslichen Abend im DUNE-Stil vor!
                     </p>
                   </>
                 )}
