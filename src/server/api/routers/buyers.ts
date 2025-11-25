@@ -12,6 +12,28 @@ export const buyersRouter = createTRPCRouter({
     }));
   }),
 
+  // Get current user's buyer information including group
+  getCurrentUser: protectedProcedure.query(async ({ ctx }) => {
+    const buyer = await ctx.db.buyers.findUnique({
+      where: { email: ctx.session.user.email! },
+      include: { group: true },
+    });
+    
+    if (!buyer) {
+      return null;
+    }
+    
+    return {
+      id: buyer.id,
+      name: buyer.name,
+      email: buyer.email,
+      group: buyer.group ? {
+        id: buyer.group.id,
+        name: buyer.group.name,
+      } : null,
+    };
+  }),
+
   // Import alumni from CSV
   importAlumni: protectedProcedure
     .input(z.object({

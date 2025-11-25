@@ -262,6 +262,12 @@ export default function BuyerPage() {
     { enabled: !!session }
   );
 
+  // Get current user's buyer information including group
+  const { data: currentUser } = api.buyers.getCurrentUser.useQuery(
+    undefined,
+    { enabled: !!session }
+  );
+
   // Retry payment mutation
   const retryPayment = api.ticket.retryPayment.useMutation();
 
@@ -533,9 +539,15 @@ export default function BuyerPage() {
                     <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
                       Ticketverkauf startet bald
                     </h2>
-                    <p className="text-lm" style={{ color: 'var(--color-text-secondary)' }}>
-                      Der Ticketverkauf für den HTL Ball 2026 - Ball der Auserwählten startet am {env.NEXT_PUBLIC_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_TICKET_SALE_DATE) : 'bald'}.
-                    </p>
+                    {currentUser?.group?.name === "Absolventen" ? (
+                      <p className="text-base px-1" style={{ color: 'var(--color-text-secondary)' }}>
+                        Der Absolventen Ticketverkauf für den HTL Ball 2026 startet am {env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE) : 'bald'}.
+                      </p>
+                    ) : (
+                      <p className="text-base px-1" style={{ color: 'var(--color-text-secondary)' }}>
+                        Der öffentliche Ticketverkauf für den HTL Ball 2026 startet am {env.NEXT_PUBLIC_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_TICKET_SALE_DATE) : 'bald'}.
+                      </p>
+                    )}
                   </>
                 )}
               </div>
