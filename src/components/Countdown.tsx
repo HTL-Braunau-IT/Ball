@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 
 interface CountdownProps {
   targetDate: string;
+  title: string;
+  completedTitle: string;
+  completedMessage: string;
+  noContainer?: boolean;
 }
 
 interface TimeLeft {
@@ -13,7 +17,13 @@ interface TimeLeft {
   seconds: number;
 }
 
-export default function Countdown({ targetDate }: CountdownProps) {
+export default function Countdown({ 
+  targetDate, 
+  title,
+  completedTitle,
+  completedMessage,
+  noContainer = false
+}: CountdownProps) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isComplete, setIsComplete] = useState(false);
 
@@ -63,42 +73,46 @@ export default function Countdown({ targetDate }: CountdownProps) {
     return () => clearInterval(timer);
   }, [targetDate, isComplete]);
 
-  if (isComplete) {
-    return (
-      <div className="text-center">
-        <h2 className="text-4xl font-bold gradient-text mb-4">
-          Ticketverkauf gestartet!
-        </h2>
-        <p className="text-lg" style={{ color: 'var(--color-text-secondary)' }}>
-          Jetzt können Sie Ihre Tickets kaufen
-        </p>
+  const countdownContent = isComplete ? (
+    <div className="text-center">
+      <h2 className="text-4xl font-bold gradient-text mb-4">
+        {completedTitle}
+      </h2>
+      <p className="text-lg" style={{ color: 'var(--color-text-secondary)' }}>
+        {completedMessage}
+      </p>
+    </div>
+  ) : (
+    <>
+      <div className="countdown-title">{title}</div>
+      <div className="countdown-grid">
+        <div className="countdown-item">
+          <div className="countdown-number">{timeLeft.days}</div>
+          <div className="countdown-label">Tage</div>
+        </div>
+        <div className="countdown-item">
+          <div className="countdown-number">{timeLeft.hours}</div>
+          <div className="countdown-label">Stunden</div>
+        </div>
+        <div className="countdown-item">
+          <div className="countdown-number">{timeLeft.minutes}</div>
+          <div className="countdown-label">Minuten</div>
+        </div>
+        <div className="countdown-item">
+          <div className="countdown-number">{timeLeft.seconds}</div>
+          <div className="countdown-label">Sekunden</div>
+        </div>
       </div>
-    );
+    </>
+  );
+
+  if (noContainer) {
+    return <div className="countdown-box">{countdownContent}</div>;
   }
 
   return (
     <div className="countdown-container">
-      <div className="countdown-box">
-        <div className="countdown-title">Countdown bis zum Ticketverkauf</div>
-        <div className="countdown-grid">
-          <div className="countdown-item">
-            <div className="countdown-number">{timeLeft.days}</div>
-            <div className="countdown-label">Tage</div>
-          </div>
-          <div className="countdown-item">
-            <div className="countdown-number">{timeLeft.hours}</div>
-            <div className="countdown-label">Stunden</div>
-          </div>
-          <div className="countdown-item">
-            <div className="countdown-number">{timeLeft.minutes}</div>
-            <div className="countdown-label">Minuten</div>
-          </div>
-          <div className="countdown-item">
-            <div className="countdown-number">{timeLeft.seconds}</div>
-            <div className="countdown-label">Sekunden</div>
-          </div>
-        </div>
-      </div>
+      <div className="countdown-box">{countdownContent}</div>
     </div>
   );
 }
