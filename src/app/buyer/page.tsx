@@ -262,14 +262,26 @@ export default function BuyerPage() {
     { enabled: !!session }
   );
 
+  // Get current user's buyer information including group
+  const { data: currentUser } = api.buyers.getCurrentUser.useQuery(
+    undefined,
+    { enabled: !!session }
+  );
+
   // Retry payment mutation
   const retryPayment = api.ticket.retryPayment.useMutation();
 
   // Check kill switch from backend
   const { data: salesEnabled } = api.systemSettings.getSalesEnabled.useQuery();
 
-  // Check if ticket sale has started
-  const ticketSaleDate = env.NEXT_PUBLIC_TICKET_SALE_DATE ? new Date(env.NEXT_PUBLIC_TICKET_SALE_DATE) : new Date();
+  // Determine which sale date to use based on user's group
+  const isAlumni = currentUser?.group?.name === "Absolventen";
+  const applicableSaleDate = isAlumni && env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE 
+    ? env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE 
+    : env.NEXT_PUBLIC_TICKET_SALE_DATE;
+
+  // Check if ticket sale has started for the applicable group
+  const ticketSaleDate = applicableSaleDate ? new Date(applicableSaleDate) : new Date();
   const now = new Date();
   const hasTicketSaleStarted = (salesEnabled ?? true) && now >= ticketSaleDate;
 
@@ -533,12 +545,15 @@ export default function BuyerPage() {
                     <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
                       Ticketverkauf startet bald
                     </h2>
-                    <p className="text-lg mb-4" style={{ color: 'var(--color-text-secondary)' }}>
-                      Der Ticketverkauf für den HTL Ball 2026 - Ball der Auserwählten startet am {env.NEXT_PUBLIC_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_TICKET_SALE_DATE) : 'bald'}.
-                    </p>
-                    <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                      Sie werden benachrichtigt, sobald der Verkauf beginnt. Bereiten Sie sich auf einen unvergesslichen Abend im DUNE-Stil vor!
-                    </p>
+                    {currentUser?.group?.name === "Absolventen" ? (
+                      <p className="text-base px-1" style={{ color: 'var(--color-text-secondary)' }}>
+                        Der Absolventen Ticketverkauf für den HTL Ball 2026 startet am {env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE) : 'bald'}.
+                      </p>
+                    ) : (
+                      <p className="text-base px-1" style={{ color: 'var(--color-text-secondary)' }}>
+                        Der öffentliche Ticketverkauf für den HTL Ball 2026 startet am {env.NEXT_PUBLIC_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_TICKET_SALE_DATE) : 'bald'}.
+                      </p>
+                    )}
                   </>
                 )}
               </div>

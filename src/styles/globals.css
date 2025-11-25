@@ -431,6 +431,40 @@ h4 {
   overflow: hidden;
 }
 
+.countdown-box-completed {
+  background: linear-gradient(135deg, var(--color-bg-card), var(--color-bg-accent));
+  border: 2px solid var(--color-accent-warm);
+  border-radius: 1rem;
+  padding: var(--spacing-xl);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: all var(--transition-normal);
+  min-width: 475px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.countdown-box-completed::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.countdown-box-completed:hover::before {
+  left: 100%;
+}
+
+.countdown-box-completed:hover {
+  border-color: var(--color-bronze);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px) scale(1.01);
+}
+
 .countdown-box::before {
   content: '';
   position: absolute;

@@ -7,6 +7,7 @@ import { env } from "~/env";
 
 // Get ticket sale date from environment variable
 const TICKET_SALE_DATE = env.NEXT_PUBLIC_TICKET_SALE_DATE;
+const ALUMNI_TICKET_SALE_DATE = env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE;
 
 export default async function Home() {
   // Check kill switch from backend
@@ -14,8 +15,10 @@ export default async function Home() {
   
   // Check if ticket sale has started
   const ticketSaleDate = TICKET_SALE_DATE ? new Date(TICKET_SALE_DATE) : new Date();
+  const alumniTicketSaleDate = ALUMNI_TICKET_SALE_DATE ? new Date(ALUMNI_TICKET_SALE_DATE) : new Date();
   const now = new Date();
   const hasTicketSaleStarted = salesEnabled && now >= ticketSaleDate;
+  const hasAlumniTicketSaleStarted = salesEnabled && now >= alumniTicketSaleDate;
 
   return (
     <HydrateClient>
@@ -123,24 +126,61 @@ export default async function Home() {
             
             {/* Countdown or Sale Active */}
             {salesEnabled && (
-              <div className="w-full max-w-2xl">
-                {hasTicketSaleStarted ? (
-                  <div className="countdown-box text-center">
-                    <h3 className="countdown-title" style={{ color: 'var(--color-gold-light)' }}>
-                      Ticketverkauf ist gestartet!
-                    </h3>
-                    <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-                      Sichern Sie sich jetzt Ihre Tickets für den HTL Ball 2026
-                    </p>
-                    <Link href="/buyer" className="btn btn-primary text-lg px-8 py-4">
-                      Jetzt Tickets kaufen
-                    </Link>
+                <div className="w-full max-w-2xl">
+                <div className="flex flex-row gap-8 items-center justify-center">
+
+                  {/* Regular Ticket Sale Countdown */}
+                  <div className="flex-1">
+                    {hasTicketSaleStarted ? (
+                      <div className="countdown-box-completed text-center">
+                        <h3 className="countdown-title" style={{ color: 'var(--color-gold-light)' }}>
+                          Ticketverkauf ist gestartet!
+                        </h3>
+                        <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
+                          Sichern Sie sich jetzt Ihre Tickets für den HTL Ball 2026
+                        </p>
+                        <Link href="/buyer" className="btn btn-primary text-lg px-8 py-4">
+                          Jetzt Tickets kaufen
+                        </Link>
+                      </div>
+                    ) : (
+                      <Countdown 
+                        targetDate={TICKET_SALE_DATE ?? new Date().toISOString()}
+                        title="Countdown bis zum Ticketverkauf"
+                        completedTitle="Ticketverkauf gestartet!"
+                        completedMessage="Jetzt können Sie Ihre Tickets kaufen"
+                      />
+                    )}
                   </div>
-                ) : (
-                  <Countdown 
-                    targetDate={TICKET_SALE_DATE ?? new Date().toISOString()}
-                  />
-                )}
+                  
+                  {/* Alumni Ticket Sale Countdown */}
+                  {ALUMNI_TICKET_SALE_DATE && (
+                    <>
+                      <div className="flex-1">
+                        {hasAlumniTicketSaleStarted ? (
+                          <div className="countdown-box-completed text-center">
+                            <h3 className="countdown-title" style={{ color: 'var(--color-gold-light)' }}>
+                              Vorverkauf ist gestartet!
+                            </h3>
+                            <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
+                              Sichern Sie sich jetzt Ihre Tickets für den HTL Ball 2026
+                            </p>
+                            <Link href="/buyer" className="btn btn-primary text-lg px-8 py-4">
+                              Jetzt Tickets kaufen
+                            </Link>
+                          </div>
+                        ) : (
+                          <Countdown 
+                            targetDate={ALUMNI_TICKET_SALE_DATE}
+                            title="Countdown bis zum Absolventen Vorverkauf"
+                            completedTitle="Vorverkauf gestartet!"
+                            completedMessage=""
+                          />
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -358,7 +398,7 @@ export default async function Home() {
                     Der Ball ist grundsätzlich ab 18 Jahren. Minderjährige können jedoch mit einer 
                     Einverständniserklärung der Eltern und in Begleitung einer volljährigen Person 
                     teilnehmen. Die Einverständniserklärung finden Sie hier:&nbsp;  
-                    <Link href="/einverstaendniserklaerung" className="text-gold-light hover:underline" style={{ color: 'var(--color-gold-light)' }}>
+                    <Link href="/einverstaendniserklaerung/einverstaendniserklaerung_muttizettel.pdf" className="text-gold-light hover:underline" style={{ color: 'var(--color-gold-light)' }} download="Einverständniserklärung_Muttizettel.pdf">
                        Einverständniserklärung herunterladen
                     </Link>
                   </p>

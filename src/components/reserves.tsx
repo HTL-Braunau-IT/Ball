@@ -82,17 +82,9 @@ export default function TicketReserves() {
     const handleSave = useCallback(() => {
         if (!editData || !data) return;
         
-        // Find the current reserve to get sold tickets count
-        const currentReserve = data.find(r => r.id === editData.id);
-        if (!currentReserve) return;
-
-        const soldCount = currentReserve.soldTickets?.filter(t => t.paid === true).length || 0;
-
         // Client-side validation
-        if (editData.amount < soldCount) {
-            window.alert(
-                `Die Anzahl kann nicht kleiner sein als die bereits verkauften Tickets (${soldCount}).`
-            );
+        if (editData.amount < 0) {
+            window.alert("Die Anzahl darf nicht negativ sein.");
             return;
         }
 
@@ -209,7 +201,7 @@ export default function TicketReserves() {
                             : "-";
 
                         const soldCount = reserve.soldTickets?.filter(t => t.paid === true).length || 0;
-                        const remainingCount = reserve.amount - soldCount;
+                        const remainingCount = reserve.amount;
                         const isEditing = editingId === reserve.id;
 
                         return (
@@ -226,7 +218,7 @@ export default function TicketReserves() {
                                     {isEditing ? (
                                         <input
                                             type="number"
-                                            min={soldCount}
+                                            min="0"
                                             value={editData?.amount || 0}
                                             onChange={(e) => handleFieldChange('amount', parseInt(e.target.value) || 0)}
                                             className="w-18 px-3 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
