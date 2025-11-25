@@ -54,18 +54,30 @@ export const authOptions: NextAuthOptions = {
       server: {},
       from: process.env.EMAIL_FROM,
       async sendVerificationRequest({ url, identifier, provider }) {
+        const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+        const logoUrl = `${baseUrl}/logos/HTL-Ball-2026_Logo_Farbe_transparent.png`;
         
         // Professional email with nice button and elaborate text
         const html = `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f6f3;">
-            <div style="background: transparent; color: #c17a3a; padding: 25px; text-align: center; margin-bottom: 20px;">
-              <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 2px;">HTL BRAUNAU</h1>
-              <p style="margin: 8px 0 0 0; font-size: 16px; font-weight: 600; letter-spacing: 1px;">Ball der Auserwählten 2026</p>
+            <div style="background: transparent; color: #c17a3a; padding: 25px; margin-bottom: 20px; text-align: center;">
+              <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
+                <tr>
+                  <td style="vertical-align: middle; text-align: center; padding-right: 20px;">
+                    <img src="${logoUrl}" alt="HTL Ball 2026 Logo" style="max-width: 120px; height: auto; display: block;" />
+                  </td>
+                  <td style="vertical-align: middle; width: 1px; background-color: #c17a3a; padding: 0;">
+                    <div style="width: 1px; height: 80px; background-color: #c17a3a;"></div>
+                  </td>
+                  <td style="vertical-align: middle; text-align: left; padding-left: 20px;">
+                    <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 2px; color: #c17a3a;">HTL BRAUNAU</h1>
+                    <p style="margin: 8px 0 0 0; font-size: 16px; font-weight: 600; letter-spacing: 1px; color: #c17a3a;">Ball der Auserwählten 2026</p>
+                  </td>
+                </tr>
+              </table>
             </div>
             
-            <div style="background: white; padding: 35px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
-              <h2 style="color: #c17a3a; margin-bottom: 25px; font-size: 22px; font-weight: 400;">Willkommen zum Ball der Auserwählten</h2>
-              
+            <div style="background: white; padding: 20px 35px 35px 35px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
               <p style="margin-bottom: 20px; line-height: 1.6; color: #444; font-size: 16px;">
                 Sehr geehrte Damen und Herren,
               </p>
