@@ -88,7 +88,7 @@ export const authOptions: NextAuthOptions = {
               </p>
               
               <p style="margin-bottom: 25px; line-height: 1.6; color: #444; font-size: 16px;">
-                Um Ihre Anmeldung abzuschließen und Zugang zu unserem exklusiven Ticketverkauf zu erhalten, 
+                Um Ihre Anmeldung abzuschließen und Zugang zu unserem exklusiven Kartenverkauf zu erhalten, 
                 klicken Sie bitte auf den untenstehenden Button:
               </p>
               

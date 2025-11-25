@@ -52,7 +52,7 @@ export async function sendConfirmationEmail(data: EmailData): Promise<void> {
 
   if (deliveryMethod.toLowerCase().includes('versand') || deliveryMethod.toLowerCase().includes('shipping')) {
     // Shipping confirmation email
-    subject = `HTL Ball 2026 - Bestätigung Ihrer Ticket-Bestellung (Versand)`;
+    subject = `HTL Ball 2026 - Bestätigung Ihrer Karten-Bestellung (Versand)`;
     const baseUrl = env.NEXTAUTH_URL || 'http://localhost:3000';
     console.log(`[Email] Using baseUrl for shipping confirmation: ${baseUrl}`);
     htmlContent = generateShippingEmailHTML({
@@ -65,7 +65,7 @@ export async function sendConfirmationEmail(data: EmailData): Promise<void> {
     });
   } else {
     // Self-pickup confirmation email
-    subject = `HTL Ball 2026 - Bestätigung Ihrer Ticket-Bestellung (Abholung)`;
+    subject = `HTL Ball 2026 - Bestätigung Ihrer Karten-Bestellung (Abholung)`;
     const baseUrl = env.NEXTAUTH_URL || 'http://localhost:3000';
     console.log(`[Email] Using baseUrl for pickup email: ${baseUrl}`);
     htmlContent = generatePickupEmailHTML({
@@ -114,7 +114,7 @@ export async function sendConfirmationEmail(data: EmailData): Promise<void> {
 export async function sendShippingNotificationEmail(data: ShippingNotificationData): Promise<void> {
   const { to, name, code, address } = data;
 
-  const subject = `HTL Ball 2026 - Ihre Tickets sind unterwegs!`;
+  const subject = `HTL Ball 2026 - Ihre Karten sind unterwegs!`;
   const baseUrl = env.NEXTAUTH_URL || 'http://localhost:3000';
   console.log(`[Email] Using baseUrl for shipping notification: ${baseUrl}`);
   const htmlContent = generateShippingNotificationHTML({ name, code, address, baseUrl });
@@ -155,7 +155,7 @@ export async function sendShippingNotificationEmail(data: ShippingNotificationDa
 export async function sendPickupNotificationEmail(data: PickupNotificationData): Promise<void> {
   const { to, name, code } = data;
 
-  const subject = `HTL Ball 2026 - Ihre Tickets wurden abgeholt!`;
+  const subject = `HTL Ball 2026 - Ihre Karten wurden abgeholt!`;
   const baseUrl = env.NEXTAUTH_URL || 'http://localhost:3000';
   console.log(`[Email] Using baseUrl for pickup notification: ${baseUrl}`);
   const htmlContent = generatePickupNotificationHTML({ name, code, baseUrl });
@@ -214,7 +214,7 @@ export function generateShippingEmailHTML(data: {
     <html>
     <head>
       <meta charset="utf-8">
-      <title>HTL Ball 2026 - Ticket Bestätigung</title>
+      <title>HTL Ball 2026 - Karten Bestätigung</title>
     </head>
     <body>
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; background-color: #f8f6f3;">
@@ -241,12 +241,12 @@ export function generateShippingEmailHTML(data: {
           </p>
           
           <p style="margin-bottom: 15px; line-height: 1.6; color: #444; font-size: 16px;">
-            vielen Dank für Ihre Bestellung! Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Tickets erfolgreich bestellt wurden.
+            vielen Dank für Ihre Bestellung! Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Karten erfolgreich bestellt wurden.
           </p>
           
           <div style="margin: 18px 0;">
             <h3 style="margin: 0 0 12px 0; color: #333; font-size: 18px;">Bestelldetails</h3>
-            <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Anzahl:</strong> ${data.quantity} Ticket(s)</p>
+            <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Anzahl:</strong> ${data.quantity} Karte(n)</p>
             <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Gesamtpreis:</strong> <span style="color: #c17a3a; font-weight: bold;">€${data.totalPrice}</span></p>
             <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Lieferart:</strong> Versand</p>
           </div>
@@ -259,7 +259,7 @@ export function generateShippingEmailHTML(data: {
           </div>
           
           <p style="margin-top: 18px; line-height: 1.6; color: #444; font-size: 16px;">
-            Ihre Tickets werden in den nächsten Tagen an die angegebene Adresse versendet. Sie erhalten eine weitere E-Mail, sobald die Tickets versandt wurden.
+            Ihre Karten werden in den nächsten Tagen an die angegebene Adresse versendet. Sie erhalten eine weitere E-Mail, sobald die Karten versandt wurden.
           </p>
           
           <p style="margin-top: 15px; line-height: 1.6; color: #444; font-size: 16px;">
@@ -299,7 +299,7 @@ export function generatePickupEmailHTML(data: {
     <html>
     <head>
       <meta charset="utf-8">
-      <title>HTL Ball 2026 - Ticket Bestätigung</title>
+      <title>HTL Ball 2026 - Karten Bestätigung</title>
     </head>
     <body>
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; background-color: #f8f6f3;">
@@ -326,12 +326,12 @@ export function generatePickupEmailHTML(data: {
           </p>
           
           <p style="margin-bottom: 15px; line-height: 1.6; color: #444; font-size: 16px;">
-            vielen Dank für Ihre Bestellung! Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Tickets erfolgreich reserviert wurden.
+            vielen Dank für Ihre Bestellung! Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Karten erfolgreich reserviert wurden.
           </p>
           
           <div style="margin: 18px 0;">
             <h3 style="margin: 0 0 12px 0; color: #333; font-size: 18px;">Bestelldetails</h3>
-            <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Anzahl:</strong> ${data.quantity} Ticket(s)</p>
+            <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Anzahl:</strong> ${data.quantity} Karte(n)</p>
             <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Gesamtpreis:</strong> <span style="color: #c17a3a; font-weight: bold;">€${data.totalPrice}</span></p>
             <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Abholart:</strong> Selbstabholung</p>
           </div>
@@ -391,7 +391,7 @@ export function generateShippingNotificationHTML(data: {
     <html>
     <head>
       <meta charset="utf-8">
-      <title>HTL Ball 2026 - Ihre Tickets sind unterwegs!</title>
+      <title>HTL Ball 2026 - Ihre Karten sind unterwegs!</title>
     </head>
     <body>
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; background-color: #f8f6f3;">
@@ -418,12 +418,12 @@ export function generateShippingNotificationHTML(data: {
           </p>
           
           <p style="margin-bottom: 15px; line-height: 1.6; color: #444; font-size: 16px;">
-            Gute Nachrichten! Ihre Tickets für den HTL Ball 2026 wurden erfolgreich versendet und sind bereits auf dem Weg zu Ihnen!
+            Gute Nachrichten! Ihre Karten für den HTL Ball 2026 wurden erfolgreich versendet und sind bereits auf dem Weg zu Ihnen!
           </p>
           
           <div style="margin: 18px 0;">
             <h3 style="margin: 0 0 12px 0; color: #333; font-size: 18px;">Versandinformationen</h3>
-            <p style="margin: 3px 0; color: #444; font-size: 16px;">Ihre Tickets wurden an die folgende Adresse versendet:</p>
+            <p style="margin: 3px 0; color: #444; font-size: 16px;">Ihre Karten wurden an die folgende Adresse versendet:</p>
           </div>
           
           <div style="margin: 18px 0;">
@@ -471,7 +471,7 @@ export function generatePickupNotificationHTML(data: {
     <html>
     <head>
       <meta charset="utf-8">
-      <title>HTL Ball 2026 - Ihre Tickets wurden abgeholt!</title>
+      <title>HTL Ball 2026 - Ihre Karten wurden abgeholt!</title>
     </head>
     <body>
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; background-color: #f8f6f3;">
@@ -498,12 +498,12 @@ export function generatePickupNotificationHTML(data: {
           </p>
           
           <p style="margin-bottom: 15px; line-height: 1.6; color: #444; font-size: 16px;">
-            Gute Nachrichten! Ihre Tickets für den HTL Ball 2026 wurden erfolgreich abgeholt!
+              Gute Nachrichten! Ihre Karten für den HTL Ball 2026 wurden erfolgreich abgeholt!
           </p>
           
           <div style="margin: 18px 0;">
             <h3 style="margin: 0 0 12px 0; color: #333; font-size: 18px;">Abholbestätigung</h3>
-            <p style="margin: 3px 0; color: #444; font-size: 16px;">Dies ist eine Bestätigung, dass Ihre Tickets mit dem folgenden Abholcode erfolgreich abgeholt wurden:</p>
+            <p style="margin: 3px 0; color: #444; font-size: 16px;">Dies ist eine Bestätigung, dass Ihre Karten mit dem folgenden Abholcode erfolgreich abgeholt wurden:</p>
           </div>
           
           <div style="padding: 18px; margin: 18px 0; text-align: center;">
