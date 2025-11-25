@@ -209,7 +209,7 @@ export default function TicketReserves() {
                             : "-";
 
                         const soldCount = reserve.soldTickets?.filter(t => t.paid === true).length || 0;
-                        const remainingCount = reserve.amount - soldCount;
+                        const remainingCount = reserve.amount;
                         const isEditing = editingId === reserve.id;
 
                         return (

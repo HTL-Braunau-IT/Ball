@@ -172,7 +172,7 @@ export default async function Home() {
                         ) : (
                           <Countdown 
                             targetDate={ALUMNI_TICKET_SALE_DATE}
-                            title="Countdown bis zum Vorverkauf"
+                            title="Countdown bis zum Absolventen Vorverkauf"
                             completedTitle="Vorverkauf gestartet!"
                             completedMessage=""
                           />
