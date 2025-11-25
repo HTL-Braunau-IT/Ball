@@ -105,10 +105,7 @@ export const ticketRouter = createTRPCRouter({
 
     // Alumni fallback: use public reserve if alumni reserve is empty
     if (userGroupName === "Absolventen" && matchingReserve) {
-      const soldCount = await ctx.db.soldTickets.count({
-        where: { reserveId: matchingReserve.id, paid: true },
-      });
-      if (matchingReserve.amount - soldCount === 0) {
+      if (matchingReserve.amount === 0) {
         const publicReserve = reserves.find(({ type }) => type[0]?.name === "Öffentlich");
         if (publicReserve) {
           matchingReserve = publicReserve;
@@ -124,13 +121,8 @@ export const ticketRouter = createTRPCRouter({
       return null;
     }
 
-    // Count paid sold tickets for the selected reserve
-    const soldTicketsCount = await ctx.db.soldTickets.count({
-      where: { reserveId: matchingReserve.id, paid: true },
-    });
-
-    // Calculate available tickets: reserve amount minus sold tickets
-    const availableAmount = Math.max(0, matchingReserve.amount - soldTicketsCount);
+    // Use reserve amount directly (it's already decremented when tickets are sold)
+    const availableAmount = matchingReserve.amount;
 
     // Filter delivery methods: only include non-expired methods
     // Methods with expiresAt = null are considered never expired (always valid)
