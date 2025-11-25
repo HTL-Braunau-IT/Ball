@@ -274,8 +274,14 @@ export default function BuyerPage() {
   // Check kill switch from backend
   const { data: salesEnabled } = api.systemSettings.getSalesEnabled.useQuery();
 
-  // Check if ticket sale has started
-  const ticketSaleDate = env.NEXT_PUBLIC_TICKET_SALE_DATE ? new Date(env.NEXT_PUBLIC_TICKET_SALE_DATE) : new Date();
+  // Determine which sale date to use based on user's group
+  const isAlumni = currentUser?.group?.name === "Absolventen";
+  const applicableSaleDate = isAlumni && env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE 
+    ? env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE 
+    : env.NEXT_PUBLIC_TICKET_SALE_DATE;
+
+  // Check if ticket sale has started for the applicable group
+  const ticketSaleDate = applicableSaleDate ? new Date(applicableSaleDate) : new Date();
   const now = new Date();
   const hasTicketSaleStarted = (salesEnabled ?? true) && now >= ticketSaleDate;
 
