@@ -255,16 +255,19 @@ export default function BuyerPage() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPurchaseFlow, setShowPurchaseFlow] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(true); // Default to true to prevent flash on mobile
 
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
     
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    // Check immediately on mount
+    if (typeof window !== 'undefined') {
+      checkMobile();
+      window.addEventListener('resize', checkMobile);
+      return () => window.removeEventListener('resize', checkMobile);
+    }
   }, []);
 
   // Fetch user's purchased tickets
@@ -379,12 +382,14 @@ export default function BuyerPage() {
               </Link>
             </div>
             <div className="flex items-center gap-4">
-              <button
-                onClick={() => setShowPurchaseFlow(false)}
-                className="btn btn-secondary"
-              >
-                Zurück zum Dashboard
-              </button>
+              {!isMobile && (
+                <button
+                  onClick={() => setShowPurchaseFlow(false)}
+                  className="btn btn-secondary"
+                >
+                  Zurück zum Dashboard
+                </button>
+              )}
               <button
                 onClick={() => signOut()}
                 className="btn btn-secondary"
