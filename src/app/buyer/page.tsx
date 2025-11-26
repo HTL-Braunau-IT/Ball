@@ -715,7 +715,10 @@ export default function BuyerPage() {
                   </div>
                 ) : (
                   <>
-                    <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
+                    <h2 className="text-2xl font-semibold mb-4" style={{ 
+                      color: 'var(--color-gold-light)',
+                      letterSpacing: isMobile ? '0.04em' : '0.08em'
+                    }}>
                       Kartenverkauf startet bald
                     </h2>
                     {currentUser?.group?.name === "Absolventen" ? (
