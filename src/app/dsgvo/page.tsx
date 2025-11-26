@@ -25,7 +25,7 @@ export default function DSGVOPage() {
             href="/buyer"
             className="btn btn-primary"
           >
-            Jetzt Tickets kaufen
+            Mein Konto
           </Link>
         </div>
       </header>
@@ -33,7 +33,7 @@ export default function DSGVOPage() {
       <div className="max-w-4xl mx-auto px-6 py-16">
 
 
-        <h1 className="text-2xl font-bold mb-20 pb-10 text-center" style={{ color: "var(--color-gold-light)" }}>
+        <h1 className="text-xl md:text-2xl font-bold mb-20 pb-10 text-center px-4 break-words" style={{ color: "var(--color-gold-light)" }}>
           Datenschutzerklärung (DSGVO)
         </h1>
 
@@ -114,7 +114,7 @@ export default function DSGVOPage() {
             <p className="leading-relaxed mb-4">Wir verarbeiten folgende Kategorien von personenbezogenen Daten:</p>
             <ul className="list-disc list-inside space-y-2 ml-4">
               <li>Kontaktdaten (Name, E-Mail-Adresse, Telefonnummer)</li>
-              <li>Bestelldaten (Ticketbestellungen, Lieferadressen)</li>
+              <li>Bestelldaten (Kartenbestellungen, Lieferadressen)</li>
               <li>Zahlungsdaten (Transaktionsreferenzen, Zahlungsstatus)</li>
               <li>Technische Daten (IP-Adresse, Browser-Informationen)</li>
             </ul>
@@ -126,7 +126,7 @@ export default function DSGVOPage() {
             </h2>
             <p className="leading-relaxed mb-4">Wir verarbeiten Ihre personenbezogenen Daten zu folgenden Zwecken:</p>
             <ul className="list-disc list-inside space-y-2 ml-4">
-              <li>Durchführung des Ticketverkaufs</li>
+              <li>Durchführung des Kartenverkaufs</li>
               <li>Bearbeitung Ihrer Bestellungen</li>
               <li>Kommunikation bezüglich Ihrer Bestellung</li>
               <li>Erfüllung gesetzlicher Verpflichtungen</li>
@@ -147,7 +147,7 @@ export default function DSGVOPage() {
                 <strong>Art. 6 Abs. 1 lit. a DSGVO:</strong> Einwilligung (z.B. für Newsletter)
               </li>
               <li>
-                <strong>Art. 6 Abs. 1 lit. b DSGVO:</strong> Vertragserfüllung (Ticketbestellung)
+                <strong>Art. 6 Abs. 1 lit. b DSGVO:</strong> Vertragserfüllung (Kartenbestellung)
               </li>
               <li>
                 <strong>Art. 6 Abs. 1 lit. c DSGVO:</strong> Rechtliche Verpflichtung

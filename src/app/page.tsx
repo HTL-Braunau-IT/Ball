@@ -117,7 +117,7 @@ export default async function Home() {
           </div>
           
           <div className="relative z-10 flex flex-col items-center justify-center w-full">
-            <div className="mb-12">
+            <div className="mb-4 md:mb-12">
               <h1 className="text-7xl font-bold mb-6 gradient-text">
                 DUNE - Ball der HTL BRAUNAU
               </h1>
@@ -129,28 +129,29 @@ export default async function Home() {
             {/* Countdown or Sale Active */}
             {salesEnabled && (
                 <div className="w-full max-w-2xl">
-                <div className="flex flex-row gap-8 items-center justify-center">
+                <div className="flex flex-col md:flex-row gap-8 items-center justify-center">
 
                   {/* Regular Ticket Sale Countdown */}
                   <div className="flex-1">
                     {hasTicketSaleStarted ? (
                       <div className="countdown-box-completed text-center">
                         <h3 className="countdown-title" style={{ color: 'var(--color-gold-light)' }}>
-                          Ticketverkauf ist gestartet!
+                          Kartenverkauf ist gestartet!
                         </h3>
                         <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-                          Sichern Sie sich jetzt Ihre Tickets für den HTL Ball 2026
+                          Sichern Sie sich jetzt Ihre Karten für den HTL Ball 2026
                         </p>
                         <Link href="/buyer" className="btn btn-primary text-lg px-8 py-4">
-                          Jetzt Tickets kaufen
+                          Jetzt Karten kaufen
                         </Link>
                       </div>
                     ) : (
                       <Countdown 
                         targetDate={TICKET_SALE_DATE ?? new Date().toISOString()}
-                        title="Countdown bis zum Ticketverkauf"
-                        completedTitle="Ticketverkauf gestartet!"
-                        completedMessage="Jetzt können Sie Ihre Tickets kaufen"
+                        title="Countdown bis zum Kartenverkauf"
+                        completedTitle="Kartenverkauf gestartet!"
+                        completedMessage="Jetzt können Sie Ihre Karten kaufen"
+                        titleClassName="pt-4 md:pt-0"
                       />
                     )}
                   </div>
@@ -165,10 +166,10 @@ export default async function Home() {
                               Vorverkauf ist gestartet!
                             </h3>
                             <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-                              Sichern Sie sich jetzt Ihre Tickets für den HTL Ball 2026
+                              Sichern Sie sich jetzt Ihre Karten für den HTL Ball 2026
                             </p>
                             <Link href="/buyer" className="btn btn-primary text-lg px-8 py-4">
-                              Jetzt Tickets kaufen
+                              Jetzt Karten kaufen
                             </Link>
                           </div>
                         ) : (
@@ -177,6 +178,7 @@ export default async function Home() {
                             title="Countdown bis zum Absolventen Vorverkauf"
                             completedTitle="Vorverkauf gestartet!"
                             completedMessage=""
+                            titleClassName="pt-4 md:pt-0"
                           />
                         )}
                       </div>
@@ -221,7 +223,7 @@ export default async function Home() {
                 </h4>
               </div>
               <div className="space-y-8">
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div style={{ width: 'calc(100% - 12px)', minWidth: '100px' }}>
                     <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
                       Keller
@@ -271,7 +273,7 @@ export default async function Home() {
                     <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
                       2. Stock
                     </h5>
-                    <p className="mb-4">CUbar und Bluesbar</p>
+                    <p className="mb-4">CuBar und Bluesbar</p>
                     <div className="mb-4">
                       <img
                         src="/lageplaene/2_stock/cubar_bluesbar.png"
@@ -386,9 +388,9 @@ export default async function Home() {
               <div className="space-y-6">
                 <div>
                   <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
-                    Wann startet der Ticketverkauf?
+                    Wann startet der Kartenverkauf?
                   </h5>
-                  <p>Der Ticketverkauf startet am 19.12.2025 um 12 Uhr. Der Countdown oben zeigt die verbleibende Zeit an. </p>
+                  <p>Der Kartenverkauf startet am 20.12.2025 um 24 Uhr. Der Countdown oben zeigt die verbleibende Zeit an. </p>
                 </div>
                 
                 
@@ -427,9 +429,9 @@ export default async function Home() {
                 
                 <div>
                   <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
-                  Ist der Eintritt nur mit Ticket möglich? 
+                  Ist der Eintritt nur mit Karte möglich? 
                   </h5>
-                  <p>Zugang nur mit im Vorfeld gekauftem Ticket möglich. Es gibt keine Abendkasse</p>
+                  <p>Zugang nur mit im Vorfeld gekaufter Karte möglich. Es gibt keine Abendkasse</p>
                 </div>
           </div>
         </div>

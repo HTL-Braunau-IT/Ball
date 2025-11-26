@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,7 +21,7 @@ const formatDateForDisplay = (dateString: string) => {
 };
 
 // Order Card Component
-function OrderCard({ orderTickets }: { orderTickets: Array<{
+function OrderCard({ orderTickets, isMobile }: { orderTickets: Array<{
   id: number;
   delivery: string;
   code: string | null;
@@ -36,7 +36,7 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
   buyerPostal?: number;
   buyerCity?: string;
   buyerCountry?: string;
-}> }) {
+}>; isMobile: boolean }) {
   const [showDetails, setShowDetails] = useState(false);
   const firstTicket = orderTickets[0]!;
   const ticketCount = orderTickets.length;
@@ -54,10 +54,9 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
       <div className="p-6">
         {/* Header Section */}
         <div className="pb-5 mb-5 border-b" style={{ borderColor: 'var(--color-accent-warm)' }}>
-          <div className="flex items-start justify-between gap-4">
-            {/* Ticket Count Display */}
-            <div className="flex-1">
-              <div className="inline-flex items-center gap-3">
+          {isMobile ? (
+            <div>
+              <div className="inline-flex items-center gap-3 mb-3">
                 <div className="flex items-center justify-center w-16 h-16 rounded-xl flex-shrink-0" style={{ 
                   background: 'linear-gradient(135deg, var(--color-gold-light), var(--color-bronze))',
                   boxShadow: '0 4px 12px rgba(193, 122, 58, 0.25)'
@@ -73,10 +72,7 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
                   </p>
                 </div>
               </div>
-            </div>
-            
-            {/* Status Badge */}
-            <div className="flex-shrink-0">
+              {/* Status Badge */}
               <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
                 firstTicket.paid 
                   ? 'bg-green-50 text-green-700 border border-green-200' 
@@ -86,51 +82,127 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
                 <span>{firstTicket.paid ? 'Bezahlt' : 'Ausstehend'}</span>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex items-start justify-between gap-4">
+              {/* Ticket Count Display */}
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-3">
+                  <div className="flex items-center justify-center w-16 h-16 rounded-xl flex-shrink-0" style={{ 
+                    background: 'linear-gradient(135deg, var(--color-gold-light), var(--color-bronze))',
+                    boxShadow: '0 4px 12px rgba(193, 122, 58, 0.25)'
+                  }}>
+                    <span className="text-2xl font-bold text-white">{ticketCount}</span>
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <p className="text-xs uppercase tracking-widest font-medium leading-tight" style={{ color: 'var(--color-text-muted)', letterSpacing: '0.15em' }}>
+                      {ticketCount === 1 ? 'Karte' : 'Karten'}
+                    </p>
+                    <p className="text-lg font-semibold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+                      {ticketCount === 1 ? 'Gekauft' : 'Gekauft'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Status Badge */}
+              <div className="flex-shrink-0">
+                <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                  firstTicket.paid 
+                    ? 'bg-green-50 text-green-700 border border-green-200' 
+                    : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+                }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+                  <span className="text-sm">{firstTicket.paid ? '✓' : '⏳'}</span>
+                  <span>{firstTicket.paid ? 'Bezahlt' : 'Ausstehend'}</span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Delivery Section */}
-        <div className="flex items-start justify-between pb-4 mb-4 border-b" style={{ borderColor: 'var(--color-accent-warm)' }}>
-          <div className="flex-1 pr-4">
+        {isMobile ? (
+          <div className="pb-4 mb-4 border-b" style={{ borderColor: 'var(--color-accent-warm)' }}>
             <div className="flex items-center gap-2 mb-2">
               <span className="text-sm" style={{ color: 'var(--color-gold-light)' }}>📦</span>
               <p className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                 {firstTicket.delivery}
               </p>
             </div>
+            {/* Status badge for delivery methods */}
+            <div className="mb-2">
+              {firstTicket.delivery.toLowerCase().includes('versand') ? (
+                <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                  firstTicket.sent 
+                    ? 'bg-green-50 text-green-700 border border-green-200' 
+                    : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+                }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+                  <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
+                  <span>{firstTicket.sent ? 'Versendet' : 'Wird vorbereitet'}</span>
+                </div>
+              ) : (
+                <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                  firstTicket.sent 
+                    ? 'bg-green-50 text-green-700 border border-green-200' 
+                    : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+                }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+                  <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
+                  <span>{firstTicket.sent ? 'Bereit zur Abholung' : 'Wird vorbereitet'}</span>
+                </div>
+              )}
+            </div>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
               {firstTicket.delivery.toLowerCase().includes('versand') 
                 ? (firstTicket.sent 
-                    ? 'Ihre Tickets wurden per Post versendet und sind auf dem Weg zu Ihnen.'
-                    : 'Ihre Tickets werden bald per Post an die angegebene Adresse versendet.')
+                    ? 'Ihre Karten wurden per Post versendet und sind auf dem Weg zu Ihnen.'
+                    : 'Ihre Karten werden bald per Post an die angegebene Adresse versendet.')
                 : (firstTicket.sent
-                    ? 'Ihre Tickets sind bereit zur Abholung am Veranstaltungsort mit dem Abholcode.'
-                    : 'Ihre Tickets werden vorbereitet und können am Veranstaltungsort mit dem Abholcode abgeholt werden.')}
+                    ? 'Ihre Karten sind bereit zur Abholung am Veranstaltungsort mit dem Abholcode.'
+                    : 'Ihre Karten werden vorbereitet und können am Veranstaltungsort mit dem Abholcode abgeholt werden.')}
             </p>
           </div>
-          {/* Status badge for delivery methods */}
-          <div className="flex-shrink-0">
-            {firstTicket.delivery.toLowerCase().includes('versand') ? (
-              <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
-                firstTicket.sent 
-                  ? 'bg-green-50 text-green-700 border border-green-200' 
-                  : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-              }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
-                <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
-                <span>{firstTicket.sent ? 'Versendet' : 'Wird vorbereitet'}</span>
+        ) : (
+          <div className="flex items-start justify-between pb-4 mb-4 border-b" style={{ borderColor: 'var(--color-accent-warm)' }}>
+            <div className="flex-1 pr-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm" style={{ color: 'var(--color-gold-light)' }}>📦</span>
+                <p className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                  {firstTicket.delivery}
+                </p>
               </div>
-            ) : (
-              <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
-                firstTicket.sent 
-                  ? 'bg-green-50 text-green-700 border border-green-200' 
-                  : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-              }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
-                <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
-                <span>{firstTicket.sent ? 'Bereit zur Abholung' : 'Wird vorbereitet'}</span>
-              </div>
-            )}
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                {firstTicket.delivery.toLowerCase().includes('versand') 
+                  ? (firstTicket.sent 
+                      ? 'Ihre Karten wurden per Post versendet und sind auf dem Weg zu Ihnen.'
+                      : 'Ihre Karten werden bald per Post an die angegebene Adresse versendet.')
+                  : (firstTicket.sent
+                      ? 'Ihre Karten sind bereit zur Abholung am Veranstaltungsort mit dem Abholcode.'
+                      : 'Ihre Karten werden vorbereitet und können am Veranstaltungsort mit dem Abholcode abgeholt werden.')}
+              </p>
+            </div>
+            {/* Status badge for delivery methods */}
+            <div className="flex-shrink-0">
+              {firstTicket.delivery.toLowerCase().includes('versand') ? (
+                <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                  firstTicket.sent 
+                    ? 'bg-green-50 text-green-700 border border-green-200' 
+                    : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+                }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+                  <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
+                  <span>{firstTicket.sent ? 'Versendet' : 'Wird vorbereitet'}</span>
+                </div>
+              ) : (
+                <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                  firstTicket.sent 
+                    ? 'bg-green-50 text-green-700 border border-green-200' 
+                    : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+                }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+                  <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
+                  <span>{firstTicket.sent ? 'Bereit zur Abholung' : 'Wird vorbereitet'}</span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Details Dropdown */}
         <div>
@@ -152,7 +224,9 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
             }}>
               <div className="space-y-4">
-                <div className={firstTicket.code && !firstTicket.delivery.toLowerCase().includes('versand') ? "grid grid-cols-2 gap-3" : ""}>
+                <div className={firstTicket.code && !firstTicket.delivery.toLowerCase().includes('versand') 
+                  ? (isMobile ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-3")
+                  : ""}>
                   <div className="p-3 rounded-lg border" style={{ 
                     background: 'var(--color-bg-card)',
                     borderColor: 'var(--color-accent-warm)'
@@ -204,41 +278,83 @@ function OrderCard({ orderTickets }: { orderTickets: Array<{
                     Preisaufstellung
                   </p>
                   <div className="space-y-2">
-                    <div className="flex justify-between items-center py-2 px-3 rounded-lg border" style={{ 
-                      background: 'var(--color-bg-card)',
-                      borderColor: 'var(--color-accent-warm)'
-                    }}>
-                      <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                        Ticket × {ticketCount}
-                      </span>
-                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                        {ticketPrice.toFixed(2)}€ × {ticketCount}
-                      </span>
-                    </div>
-                    {shippingFee > 0 && (
+                    {isMobile ? (
+                      <div className="py-2 px-3 rounded-lg border" style={{ 
+                        background: 'var(--color-bg-card)',
+                        borderColor: 'var(--color-accent-warm)'
+                      }}>
+                        <div className="text-sm mb-1" style={{ color: 'var(--color-text-secondary)' }}>
+                          Karte × {ticketCount}
+                        </div>
+                        <div className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                          {ticketPrice.toFixed(2)}€ × {ticketCount}
+                        </div>
+                      </div>
+                    ) : (
                       <div className="flex justify-between items-center py-2 px-3 rounded-lg border" style={{ 
                         background: 'var(--color-bg-card)',
                         borderColor: 'var(--color-accent-warm)'
                       }}>
                         <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                          Versandkosten
+                          Karte × {ticketCount}
                         </span>
                         <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                          {shippingFee.toFixed(2)}€
+                          {ticketPrice.toFixed(2)}€ × {ticketCount}
                         </span>
                       </div>
                     )}
-                    <div className="flex justify-between items-center py-2.5 px-3 rounded-lg border-2 mt-3" style={{ 
-                      background: 'var(--color-bg-card)',
-                      borderColor: 'var(--color-gold-light)'
-                    }}>
-                      <span className="text-sm font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-primary)' }}>
-                        Gesamt
-                      </span>
-                      <span className="text-base font-bold" style={{ color: 'var(--color-gold-light)' }}>
-                        {totalPaid.toFixed(2)}€
-                      </span>
-                    </div>
+                    {shippingFee > 0 && (
+                      isMobile ? (
+                        <div className="py-2 px-3 rounded-lg border" style={{ 
+                          background: 'var(--color-bg-card)',
+                          borderColor: 'var(--color-accent-warm)'
+                        }}>
+                          <div className="text-sm mb-1" style={{ color: 'var(--color-text-secondary)' }}>
+                            Versandkosten
+                          </div>
+                          <div className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                            {shippingFee.toFixed(2)}€
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex justify-between items-center py-2 px-3 rounded-lg border" style={{ 
+                          background: 'var(--color-bg-card)',
+                          borderColor: 'var(--color-accent-warm)'
+                        }}>
+                          <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                            Versandkosten
+                          </span>
+                          <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                            {shippingFee.toFixed(2)}€
+                          </span>
+                        </div>
+                      )
+                    )}
+                    {isMobile ? (
+                      <div className="py-2.5 px-3 rounded-lg border-2 mt-3" style={{ 
+                        background: 'var(--color-bg-card)',
+                        borderColor: 'var(--color-gold-light)'
+                      }}>
+                        <div className="text-sm font-bold uppercase tracking-wide mb-1" style={{ color: 'var(--color-text-primary)' }}>
+                          Gesamt
+                        </div>
+                        <div className="text-base font-bold" style={{ color: 'var(--color-gold-light)' }}>
+                          {totalPaid.toFixed(2)}€
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex justify-between items-center py-2.5 px-3 rounded-lg border-2 mt-3" style={{ 
+                        background: 'var(--color-bg-card)',
+                        borderColor: 'var(--color-gold-light)'
+                      }}>
+                        <span className="text-sm font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-primary)' }}>
+                          Gesamt
+                        </span>
+                        <span className="text-base font-bold" style={{ color: 'var(--color-gold-light)' }}>
+                          {totalPaid.toFixed(2)}€
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -255,6 +371,20 @@ export default function BuyerPage() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPurchaseFlow, setShowPurchaseFlow] = useState(false);
+  const [isMobile, setIsMobile] = useState(true); // Default to true to prevent flash on mobile
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Check immediately on mount
+    if (typeof window !== 'undefined') {
+      checkMobile();
+      window.addEventListener('resize', checkMobile);
+      return () => window.removeEventListener('resize', checkMobile);
+    }
+  }, []);
 
   // Fetch user's purchased tickets
   const { data: userTickets  } = api.ticket.getUserTickets.useQuery(
@@ -326,12 +456,14 @@ export default function BuyerPage() {
             </Link>
           </div>
           <div className="flex items-center">
-            <Link
-              href="/"
-              className="btn btn-secondary"
-            >
-              Zurück zur Startseite
-            </Link>
+            {!isMobile && (
+              <Link
+                href="/"
+                className="btn btn-secondary"
+              >
+                Zurück zur Startseite
+              </Link>
+            )}
           </div>
         </header>
         <div className="flex items-center justify-center min-h-[60vh]">
@@ -366,12 +498,14 @@ export default function BuyerPage() {
               </Link>
             </div>
             <div className="flex items-center gap-4">
-              <button
-                onClick={() => setShowPurchaseFlow(false)}
-                className="btn btn-secondary"
-              >
-                Zurück zum Dashboard
-              </button>
+              {!isMobile && (
+                <button
+                  onClick={() => setShowPurchaseFlow(false)}
+                  className="btn btn-secondary"
+                >
+                  Zurück zum Dashboard
+                </button>
+              )}
               <button
                 onClick={() => signOut()}
                 className="btn btn-secondary"
@@ -409,12 +543,14 @@ export default function BuyerPage() {
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="btn btn-secondary"
-            >
-              Zurück zur Startseite
-            </Link>
+            {!isMobile && (
+              <Link
+                href="/"
+                className="btn btn-secondary"
+              >
+                Zurück zur Startseite
+              </Link>
+            )}
             <button
               onClick={() => signOut()}
               className="btn btn-secondary"
@@ -427,7 +563,7 @@ export default function BuyerPage() {
         <section className="max-w-4xl mx-auto px-6 py-12">
           <div className="card">
             <h1 className="text-4xl font-bold mb-6 gradient-text text-center">
-              Ticket Dashboard
+              Karten Dashboard
             </h1>
             <div className="text-center mb-8">
               <p className="text-lg mb-2" style={{ color: 'var(--color-text-secondary)' }}>
@@ -442,7 +578,7 @@ export default function BuyerPage() {
             {cancelled && (
               <div className="mb-6 p-4 rounded-lg" style={{ background: 'var(--color-warning)', color: 'white' }}>
                 <p className="text-center">
-                  Die Zahlung wurde abgebrochen. Sie können jederzeit erneut versuchen, Tickets zu kaufen.
+                  Die Zahlung wurde abgebrochen. Sie können jederzeit erneut versuchen, Karten zu kaufen.
                 </p>
               </div>
             )}
@@ -453,36 +589,67 @@ export default function BuyerPage() {
                 borderColor: 'var(--color-warning)',
                 background: 'var(--color-bg-accent)'
               }}>
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex-1">
+                {isMobile ? (
+                  <div>
                     <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
                       Ausstehende Zahlung
                     </h3>
-                    <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                      Sie haben unbezahlte Tickets. Klicken Sie auf den Button, um die Zahlung erneut zu versuchen.
+                    <p className="text-sm mb-4" style={{ color: 'var(--color-text-secondary)' }}>
+                      Sie haben unbezahlte Karten. Klicken Sie auf den Button, um die Zahlung erneut zu versuchen.
                     </p>
+                    <button
+                      onClick={() => {
+                        retryPayment.mutate(undefined, {
+                          onSuccess: (data) => {
+                            if (data.checkoutUrl) {
+                              window.location.href = data.checkoutUrl;
+                            }
+                          },
+                          onError: (error) => {
+                            console.error("Retry payment error:", error);
+                            alert("Fehler beim Erstellen der Zahlungsseite: " + error.message);
+                          },
+                        });
+                      }}
+                      disabled={retryPayment.isPending}
+                      className="btn btn-primary w-full"
+                      style={{ opacity: retryPayment.isPending ? 0.6 : 1 }}
+                    >
+                      {retryPayment.isPending ? "Wird vorbereitet..." : "Zahlung erneut versuchen"}
+                    </button>
                   </div>
-                  <button
-                    onClick={() => {
-                      retryPayment.mutate(undefined, {
-                        onSuccess: (data) => {
-                          if (data.checkoutUrl) {
-                            window.location.href = data.checkoutUrl;
-                          }
-                        },
-                        onError: (error) => {
-                          console.error("Retry payment error:", error);
-                          alert("Fehler beim Erstellen der Zahlungsseite: " + error.message);
-                        },
-                      });
-                    }}
-                    disabled={retryPayment.isPending}
-                    className="btn btn-primary flex-shrink-0"
-                    style={{ opacity: retryPayment.isPending ? 0.6 : 1 }}
-                  >
-                    {retryPayment.isPending ? "Wird vorbereitet..." : "Zahlung erneut versuchen"}
-                  </button>
-                </div>
+                ) : (
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                        Ausstehende Zahlung
+                      </h3>
+                      <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                        Sie haben unbezahlte Karten. Klicken Sie auf den Button, um die Zahlung erneut zu versuchen.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        retryPayment.mutate(undefined, {
+                          onSuccess: (data) => {
+                            if (data.checkoutUrl) {
+                              window.location.href = data.checkoutUrl;
+                            }
+                          },
+                          onError: (error) => {
+                            console.error("Retry payment error:", error);
+                            alert("Fehler beim Erstellen der Zahlungsseite: " + error.message);
+                          },
+                        });
+                      }}
+                      disabled={retryPayment.isPending}
+                      className="btn btn-primary flex-shrink-0"
+                      style={{ opacity: retryPayment.isPending ? 0.6 : 1 }}
+                    >
+                      {retryPayment.isPending ? "Wird vorbereitet..." : "Zahlung erneut versuchen"}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -503,11 +670,11 @@ export default function BuyerPage() {
               return (
                 <div className="mb-8">
                   <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                    Ihre Tickets
+                    Ihre Karten
                   </h2>
                   <div className="space-y-4">
                     {orders.map((orderTickets) => (
-                      <OrderCard key={orderTickets[0]!.code || orderTickets[0]!.id} orderTickets={orderTickets} />
+                      <OrderCard key={orderTickets[0]!.code || orderTickets[0]!.id} orderTickets={orderTickets} isMobile={isMobile} />
                     ))}
                   </div>
                 </div>
@@ -521,7 +688,7 @@ export default function BuyerPage() {
                 border: '1px solid var(--color-accent-warm)'
               }}>
                 <p className="text-lg" style={{ color: 'var(--color-text-secondary)' }}>
-                  Sie haben noch keine Tickets gekauft.
+                  Sie haben noch keine Karten gekauft.
                 </p>
               </div>
             )}
@@ -533,31 +700,34 @@ export default function BuyerPage() {
               }}>
                 {hasTicketSaleStarted ? (
                   <div className="text-center">
-                    <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
-                      Ticketverkauf ist gestartet!
+                    <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)', letterSpacing: isMobile ? '0.04em' : '0.08em' }}>
+                      Kartenverkauf ist gestartet!
                     </h2>
                     <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-                      Sichern Sie sich jetzt Ihre Tickets für einen unvergesslichen Abend im DUNE-Stil!
+                      Sichern Sie sich jetzt Ihre Karten für einen unvergesslichen Abend im DUNE-Stil!
                     </p>
                     <button 
                       onClick={() => setShowPurchaseFlow(true)}
                       className="btn btn-primary"
                     >
-                      Jetzt Tickets kaufen
+                      Jetzt Karten kaufen
                     </button>
                   </div>
                 ) : (
                   <>
-                    <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
-                      Ticketverkauf startet bald
+                    <h2 className="text-2xl font-semibold mb-4" style={{ 
+                      color: 'var(--color-gold-light)',
+                      letterSpacing: isMobile ? '0.04em' : '0.08em'
+                    }}>
+                      Kartenverkauf startet bald
                     </h2>
                     {currentUser?.group?.name === "Absolventen" ? (
                       <p className="text-base px-1" style={{ color: 'var(--color-text-secondary)' }}>
-                        Der Absolventen Ticketverkauf für den HTL Ball 2026 startet am {env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE) : 'bald'}.
+                        Der Absolventen Kartenverkauf für den HTL Ball 2026 startet am {env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE) : 'bald'}.
                       </p>
                     ) : (
                       <p className="text-base px-1" style={{ color: 'var(--color-text-secondary)' }}>
-                        Der öffentliche Ticketverkauf für den HTL Ball 2026 startet am {env.NEXT_PUBLIC_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_TICKET_SALE_DATE) : 'bald'}.
+                        Der öffentliche Kartenverkauf für den HTL Ball 2026 startet am {env.NEXT_PUBLIC_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_TICKET_SALE_DATE) : 'bald'}.
                       </p>
                     )}
                   </>
@@ -588,12 +758,14 @@ export default function BuyerPage() {
           </Link>
         </div>
         <div className="flex items-center">
-          <Link
-            href="/"
-            className="btn btn-secondary"
-          >
-            Zurück zur Startseite
-          </Link>
+          {!isMobile && (
+            <Link
+              href="/"
+              className="btn btn-secondary"
+            >
+              Zurück zur Startseite
+            </Link>
+          )}
         </div>
       </header>
 
@@ -603,7 +775,7 @@ export default function BuyerPage() {
             Anmelden
           </h1>
           <p className="text-center mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-          Melden Sie sich an, um Ihre Tickets zu sehen oder neue zu kaufen.
+          Melden Sie sich an, um Ihre Karten zu sehen oder neue zu kaufen.
           </p>          
           <form onSubmit={handleSignIn} className="space-y-6">
             <div>

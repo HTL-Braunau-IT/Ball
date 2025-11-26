@@ -22,7 +22,7 @@ export default function Footer() {
       }}
     >
       <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+        <div className="flex flex-row items-center justify-center gap-4 sm:gap-6">
           <Link
             href="/impressum"
             className="text-sm hover:underline transition-all"
@@ -31,7 +31,7 @@ export default function Footer() {
             Impressum
           </Link>
           <span
-            className="hidden sm:inline text-sm"
+            className="text-sm"
             style={{ color: "var(--color-text-muted)" }}
           >
             |
@@ -44,7 +44,7 @@ export default function Footer() {
             DSGVO
           </Link>
           <span
-            className="hidden sm:inline text-sm"
+            className="text-sm"
             style={{ color: "var(--color-text-muted)" }}
           >
             |

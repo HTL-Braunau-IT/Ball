@@ -63,7 +63,7 @@ function SuccessPageContent() {
               Keine gültige Sitzungs-ID gefunden.
             </p>
             <Link href="/buyer" className="btn btn-primary">
-              Zurück zum Ticketverkauf
+              Zurück zum Kartenverkauf
             </Link>
           </div>
         </section>
@@ -136,7 +136,7 @@ function SuccessPageContent() {
               {confirmPayment.error.message}
             </p>
             <Link href="/buyer" className="btn btn-primary">
-              Zurück zum Ticketverkauf
+              Zurück zum Kartenverkauf
             </Link>
           </div>
         </section>
@@ -199,25 +199,25 @@ function SuccessPageContent() {
               Bestelldetails
             </h2>
             
-            <div className="space-y-3 text-left pt-4">
-              <div className="flex justify-between">
-                <span style={{ color: "var(--color-text-secondary)" }}>Name:</span>
-                <span style={{ color: "var(--color-text-primary)" }}>{soldTicket.buyer.name}</span>
+            <div className="space-y-4 text-left pt-4">
+              <div>
+                <div style={{ color: "var(--color-text-secondary)", marginBottom: "0.5rem" }}>Name:</div>
+                <div style={{ color: "var(--color-text-primary)", fontWeight: "500" }}>{soldTicket.buyer.name}</div>
               </div>
               
-              <div className="flex justify-between">
-                <span style={{ color: "var(--color-text-secondary)" }}>E-Mail:</span>
-                <span style={{ color: "var(--color-text-primary)" }}>{soldTicket.buyer.email}</span>
+              <div>
+                <div style={{ color: "var(--color-text-secondary)", marginBottom: "0.5rem" }}>E-Mail:</div>
+                <div style={{ color: "var(--color-text-primary)", fontWeight: "500" }}>{soldTicket.buyer.email}</div>
               </div>
               
-              <div className="flex justify-between">
-                <span style={{ color: "var(--color-text-secondary)" }}>Telefon:</span>
-                <span style={{ color: "var(--color-text-primary)" }}>{soldTicket.buyer.phone}</span>
+              <div>
+                <div style={{ color: "var(--color-text-secondary)", marginBottom: "0.5rem" }}>Telefon:</div>
+                <div style={{ color: "var(--color-text-primary)", fontWeight: "500" }}>{soldTicket.buyer.phone}</div>
               </div>
               
-              <div className="flex justify-between">
-                <span style={{ color: "var(--color-text-secondary)" }}>Versandart:</span>
-                <span style={{ color: "var(--color-text-primary)" }}>{soldTicket.delivery}</span>
+              <div>
+                <div style={{ color: "var(--color-text-secondary)", marginBottom: "0.5rem" }}>Versandart:</div>
+                <div style={{ color: "var(--color-text-primary)", fontWeight: "500" }}>{soldTicket.delivery}</div>
               </div>
 
               {isSelfPickup && soldTicket.code && (
@@ -236,10 +236,8 @@ function SuccessPageContent() {
 
               {!isSelfPickup && (
                 <div className="mt-4">
-                  <div className="flex justify-between">
-                    <span style={{ color: "var(--color-text-secondary)" }}>Lieferadresse:</span>
-                  </div>
-                  <div className="text-right" style={{ color: "var(--color-text-primary)" }}>
+                  <div style={{ color: "var(--color-text-secondary)", marginBottom: "0.5rem" }}>Lieferadresse:</div>
+                  <div style={{ color: "var(--color-text-primary)", fontWeight: "500" }}>
                     <div>{soldTicket.buyer.address}</div>
                     <div>{soldTicket.buyer.postal} {soldTicket.buyer.city}</div>
                     <div>{soldTicket.buyer.country}</div>
@@ -264,7 +262,7 @@ function SuccessPageContent() {
               </ul>
             ) : (
               <ul className="space-y-2" style={{ color: "var(--color-text-secondary)" }}>
-                <li>• Ihre Tickets werden in den nächsten Tagen versendet</li>
+                <li>• Ihre Karten werden in den nächsten Tagen versendet</li>
                 <li>• Sie erhalten eine Versandbestätigung per E-Mail</li>
                 <li>• Bei Fragen wenden Sie sich an: ball@htl-braunau.at</li>
               </ul>
