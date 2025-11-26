@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -255,6 +255,17 @@ export default function BuyerPage() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPurchaseFlow, setShowPurchaseFlow] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Fetch user's purchased tickets
   const { data: userTickets  } = api.ticket.getUserTickets.useQuery(
@@ -326,12 +337,14 @@ export default function BuyerPage() {
             </Link>
           </div>
           <div className="flex items-center">
-            <Link
-              href="/"
-              className="btn btn-secondary"
-            >
-              Zurück zur Startseite
-            </Link>
+            {!isMobile && (
+              <Link
+                href="/"
+                className="btn btn-secondary"
+              >
+                Zurück zur Startseite
+              </Link>
+            )}
           </div>
         </header>
         <div className="flex items-center justify-center min-h-[60vh]">
@@ -409,12 +422,14 @@ export default function BuyerPage() {
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="btn btn-secondary"
-            >
-              Zurück zur Startseite
-            </Link>
+            {!isMobile && (
+              <Link
+                href="/"
+                className="btn btn-secondary"
+              >
+                Zurück zur Startseite
+              </Link>
+            )}
             <button
               onClick={() => signOut()}
               className="btn btn-secondary"
@@ -588,12 +603,14 @@ export default function BuyerPage() {
           </Link>
         </div>
         <div className="flex items-center">
-          <Link
-            href="/"
-            className="btn btn-secondary"
-          >
-            Zurück zur Startseite
-          </Link>
+          {!isMobile && (
+            <Link
+              href="/"
+              className="btn btn-secondary"
+            >
+              Zurück zur Startseite
+            </Link>
+          )}
         </div>
       </header>
 
