@@ -129,7 +129,7 @@ export default async function Home() {
             {/* Countdown or Sale Active */}
             {salesEnabled && (
                 <div className="w-full max-w-2xl">
-                <div className="flex flex-row gap-8 items-center justify-center">
+                <div className="flex flex-col md:flex-row gap-8 items-center justify-center">
 
                   {/* Regular Ticket Sale Countdown */}
                   <div className="flex-1">
