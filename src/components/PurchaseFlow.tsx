@@ -165,7 +165,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                           +{((shippingDeliveryMethod.surcharge ?? 0) / 100).toFixed(2)}€
                         </p>
                         <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
-                          Tickets werden an Ihre Adresse versendet
+                          Karten werden an Ihre Adresse versendet
                         </p>
                         <p className="text-xs font-medium mt-1" style={{ color: "var(--color-text-secondary)" }}>
                           Keine Haftung bei Verlust per Postversand.
@@ -178,7 +178,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                             Versand
                           </h3>
                           <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
-                            Tickets werden an Ihre Adresse versendet
+                            Karten werden an Ihre Adresse versendet
                           </p>
                           <p className="text-xs font-medium mt-1 px-0.5" style={{ color: "var(--color-text-secondary)" }}>
                             Keine Haftung bei Verlust per Postversand.
@@ -212,7 +212,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                           Kostenlos
                         </p>
                         <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
-                          Tickets werden vor Ort abgeholt
+                          Karten werden vor Ort abgeholt
                         </p>
                         {env.NEXT_PUBLIC_PICKUP_DATE_1 && env.NEXT_PUBLIC_PICKUP_DATE_2 && (
                           <div className="text-sm mt-1" style={{ color: "var(--color-text-secondary)" }}>
@@ -267,7 +267,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                             Selbstabholung
                           </h3>
                           <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
-                            Tickets werden vor Ort abgeholt
+                            Karten werden vor Ort abgeholt
                           </p>
                           {env.NEXT_PUBLIC_PICKUP_DATE_1 && env.NEXT_PUBLIC_PICKUP_DATE_2 && (
                             <div className="text-sm mt-1" style={{ color: "var(--color-text-secondary)" }}>
@@ -577,7 +577,7 @@ function QuantitySelection({
     return (
       <div className="card text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-4 border-t-transparent mx-auto mb-4" style={{ borderColor: "var(--color-accent-warm)", borderTopColor: "var(--color-gold-light)" }} />
-        <p style={{ color: "var(--color-text-secondary)" }}>Tickets werden geladen...</p>
+        <p style={{ color: "var(--color-text-secondary)" }}>Karten werden geladen...</p>
       </div>
     );
   }
@@ -592,10 +592,10 @@ function QuantitySelection({
             </svg>
           </div>
           <h2 className="text-2xl font-semibold mb-2" style={{ color: "var(--color-text-primary)" }}>
-            Keine Tickets verfügbar
+            Keine Karten verfügbar
           </h2>
           <p className="text-lg" style={{ color: "var(--color-text-secondary)" }}>
-            Derzeit sind keine Tickets zum Verkauf verfügbar.
+            Derzeit sind keine Karten zum Verkauf verfügbar.
           </p>
         </div>
         <button onClick={onBack} className="btn btn-secondary mt-4">
@@ -612,7 +612,7 @@ function QuantitySelection({
   return (
     <div className="card">
       <h2 className="text-2xl font-semibold gradient-text text-center" style={{ marginBottom: '2rem' }}>
-        Anzahl der Tickets wählen
+        Anzahl der Karten wählen
       </h2>
     
 
@@ -720,7 +720,7 @@ function QuantitySelection({
 
       {availableAmount < maxQuantity && (
         <p className="text-sm text-center mb-4" style={{ color: "var(--color-text-muted)" }}>
-          Nur {availableAmount} {availableAmount === 1 ? "Ticket" : "Tickets"} verfügbar
+          Nur {availableAmount} {availableAmount === 1 ? "Karte" : "Karten"} verfügbar
         </p>
       )}
 
@@ -767,7 +767,7 @@ function PaymentSummary({
 
       <div className="space-y-4 mb-6">
         <div className="flex justify-between">
-          <span style={{ color: "var(--color-text-primary)" }}>Ticket × {quantity}</span>
+          <span style={{ color: "var(--color-text-primary)" }}>Karte × {quantity}</span>
           <span style={{ color: "var(--color-text-primary)" }}>{selectedTicket.price}€ × {quantity}</span>
         </div>
         

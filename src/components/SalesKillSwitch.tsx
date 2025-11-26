@@ -34,7 +34,7 @@ export default function SalesKillSwitch() {
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            Ticketverkauf Status
+            Kartenverkauf Status
           </h3>
           <p className="text-sm text-gray-600 mb-1">
             Aktueller Status:{" "}
@@ -48,8 +48,8 @@ export default function SalesKillSwitch() {
           </p>
           <p className="text-xs text-gray-500">
             {salesEnabled
-              ? "Tickets können derzeit gekauft werden."
-              : "Der Ticketverkauf ist derzeit deaktiviert. Keine neuen Käufe möglich."}
+              ? "Karten können derzeit gekauft werden."
+              : "Der Kartenverkauf ist derzeit deaktiviert. Keine neuen Käufe möglich."}
           </p>
         </div>
         <button

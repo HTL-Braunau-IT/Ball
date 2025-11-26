@@ -63,7 +63,7 @@ function SuccessPageContent() {
               Keine gültige Sitzungs-ID gefunden.
             </p>
             <Link href="/buyer" className="btn btn-primary">
-              Zurück zum Ticketverkauf
+              Zurück zum Kartenverkauf
             </Link>
           </div>
         </section>
@@ -136,7 +136,7 @@ function SuccessPageContent() {
               {confirmPayment.error.message}
             </p>
             <Link href="/buyer" className="btn btn-primary">
-              Zurück zum Ticketverkauf
+              Zurück zum Kartenverkauf
             </Link>
           </div>
         </section>
@@ -262,7 +262,7 @@ function SuccessPageContent() {
               </ul>
             ) : (
               <ul className="space-y-2" style={{ color: "var(--color-text-secondary)" }}>
-                <li>• Ihre Tickets werden in den nächsten Tagen versendet</li>
+                <li>• Ihre Karten werden in den nächsten Tagen versendet</li>
                 <li>• Sie erhalten eine Versandbestätigung per E-Mail</li>
                 <li>• Bei Fragen wenden Sie sich an: ball@htl-braunau.at</li>
               </ul>

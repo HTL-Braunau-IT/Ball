@@ -153,11 +153,11 @@ function OrderCard({ orderTickets, isMobile }: { orderTickets: Array<{
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
               {firstTicket.delivery.toLowerCase().includes('versand') 
                 ? (firstTicket.sent 
-                    ? 'Ihre Tickets wurden per Post versendet und sind auf dem Weg zu Ihnen.'
-                    : 'Ihre Tickets werden bald per Post an die angegebene Adresse versendet.')
+                    ? 'Ihre Karten wurden per Post versendet und sind auf dem Weg zu Ihnen.'
+                    : 'Ihre Karten werden bald per Post an die angegebene Adresse versendet.')
                 : (firstTicket.sent
-                    ? 'Ihre Tickets sind bereit zur Abholung am Veranstaltungsort mit dem Abholcode.'
-                    : 'Ihre Tickets werden vorbereitet und können am Veranstaltungsort mit dem Abholcode abgeholt werden.')}
+                    ? 'Ihre Karten sind bereit zur Abholung am Veranstaltungsort mit dem Abholcode.'
+                    : 'Ihre Karten werden vorbereitet und können am Veranstaltungsort mit dem Abholcode abgeholt werden.')}
             </p>
           </div>
         ) : (
@@ -172,11 +172,11 @@ function OrderCard({ orderTickets, isMobile }: { orderTickets: Array<{
               <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
                 {firstTicket.delivery.toLowerCase().includes('versand') 
                   ? (firstTicket.sent 
-                      ? 'Ihre Tickets wurden per Post versendet und sind auf dem Weg zu Ihnen.'
-                      : 'Ihre Tickets werden bald per Post an die angegebene Adresse versendet.')
+                      ? 'Ihre Karten wurden per Post versendet und sind auf dem Weg zu Ihnen.'
+                      : 'Ihre Karten werden bald per Post an die angegebene Adresse versendet.')
                   : (firstTicket.sent
-                      ? 'Ihre Tickets sind bereit zur Abholung am Veranstaltungsort mit dem Abholcode.'
-                      : 'Ihre Tickets werden vorbereitet und können am Veranstaltungsort mit dem Abholcode abgeholt werden.')}
+                      ? 'Ihre Karten sind bereit zur Abholung am Veranstaltungsort mit dem Abholcode.'
+                      : 'Ihre Karten werden vorbereitet und können am Veranstaltungsort mit dem Abholcode abgeholt werden.')}
               </p>
             </div>
             {/* Status badge for delivery methods */}
@@ -284,7 +284,7 @@ function OrderCard({ orderTickets, isMobile }: { orderTickets: Array<{
                         borderColor: 'var(--color-accent-warm)'
                       }}>
                         <div className="text-sm mb-1" style={{ color: 'var(--color-text-secondary)' }}>
-                          Ticket × {ticketCount}
+                          Karte × {ticketCount}
                         </div>
                         <div className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
                           {ticketPrice.toFixed(2)}€ × {ticketCount}
@@ -296,7 +296,7 @@ function OrderCard({ orderTickets, isMobile }: { orderTickets: Array<{
                         borderColor: 'var(--color-accent-warm)'
                       }}>
                         <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                          Ticket × {ticketCount}
+                          Karte × {ticketCount}
                         </span>
                         <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
                           {ticketPrice.toFixed(2)}€ × {ticketCount}
@@ -625,7 +625,7 @@ export default function BuyerPage() {
                         Ausstehende Zahlung
                       </h3>
                       <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                        Sie haben unbezahlte Tickets. Klicken Sie auf den Button, um die Zahlung erneut zu versuchen.
+                        Sie haben unbezahlte Karten. Klicken Sie auf den Button, um die Zahlung erneut zu versuchen.
                       </p>
                     </div>
                     <button
@@ -670,7 +670,7 @@ export default function BuyerPage() {
               return (
                 <div className="mb-8">
                   <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                    Ihre Tickets
+                    Ihre Karten
                   </h2>
                   <div className="space-y-4">
                     {orders.map((orderTickets) => (

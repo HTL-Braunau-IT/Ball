@@ -60,7 +60,7 @@ export default function Countdown({
             button.style.opacity = '1';
             button.style.cursor = 'pointer';
             button.style.pointerEvents = 'auto';
-            button.title = 'Jetzt Tickets kaufen!';
+            button.title = 'Jetzt Karten kaufen!';
           }
         }
       }
