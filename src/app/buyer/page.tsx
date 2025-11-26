@@ -473,36 +473,67 @@ export default function BuyerPage() {
                 borderColor: 'var(--color-warning)',
                 background: 'var(--color-bg-accent)'
               }}>
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex-1">
+                {isMobile ? (
+                  <div>
                     <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
                       Ausstehende Zahlung
                     </h3>
-                    <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                    <p className="text-sm mb-4" style={{ color: 'var(--color-text-secondary)' }}>
                       Sie haben unbezahlte Tickets. Klicken Sie auf den Button, um die Zahlung erneut zu versuchen.
                     </p>
+                    <button
+                      onClick={() => {
+                        retryPayment.mutate(undefined, {
+                          onSuccess: (data) => {
+                            if (data.checkoutUrl) {
+                              window.location.href = data.checkoutUrl;
+                            }
+                          },
+                          onError: (error) => {
+                            console.error("Retry payment error:", error);
+                            alert("Fehler beim Erstellen der Zahlungsseite: " + error.message);
+                          },
+                        });
+                      }}
+                      disabled={retryPayment.isPending}
+                      className="btn btn-primary w-full"
+                      style={{ opacity: retryPayment.isPending ? 0.6 : 1 }}
+                    >
+                      {retryPayment.isPending ? "Wird vorbereitet..." : "Zahlung erneut versuchen"}
+                    </button>
                   </div>
-                  <button
-                    onClick={() => {
-                      retryPayment.mutate(undefined, {
-                        onSuccess: (data) => {
-                          if (data.checkoutUrl) {
-                            window.location.href = data.checkoutUrl;
-                          }
-                        },
-                        onError: (error) => {
-                          console.error("Retry payment error:", error);
-                          alert("Fehler beim Erstellen der Zahlungsseite: " + error.message);
-                        },
-                      });
-                    }}
-                    disabled={retryPayment.isPending}
-                    className="btn btn-primary flex-shrink-0"
-                    style={{ opacity: retryPayment.isPending ? 0.6 : 1 }}
-                  >
-                    {retryPayment.isPending ? "Wird vorbereitet..." : "Zahlung erneut versuchen"}
-                  </button>
-                </div>
+                ) : (
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                        Ausstehende Zahlung
+                      </h3>
+                      <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                        Sie haben unbezahlte Tickets. Klicken Sie auf den Button, um die Zahlung erneut zu versuchen.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        retryPayment.mutate(undefined, {
+                          onSuccess: (data) => {
+                            if (data.checkoutUrl) {
+                              window.location.href = data.checkoutUrl;
+                            }
+                          },
+                          onError: (error) => {
+                            console.error("Retry payment error:", error);
+                            alert("Fehler beim Erstellen der Zahlungsseite: " + error.message);
+                          },
+                        });
+                      }}
+                      disabled={retryPayment.isPending}
+                      className="btn btn-primary flex-shrink-0"
+                      style={{ opacity: retryPayment.isPending ? 0.6 : 1 }}
+                    >
+                      {retryPayment.isPending ? "Wird vorbereitet..." : "Zahlung erneut versuchen"}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
