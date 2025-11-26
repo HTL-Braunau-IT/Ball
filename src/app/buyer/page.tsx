@@ -278,41 +278,83 @@ function OrderCard({ orderTickets, isMobile }: { orderTickets: Array<{
                     Preisaufstellung
                   </p>
                   <div className="space-y-2">
-                    <div className="flex justify-between items-center py-2 px-3 rounded-lg border" style={{ 
-                      background: 'var(--color-bg-card)',
-                      borderColor: 'var(--color-accent-warm)'
-                    }}>
-                      <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                        Ticket × {ticketCount}
-                      </span>
-                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                        {ticketPrice.toFixed(2)}€ × {ticketCount}
-                      </span>
-                    </div>
-                    {shippingFee > 0 && (
+                    {isMobile ? (
+                      <div className="py-2 px-3 rounded-lg border" style={{ 
+                        background: 'var(--color-bg-card)',
+                        borderColor: 'var(--color-accent-warm)'
+                      }}>
+                        <div className="text-sm mb-1" style={{ color: 'var(--color-text-secondary)' }}>
+                          Ticket × {ticketCount}
+                        </div>
+                        <div className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                          {ticketPrice.toFixed(2)}€ × {ticketCount}
+                        </div>
+                      </div>
+                    ) : (
                       <div className="flex justify-between items-center py-2 px-3 rounded-lg border" style={{ 
                         background: 'var(--color-bg-card)',
                         borderColor: 'var(--color-accent-warm)'
                       }}>
                         <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                          Versandkosten
+                          Ticket × {ticketCount}
                         </span>
                         <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                          {shippingFee.toFixed(2)}€
+                          {ticketPrice.toFixed(2)}€ × {ticketCount}
                         </span>
                       </div>
                     )}
-                    <div className="flex justify-between items-center py-2.5 px-3 rounded-lg border-2 mt-3" style={{ 
-                      background: 'var(--color-bg-card)',
-                      borderColor: 'var(--color-gold-light)'
-                    }}>
-                      <span className="text-sm font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-primary)' }}>
-                        Gesamt
-                      </span>
-                      <span className="text-base font-bold" style={{ color: 'var(--color-gold-light)' }}>
-                        {totalPaid.toFixed(2)}€
-                      </span>
-                    </div>
+                    {shippingFee > 0 && (
+                      isMobile ? (
+                        <div className="py-2 px-3 rounded-lg border" style={{ 
+                          background: 'var(--color-bg-card)',
+                          borderColor: 'var(--color-accent-warm)'
+                        }}>
+                          <div className="text-sm mb-1" style={{ color: 'var(--color-text-secondary)' }}>
+                            Versandkosten
+                          </div>
+                          <div className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                            {shippingFee.toFixed(2)}€
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex justify-between items-center py-2 px-3 rounded-lg border" style={{ 
+                          background: 'var(--color-bg-card)',
+                          borderColor: 'var(--color-accent-warm)'
+                        }}>
+                          <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                            Versandkosten
+                          </span>
+                          <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                            {shippingFee.toFixed(2)}€
+                          </span>
+                        </div>
+                      )
+                    )}
+                    {isMobile ? (
+                      <div className="py-2.5 px-3 rounded-lg border-2 mt-3" style={{ 
+                        background: 'var(--color-bg-card)',
+                        borderColor: 'var(--color-gold-light)'
+                      }}>
+                        <div className="text-sm font-bold uppercase tracking-wide mb-1" style={{ color: 'var(--color-text-primary)' }}>
+                          Gesamt
+                        </div>
+                        <div className="text-base font-bold" style={{ color: 'var(--color-gold-light)' }}>
+                          {totalPaid.toFixed(2)}€
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex justify-between items-center py-2.5 px-3 rounded-lg border-2 mt-3" style={{ 
+                        background: 'var(--color-bg-card)',
+                        borderColor: 'var(--color-gold-light)'
+                      }}>
+                        <span className="text-sm font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-primary)' }}>
+                          Gesamt
+                        </span>
+                        <span className="text-base font-bold" style={{ color: 'var(--color-gold-light)' }}>
+                          {totalPaid.toFixed(2)}€
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
