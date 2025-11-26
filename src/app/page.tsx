@@ -151,6 +151,7 @@ export default async function Home() {
                         title="Countdown bis zum öffentlichen Ticketverkauf"
                         completedTitle="Ticketverkauf gestartet!"
                         completedMessage="Jetzt können Sie Ihre Tickets kaufen"
+                        titleClassName="pt-4 md:pt-0"
                       />
                     )}
                   </div>
@@ -177,6 +178,7 @@ export default async function Home() {
                             title="Countdown bis zum Absolventen Vorverkauf"
                             completedTitle="Vorverkauf gestartet!"
                             completedMessage=""
+                            titleClassName="pt-4 md:pt-0"
                           />
                         )}
                       </div>

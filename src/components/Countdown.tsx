@@ -8,6 +8,7 @@ interface CountdownProps {
   completedTitle: string;
   completedMessage: string;
   noContainer?: boolean;
+  titleClassName?: string;
 }
 
 interface TimeLeft {
@@ -22,7 +23,8 @@ export default function Countdown({
   title,
   completedTitle,
   completedMessage,
-  noContainer = false
+  noContainer = false,
+  titleClassName = ""
 }: CountdownProps) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isComplete, setIsComplete] = useState(false);
@@ -84,7 +86,7 @@ export default function Countdown({
     </div>
   ) : (
     <>
-      <div className="countdown-title">{title}</div>
+      <div className={`countdown-title ${titleClassName}`}>{title}</div>
       <div className="countdown-grid">
         <div className="countdown-item">
           <div className="countdown-number">{timeLeft.days}</div>
