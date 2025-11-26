@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { api } from "~/trpc/react";
 import { shippingAddressSchema, selfPickupSchema } from "~/utils/validateAddress";
 import type { ShippingAddress, SelfPickupInfo } from "~/utils/validateAddress";
@@ -19,6 +19,19 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
   const [contactInfo, setContactInfo] = useState<ShippingAddress | SelfPickupInfo | null>(null);
   const [quantity, setQuantity] = useState<number | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    if (typeof window !== 'undefined') {
+      checkMobile();
+      window.addEventListener('resize', checkMobile);
+      return () => window.removeEventListener('resize', checkMobile);
+    }
+  }, []);
 
   // API calls - now returns single ticket object instead of array
   const { data: availableTicket, isLoading: ticketsLoading } = api.ticket.getAvailableTickets.useQuery();
@@ -113,6 +126,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
           availableAmount={availableAmount}
           onQuantitySelect={handleQuantitySelect}
           onBack={onCancel}
+          isMobile={isMobile}
         />
       )}
 
@@ -142,24 +156,41 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                     className="w-full p-6 border-2 rounded-lg text-left hover:border-[var(--color-bronze)] transition-colors"
                     style={{ borderColor: "var(--color-accent-warm)" }}
                   >
-                    <div className="flex items-center justify-between">
+                    {isMobile ? (
                       <div>
-                        <h3 className="text-lg font-semibold" style={{ color: "var(--color-text-primary)" }}>
+                        <h3 className="text-lg font-semibold mb-1" style={{ color: "var(--color-text-primary)" }}>
                           Versand
                         </h3>
+                        <p className="text-sm font-semibold mb-2" style={{ color: "var(--color-gold-light)" }}>
+                          +{((shippingDeliveryMethod.surcharge ?? 0) / 100).toFixed(2)}€
+                        </p>
                         <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
                           Tickets werden an Ihre Adresse versendet
                         </p>
-                        <p className="text-xs font-medium mt-1 px-0.5" style={{ color: "var(--color-text-secondary)" }}>
-                        Keine Haftung bei Verlust per Postversand.
+                        <p className="text-xs font-medium mt-1" style={{ color: "var(--color-text-secondary)" }}>
+                          Keine Haftung bei Verlust per Postversand.
                         </p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-sm font-semibold" style={{ color: "var(--color-gold-light)" }}>
-                          +{((shippingDeliveryMethod.surcharge ?? 0) / 100).toFixed(2)}€
-                        </p>
+                    ) : (
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-lg font-semibold" style={{ color: "var(--color-text-primary)" }}>
+                            Versand
+                          </h3>
+                          <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
+                            Tickets werden an Ihre Adresse versendet
+                          </p>
+                          <p className="text-xs font-medium mt-1 px-0.5" style={{ color: "var(--color-text-secondary)" }}>
+                            Keine Haftung bei Verlust per Postversand.
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-semibold" style={{ color: "var(--color-gold-light)" }}>
+                            +{((shippingDeliveryMethod.surcharge ?? 0) / 100).toFixed(2)}€
+                          </p>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </button>
                 )}
 
@@ -172,11 +203,14 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                     className="w-full p-6 border-2 rounded-lg text-left hover:border-[var(--color-bronze)] transition-colors"
                     style={{ borderColor: "var(--color-accent-warm)" }}
                   >
-                    <div className="flex items-center justify-between">
+                    {isMobile ? (
                       <div>
-                        <h3 className="text-lg font-semibold" style={{ color: "var(--color-text-primary)" }}>
+                        <h3 className="text-lg font-semibold mb-1" style={{ color: "var(--color-text-primary)" }}>
                           Selbstabholung
                         </h3>
+                        <p className="text-sm font-semibold mb-2" style={{ color: "var(--color-success)" }}>
+                          Kostenlos
+                        </p>
                         <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
                           Tickets werden vor Ort abgeholt
                         </p>
@@ -226,12 +260,68 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                           </div>
                         )}
                       </div>
-                      <div className="text-right">
-                        <p className="text-sm font-semibold" style={{ color: "var(--color-success)" }}>
-                          Kostenlos
-                        </p>
+                    ) : (
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-lg font-semibold" style={{ color: "var(--color-text-primary)" }}>
+                            Selbstabholung
+                          </h3>
+                          <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
+                            Tickets werden vor Ort abgeholt
+                          </p>
+                          {env.NEXT_PUBLIC_PICKUP_DATE_1 && env.NEXT_PUBLIC_PICKUP_DATE_2 && (
+                            <div className="text-sm mt-1" style={{ color: "var(--color-text-secondary)" }}>
+                              <p className="text-xs font-medium mb-0.5" style={{ color: "var(--color-text-secondary)" }}>
+                                Mögliche Abholzeiten:
+                              </p>
+                              {(() => {
+                                const formatPickupDate = (dateStr: string, startTime?: string, endTime?: string) => {
+                                  try {
+                                    const date = new Date(dateStr);
+                                    const formattedDate = date.toLocaleDateString('de-DE', {
+                                      day: 'numeric',
+                                      month: 'long',
+                                      year: 'numeric'
+                                    });
+                                    if (startTime && endTime) {
+                                      return `${formattedDate}, ${startTime} - ${endTime} Uhr`;
+                                    } else if (startTime) {
+                                      return `${formattedDate}, ab ${startTime} Uhr`;
+                                    }
+                                    return formattedDate;
+                                  } catch {
+                                    return dateStr;
+                                  }
+                                };
+                                
+                                const date1 = formatPickupDate(
+                                  env.NEXT_PUBLIC_PICKUP_DATE_1,
+                                  env.NEXT_PUBLIC_PICKUP_DATE_1_START_TIME,
+                                  env.NEXT_PUBLIC_PICKUP_DATE_1_END_TIME
+                                );
+                                const date2 = formatPickupDate(
+                                  env.NEXT_PUBLIC_PICKUP_DATE_2,
+                                  env.NEXT_PUBLIC_PICKUP_DATE_2_START_TIME,
+                                  env.NEXT_PUBLIC_PICKUP_DATE_2_END_TIME
+                                );
+                                
+                                return (
+                                  <div className="space-y-0.5">
+                                    <p>{date1}</p>
+                                    <p>{date2}</p>
+                                  </div>
+                                );
+                              })()}
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-semibold" style={{ color: "var(--color-success)" }}>
+                            Kostenlos
+                          </p>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </button>
                 )}
               </div>
@@ -472,6 +562,7 @@ function QuantitySelection({
   availableAmount,
   onQuantitySelect,
   onBack,
+  isMobile,
 }: {
   availableTicket?: { id: number; price: number; type: string; amount: number; maxTickets: number } | null;
   isLoading: boolean;
@@ -480,6 +571,7 @@ function QuantitySelection({
   availableAmount: number;
   onQuantitySelect: (quantity: number) => void;
   onBack: () => void;
+  isMobile: boolean;
 }) {
   if (isLoading) {
     return (
@@ -547,50 +639,80 @@ function QuantitySelection({
                 boxShadow: isSelected ? '0 4px 12px rgba(193, 122, 58, 0.25)' : '0 2px 8px rgba(0, 0, 0, 0.04)'
               }}
             >
-              <div className="flex flex-col">
-                {/* Icon, Label, and Price - horizontal layout */}
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 flex-1">
-                    {/* Icon display similar to OrderCard */}
-                    <div className="flex items-center justify-center w-16 h-16 rounded-xl flex-shrink-0" style={{ 
-                      background: isDisabled 
-                        ? 'linear-gradient(135deg, #e5e7eb, #9ca3af)'
-                        : 'linear-gradient(135deg, var(--color-gold-light), var(--color-bronze))',
-                      boxShadow: isDisabled 
-                        ? '0 2px 6px rgba(0, 0, 0, 0.1)'
-                        : '0 4px 12px rgba(193, 122, 58, 0.25)'
-                    }}>
-                      <span className="text-2xl font-bold text-white">{qty}</span>
+              {isMobile ? (
+                <div className="flex flex-col items-center">
+                  {/* Icon */}
+                  <div className="flex items-center justify-center w-16 h-16 rounded-xl mb-2" style={{ 
+                    background: isDisabled 
+                      ? 'linear-gradient(135deg, #e5e7eb, #9ca3af)'
+                      : 'linear-gradient(135deg, var(--color-gold-light), var(--color-bronze))',
+                    boxShadow: isDisabled 
+                      ? '0 2px 6px rgba(0, 0, 0, 0.1)'
+                      : '0 4px 12px rgba(193, 122, 58, 0.25)'
+                  }}>
+                    <span className="text-2xl font-bold text-white">{qty}</span>
+                  </div>
+                  
+                  {/* Price */}
+                  <p className="text-xl font-bold" style={{ color: "var(--color-gold-light)" }}>
+                    €{totalPrice}
+                  </p>
+                  
+                  {/* Disabled message */}
+                  {isDisabled && (
+                    <div className="mt-2">
+                      <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>
+                        Nicht verfügbar
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex flex-col">
+                  {/* Icon, Label, and Price - horizontal layout */}
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 flex-1">
+                      {/* Icon display similar to OrderCard */}
+                      <div className="flex items-center justify-center w-16 h-16 rounded-xl flex-shrink-0" style={{ 
+                        background: isDisabled 
+                          ? 'linear-gradient(135deg, #e5e7eb, #9ca3af)'
+                          : 'linear-gradient(135deg, var(--color-gold-light), var(--color-bronze))',
+                        boxShadow: isDisabled 
+                          ? '0 2px 6px rgba(0, 0, 0, 0.1)'
+                          : '0 4px 12px rgba(193, 122, 58, 0.25)'
+                      }}>
+                        <span className="text-2xl font-bold text-white">{qty}</span>
+                      </div>
+                      
+                      {/* Label */}
+                      <div className="flex flex-col justify-center">
+                        <p className="text-sm font-semibold uppercase leading-tight" style={{ 
+                          color: 'var(--color-text-secondary)', 
+                          letterSpacing: '0.05em' 
+                        }}>
+                          {qty === 1 ? 'KARTE' : 'KARTEN'}
+                        </p>
+                      </div>
                     </div>
                     
-                    {/* Label */}
-                    <div className="flex flex-col justify-center">
-                      <p className="text-sm font-semibold uppercase leading-tight" style={{ 
-                        color: 'var(--color-text-secondary)', 
-                        letterSpacing: '0.05em' 
-                      }}>
-                        {qty === 1 ? 'KARTE' : 'KARTEN'}
+                    {/* Price */}
+                    <div className="flex-shrink-0">
+                      <p className="text-xl font-bold" style={{ color: "var(--color-gold-light)" }}>
+                        €{totalPrice}
                       </p>
                     </div>
                   </div>
                   
-                  {/* Price */}
-                  <div className="flex-shrink-0">
-                    <p className="text-xl font-bold" style={{ color: "var(--color-gold-light)" }}>
-                      €{totalPrice}
-                    </p>
-                  </div>
+                  {/* Disabled message */}
+                  {isDisabled && (
+                    <div className="mt-3 text-center">
+                      <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>
+                        Nicht verfügbar
+                      </p>
+                    </div>
+                  )}
                 </div>
-                
-                {/* Disabled message */}
-                {isDisabled && (
-                  <div className="mt-3 text-center">
-                    <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>
-                      Nicht verfügbar
-                    </p>
-                  </div>
-                )}
-              </div>
+              )}
             </button>
           );
         })}
