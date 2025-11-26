@@ -33,7 +33,7 @@ export default function DSGVOPage() {
       <div className="max-w-4xl mx-auto px-6 py-16">
 
 
-        <h1 className="text-2xl font-bold mb-20 pb-10 text-center" style={{ color: "var(--color-gold-light)" }}>
+        <h1 className="text-xl md:text-2xl font-bold mb-20 pb-10 text-center px-4 break-words" style={{ color: "var(--color-gold-light)" }}>
           Datenschutzerklärung (DSGVO)
         </h1>
 
