@@ -700,7 +700,7 @@ export default function BuyerPage() {
               }}>
                 {hasTicketSaleStarted ? (
                   <div className="text-center">
-                    <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
+                    <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)', letterSpacing: isMobile ? '0.04em' : '0.08em' }}>
                       Kartenverkauf ist gestartet!
                     </h2>
                     <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
