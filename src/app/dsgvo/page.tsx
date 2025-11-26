@@ -25,7 +25,7 @@ export default function DSGVOPage() {
             href="/buyer"
             className="btn btn-primary"
           >
-            Jetzt Tickets kaufen
+            Mein Konto
           </Link>
         </div>
       </header>
