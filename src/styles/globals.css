@@ -566,6 +566,13 @@ h4 {
     padding: var(--spacing-md);
   }
   
+  .countdown-box-completed {
+    min-width: 280px;
+    padding: var(--spacing-md);
+    padding-top: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+  }
+  
   .countdown-title {
     font-size: 1rem;
     margin-bottom: var(--spacing-md);
