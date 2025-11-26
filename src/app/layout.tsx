@@ -9,7 +9,7 @@ import Footer from "~/components/Footer";
 export const metadata: Metadata = {
   title: "HTL Braunau - Ball der Auserwählten 2026",
   description: "Der elegante Ball der HTL Braunau - DUNE Theme. Karten, Informationen und Details zum Ball der Auserwählten 2026.",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/icons/favicon.ico" }],
 };
 
 const inter = Inter({
