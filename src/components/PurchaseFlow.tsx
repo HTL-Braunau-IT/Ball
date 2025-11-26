@@ -755,13 +755,31 @@ function PaymentSummary({
   onBack: () => void;
   isLoading: boolean;
 }) {
+  const [hasReadTerms, setHasReadTerms] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    if (typeof window !== 'undefined') {
+      checkMobile();
+      window.addEventListener('resize', checkMobile);
+      return () => window.removeEventListener('resize', checkMobile);
+    }
+  }, []);
+  
   const shippingAddress = deliveryMethod === "shipping" && contactInfo && "address" in contactInfo 
     ? contactInfo 
     : null;
 
   return (
     <div className="card">
-      <h2 className="text-2xl font-semibold gradient-text text-center" style={{ marginBottom: '2rem' }}>
+      <h2 className="text-2xl font-semibold gradient-text text-center" style={{ 
+        marginBottom: '2rem',
+        letterSpacing: isMobile ? '0.04em' : '0.08em'
+      }}>
         Bestellübersicht
       </h2>
 
@@ -806,13 +824,31 @@ function PaymentSummary({
         </div>
       )}
 
+      <div className="mb-6">
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={hasReadTerms}
+            onChange={(e) => setHasReadTerms(e.target.checked)}
+            className="mt-1 w-5 h-5 rounded border-2 focus:ring-2 focus:ring-offset-2 cursor-pointer"
+            style={{
+              borderColor: "var(--color-accent-warm)",
+              accentColor: "var(--color-gold-light)",
+            }}
+          />
+          <span className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
+            Ich habe die <span className="font-semibold" style={{ color: "var(--color-text-primary)" }}>Allgemeinen Geschäftsbedingungen</span> und die <span className="font-semibold" style={{ color: "var(--color-text-primary)" }}>Datenschutzerklärung</span> gelesen und akzeptiere diese.
+          </span>
+        </label>
+      </div>
+
       <div className="flex gap-4">
         <button onClick={onBack} className="btn btn-secondary flex-1">
           Zurück
         </button>
         <button
           onClick={onPurchase}
-          disabled={isLoading}
+          disabled={isLoading || !hasReadTerms}
           className="btn btn-primary flex-1"
         >
           {isLoading ? "Wird verarbeitet..." : "Zur Zahlung"}

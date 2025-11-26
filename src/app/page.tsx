@@ -148,7 +148,7 @@ export default async function Home() {
                     ) : (
                       <Countdown 
                         targetDate={TICKET_SALE_DATE ?? new Date().toISOString()}
-                        title="Countdown bis zum öffentlichen Kartenverkauf"
+                        title="Countdown bis zum Kartenverkauf"
                         completedTitle="Kartenverkauf gestartet!"
                         completedMessage="Jetzt können Sie Ihre Karten kaufen"
                         titleClassName="pt-4 md:pt-0"
@@ -273,7 +273,7 @@ export default async function Home() {
                     <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
                       2. Stock
                     </h5>
-                    <p className="mb-4">CUbar und Bluesbar</p>
+                    <p className="mb-4">CuBar und Bluesbar</p>
                     <div className="mb-4">
                       <img
                         src="/lageplaene/2_stock/cubar_bluesbar.png"
@@ -390,7 +390,7 @@ export default async function Home() {
                   <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
                     Wann startet der Kartenverkauf?
                   </h5>
-                  <p>Der Kartenverkauf startet am 19.12.2025 um 12 Uhr. Der Countdown oben zeigt die verbleibende Zeit an. </p>
+                  <p>Der Kartenverkauf startet am 20.12.2025 um 24 Uhr. Der Countdown oben zeigt die verbleibende Zeit an. </p>
                 </div>
                 
                 
