@@ -586,6 +586,36 @@ h4 {
     padding: var(--spacing-sm) var(--spacing-lg);
     font-size: 0.9rem;
   }
+  
+  .content-box {
+    padding: var(--spacing-lg);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  
+  .content-box p,
+  .content-box li,
+  .content-box a {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  
+  .content-box h2 {
+    font-size: 1.5rem;
+  }
+  
+  .content-box h3 {
+    font-size: 1.25rem;
+  }
+  
+  /* Prevent overflow on footer pages */
+  main .max-w-4xl,
+  main .max-w-6xl {
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+  }
 }
 
 @media (max-width: 480px) {
