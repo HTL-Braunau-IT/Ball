@@ -223,7 +223,7 @@ export default async function Home() {
                 </h4>
               </div>
               <div className="space-y-8">
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div style={{ width: 'calc(100% - 12px)', minWidth: '100px' }}>
                     <h5 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-bronze)' }}>
                       Keller
