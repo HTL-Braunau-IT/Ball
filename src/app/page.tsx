@@ -148,7 +148,7 @@ export default async function Home() {
                     ) : (
                       <Countdown 
                         targetDate={TICKET_SALE_DATE ?? new Date().toISOString()}
-                        title="Countdown bis zum Ticketverkauf"
+                        title="Countdown bis zum öffentlichen Ticketverkauf"
                         completedTitle="Ticketverkauf gestartet!"
                         completedMessage="Jetzt können Sie Ihre Tickets kaufen"
                       />
