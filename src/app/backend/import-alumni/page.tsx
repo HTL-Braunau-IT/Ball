@@ -53,23 +53,20 @@ export default function ImportAlumniPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6 gradient-text">
-          Absolventen Import
-        </h1>
 
-        <div className="card mb-6">
+        <div className="bg-white/40 backdrop-filter backdrop-blur-sm rounded-lg p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4" style={{ color: "var(--color-text-primary)" }}>
             CSV-Datei hochladen
           </h2>
           
           <div className="mb-4">
             <p className="text-sm mb-2" style={{ color: "var(--color-text-secondary)" }}>
-              Format: <code className="bg-gray-100 px-2 py-1 rounded">email,name</code>
+              Format: <code className="bg-white/80 px-2 py-1 rounded">email,name</code>
             </p>
             <p className="text-sm mb-4" style={{ color: "var(--color-text-secondary)" }}>
               Beispiel:
             </p>
-            <pre className="bg-gray-100 p-3 rounded text-sm mb-4">
+            <pre className="bg-white/80 p-3 rounded text-sm mb-4">
 {`email,name
 max.mustermann@example.com,Max Mustermann
 anna.schmidt@example.com,Anna Schmidt`}
@@ -93,7 +90,7 @@ anna.schmidt@example.com,Anna Schmidt`}
               <h3 className="text-sm font-semibold mb-2" style={{ color: "var(--color-text-primary)" }}>
                 Vorschau ({csvLineCount} Zeilen):
               </h3>
-              <pre className="bg-gray-100 p-3 rounded text-xs max-h-40 overflow-auto">
+              <pre className="bg-white/80 p-3 rounded text-xs max-h-40 overflow-auto">
                 {csvPreview}
                 {csvLineCount > 10 && '\n...'}
               </pre>
