@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { db } from "~/server/db";
 import { hasRouteAccess } from "~/config/backendPermissions";
 
 export async function middleware(req: NextRequest) {
@@ -40,27 +39,20 @@ export async function middleware(req: NextRequest) {
     }
     
     // For other routes, check permissions
-    if (token.provider === "credentials" && token.email) {
-      try {
-        const backendUser = await db.backendUsers.findUnique({
-          where: { email: token.email as string },
-          include: { group: true },
-        });
+    if (token.provider === "credentials") {
+      // Get groupName from JWT token (set during login)
+      const groupName = token.groupName ?? null;
 
-        const groupName = backendUser?.group?.name ?? null;
+      // Admin users always have access to all routes
+      if (groupName === "Admin") {
+        return NextResponse.next();
+      }
 
-        // Check if user has access to this route
-        if (!hasRouteAccess(groupName, routePath)) {
-          // Redirect to dashboard with error message
-          const url = new URL("/backend", req.url);
-          url.searchParams.set("error", "Sie haben keine Berechtigung für diese Seite.");
-          return NextResponse.redirect(url);
-        }
-      } catch (error) {
-        console.error("Error checking permissions in middleware:", error);
-        // On error, redirect to dashboard (which is always allowed, preventing loops)
+      // Check if user has access to this route
+      if (!hasRouteAccess(groupName, routePath)) {
+        // Redirect to dashboard with error message
         const url = new URL("/backend", req.url);
-        url.searchParams.set("error", "Fehler bei der Berechtigungsprüfung. Bitte versuchen Sie es erneut.");
+        url.searchParams.set("error", "Sie haben keine Berechtigung für diese Seite.");
         return NextResponse.redirect(url);
       }
     }

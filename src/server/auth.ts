@@ -19,6 +19,7 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     provider?: string;
+    groupName?: string | null;
   }
 }
 
@@ -36,6 +37,7 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) return null;
         const backendUser = await db.backendUsers.findUnique({
           where: { email: credentials.email },
+          include: { group: true },
         });
         if (!backendUser?.passwordHash) return null;
         const passwordOk = await bcrypt.compare(
@@ -47,6 +49,7 @@ export const authOptions: NextAuthOptions = {
           id: String(backendUser.id),
           name: backendUser.firstName + " " + backendUser.surName,
           email: backendUser.email,
+          groupName: backendUser.group?.name ?? null,
         };
       },
     }),
@@ -172,6 +175,12 @@ export const authOptions: NextAuthOptions = {
     jwt: async ({ user, token, account }) => {
       if (user) {
         token.uid = user.id;
+        // Store groupName from user object (set in authorize callback for credentials provider)
+        // NextAuth allows additional properties in user object from authorize
+        const userWithGroup = user as typeof user & { groupName?: string | null };
+        if (userWithGroup.groupName !== undefined) {
+          token.groupName = userWithGroup.groupName;
+        }
       }
       // Store provider type in token
       // For CredentialsProvider, account is null, so we set it explicitly
