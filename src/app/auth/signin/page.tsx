@@ -38,8 +38,8 @@ export default function SignIn() {
 
       <section className="max-w-md mx-auto px-6 py-12">
         <div className="card text-center">
-          <h1 className="text-3xl font-bold mb-6 gradient-text">
-            Anmeldung
+          <h1 className="font-bold mb-6 gradient-text">
+            Anmelden
           </h1>
           <p className="text-lg mb-8" style={{ color: 'var(--color-text-secondary)' }}>
             Bitte verwenden Sie das Anmeldeformular auf der Käuferseite, um sich zu authentifizieren.
