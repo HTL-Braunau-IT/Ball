@@ -318,7 +318,7 @@ export default async function Home() {
               
               <div className="space-y-4">
                 <div className="flex items-center gap-4 p-4 rounded-lg" style={{ background: 'var(--color-bg-secondary)' }}>
-                  <div className="text-2xl font-bold" style={{ color: 'var(--color-gold-light)' }}>18:00</div>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--color-gold-light)' }}>19:00</div>
                   <div>
                     <h5 className="font-semibold">Einlass</h5>
                   </div>
