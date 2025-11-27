@@ -837,7 +837,7 @@ function PaymentSummary({
             }}
           />
           <span className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
-            Ich habe die <span className="font-semibold" style={{ color: "var(--color-text-primary)" }}>Allgemeinen Geschäftsbedingungen</span> und die <span className="font-semibold" style={{ color: "var(--color-text-primary)" }}>Datenschutzerklärung</span> gelesen und akzeptiere diese.
+            Mit dem Kauf dieser Karte(n), stimme ich zu, dass am Ballabend Fotos von mir gemacht und veröffentlicht werden dürfen.
           </span>
         </label>
       </div>
