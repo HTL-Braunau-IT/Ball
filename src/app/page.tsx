@@ -390,7 +390,7 @@ export default async function Home() {
                   <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
                     Wann startet der Kartenverkauf?
                   </h5>
-                  <p>Der Kartenverkauf startet am 20.12.2025 um 24 Uhr. Der Countdown oben zeigt die verbleibende Zeit an. </p>
+                  <p>Der Kartenverkauf startet am 20.12.2025 um 0 Uhr. Der Countdown oben zeigt die verbleibende Zeit an. </p>
                 </div>
                 
                 
