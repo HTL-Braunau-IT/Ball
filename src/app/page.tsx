@@ -119,7 +119,7 @@ export default async function Home() {
           <div className="relative z-10 flex flex-col items-center justify-center w-full">
             <div className="mb-4 md:mb-12">
               <h1 className="text-7xl font-bold mb-6 gradient-text">
-                DUNE - Ball der HTL BRAUNAU
+                DUNE - Ball der Auserwählten
               </h1>
               <p className="text-2xl mb-16" style={{ color: 'var(--color-text-secondary)' }}>
                 Ein eleganter Abend im Zeichen von DUNE
