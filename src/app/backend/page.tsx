@@ -79,14 +79,12 @@ const sections: ReadonlyArray<Section> = [
 ];
 
 type Props = {
-  searchParams?: Promise<{ error?: string }> | { error?: string };
+  searchParams?: Promise<{ error?: string }>;
 };
 
 export default async function BackendDashboard(props: Props) {
-    // Handle both sync and async searchParams (Next.js 13+ vs 14+)
-    const searchParams = props.searchParams instanceof Promise 
-      ? await props.searchParams 
-      : props.searchParams ?? {};
+    // Next.js 15 requires searchParams to always be a Promise
+    const searchParams = await (props.searchParams ?? Promise.resolve({} as { error?: string }));
     const session = await getServerSession(authOptions);
     const fullName = session?.user?.name ?? session?.user?.email ?? "im Backend";
     const displayName = fullName.includes(' ') ? fullName.split(' ')[0] : fullName;

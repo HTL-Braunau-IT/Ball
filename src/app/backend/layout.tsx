@@ -4,7 +4,7 @@ import { useSession, signOut, signIn } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import FloatingActionButtons from "~/components/FloatingActionButtons";
 import { FilteredDataProvider } from "~/contexts/FilteredDataContext";
 import { shouldShowNavigationItem } from "~/config/backendPermissions";

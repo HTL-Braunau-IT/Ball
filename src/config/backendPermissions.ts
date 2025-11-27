@@ -12,13 +12,9 @@
 
 export type PermissionKey = "kontigente" | "liefermethoden" | "käufer" | "import";
 
-export type GroupPermissions = {
-  [key in PermissionKey]: boolean;
-};
+export type GroupPermissions = Record<PermissionKey, boolean>;
 
-export type PermissionsConfig = {
-  [groupName: string]: GroupPermissions;
-};
+export type PermissionsConfig = Record<string, GroupPermissions>;
 
 // Define permissions for each group
 export const permissions: PermissionsConfig = {

@@ -109,6 +109,7 @@ export default function FloatingActionButtons() {
     enabled: pathname === "/backend/reserves"
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const exportToCSV = useCallback(() => {
     let csvHeaders: string[] = [];
     let csvData: unknown[][] = [];
@@ -203,11 +204,13 @@ export default function FloatingActionButtons() {
   }, [pathname, reservesData, filteredBuyers]);
 
   // Export button only on data pages
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const showExport = pathname === "/backend/reserves" || 
                     pathname === "/backend/tickets" || 
                     pathname === "/backend/buyers";
 
   // Check if we have data to export
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const hasData = (pathname === "/backend/reserves" && reservesData && reservesData.length > 0) ||
                  (pathname === "/backend/buyers" && filteredBuyers && filteredBuyers.length > 0);
 
