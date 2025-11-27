@@ -26,13 +26,21 @@ export default function VerifyRequest() {
             className="h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
           />
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center gap-4">
           <Link
-            href="/"
-            className="btn btn-secondary"
+            href="/buyer"
+            className="btn btn-primary"
           >
-            Zurück zur Startseite
+            Mein Konto
           </Link>
+          <div className="hidden md:block">
+            <Link
+              href="/"
+              className="btn btn-secondary"
+            >
+              Zurück zur Startseite
+            </Link>
+          </div>
         </div>
       </header>
 

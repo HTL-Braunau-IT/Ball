@@ -785,7 +785,13 @@ export default function BuyerPage() {
             className="h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
           />
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/buyer"
+            className="btn btn-primary"
+          >
+            Mein Konto
+          </Link>
           {!isMobile && (
             <Link
               href="/"
