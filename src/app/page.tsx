@@ -31,7 +31,7 @@ export default async function Home() {
           <div className="flex items-center">
             <Link href="/">
               <Image
-                src="/logos/HTL-Ball-2026_Logo_Farbe.png"
+                src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
                 alt="HTL Ball 2026 Logo"
                 width={200}
                 height={80}
