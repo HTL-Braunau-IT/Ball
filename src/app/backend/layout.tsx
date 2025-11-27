@@ -95,7 +95,7 @@ export default function BackendLayout({
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mx-auto mb-4"></div>
-          <p className="text-gray-600">Checking access...</p>
+          <p className="text-gray-600">Bitte warten...</p>
         </div>
       </div>
     );
@@ -104,53 +104,70 @@ export default function BackendLayout({
   // Show login form if no session or if session exists but user doesn't have access
   if (!session || (session && !hasAccess)) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="max-w-md w-full mx-auto p-8">
-          <h1 className="text-2xl font-bold mb-6 text-center">Backend Login</h1>
-          
-          {errorMessage && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {errorMessage}
+      <div className="min-h-screen backend-layout backend-bg flex items-center justify-center px-4">
+        <div className="max-w-md w-full">
+          <div className="rounded-xl bg-white/40 backdrop-blur-sm shadow-sm ring-1 ring-gray-200 p-8">
+            <div className="text-center mb-6">
+              <div className="flex flex-col justify-center items-center text-gray-600 mb-4">
+                <span className="text-xl font-medium tracking-wide">HTL Ball 2026</span>
+                <span className="text-xs font-bold tracking-widest uppercase text-violet-600">Backend</span>
+              </div>
+              <h1 className="text-2xl font-bold text-gray-900">Anmeldung</h1>
             </div>
-          )}
-          
-          <form onSubmit={handleSignIn} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">
-                Email Adresse
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Email Adresse"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-2">
-                Passwort
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Passwort"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:opacity-50"
-            >
-              {isLoading ? "Übertrage..." : "Einloggen"}
-            </button>
-          </form>
+            
+            {errorMessage && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-red-800">{errorMessage}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <form onSubmit={handleSignIn} className="space-y-5">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Adresse
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 bg-white/80 backdrop-blur-sm"
+                  placeholder="Email Adresse"
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  Passwort
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 bg-white/80 backdrop-blur-sm"
+                  placeholder="Passwort"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-violet-600 text-white py-2.5 px-4 rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium shadow-sm hover:shadow-md"
+              >
+                {isLoading ? "Übertrage..." : "Einloggen"}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     );
