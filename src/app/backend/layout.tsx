@@ -104,13 +104,13 @@ export default function BackendLayout({
   // Show login form if no session or if session exists but user doesn't have access
   if (!session || (session && !hasAccess)) {
     return (
-      <div className="min-h-screen backend-layout backend-bg flex items-center justify-center px-4">
+      <div className="min-h-screen backend-layout backend-bg flex items-center justify-center px-4 theme-gold" style={{ background: 'radial-gradient(35% 35% at 20% 30%, rgba(242, 218, 189, 0.60) 0%, rgba(242, 218, 189, 0.38) 22%, rgba(242, 218, 189, 0.00) 60%), radial-gradient(28% 28% at 80% 25%, rgba(230, 190, 140, 0.55) 0%, rgba(230, 190, 140, 0.36) 18%, rgba(230, 190, 140, 0.00) 58%), radial-gradient(30% 30% at 72% 78%, rgba(220, 160, 100, 0.50) 0%, rgba(220, 160, 100, 0.30) 20%, rgba(220, 160, 100, 0.00) 58%), linear-gradient(135deg, #fffaf0 0%, #fdf3e7 45%, #fae8d7 100%)' }}>
         <div className="max-w-md w-full">
           <div className="rounded-xl bg-white/40 backdrop-blur-sm shadow-sm ring-1 ring-gray-200 p-8">
             <div className="text-center mb-6">
               <div className="flex flex-col justify-center items-center text-gray-600 mb-4">
                 <span className="text-xl font-medium tracking-wide">HTL Ball 2026</span>
-                <span className="text-xs font-bold tracking-widest uppercase text-violet-600">Backend</span>
+                <span className="text-xs font-bold tracking-widest uppercase" style={{ color: '#A5662F' }}>Backend</span>
               </div>
               <h1 className="text-2xl font-bold text-gray-900">Anmeldung</h1>
             </div>
@@ -141,7 +141,7 @@ export default function BackendLayout({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 bg-white/80 backdrop-blur-sm"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E6C39A] focus:border-[#E6C39A] bg-white/80 backdrop-blur-sm"
                   placeholder="Email Adresse"
                 />
               </div>
@@ -155,14 +155,14 @@ export default function BackendLayout({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 bg-white/80 backdrop-blur-sm"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E6C39A] focus:border-[#E6C39A] bg-white/80 backdrop-blur-sm"
                   placeholder="Passwort"
                 />
               </div>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-violet-600 text-white py-2.5 px-4 rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium shadow-sm hover:shadow-md"
+                className="w-full bg-[#D19A5C] hover:bg-[#B36B2C] text-white py-2.5 px-4 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium shadow-sm hover:shadow-md"
               >
                 {isLoading ? "Übertrage..." : "Einloggen"}
               </button>
