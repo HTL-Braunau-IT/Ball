@@ -192,7 +192,7 @@ export default async function Home() {
 
         {/* Event Information Sections */}
         <section className="max-w-6xl mx-auto px-6 pb-16 pt-12" style={{ background: 'var(--color-bg-primary)' }}>
-          <CollapsibleSection title="Lageplan & Bars" defaultOpen={true}>
+          <CollapsibleSection title="Lageplan & Bars" defaultOpen={false}>
             <div className="space-y-6">
               <div className="mb-6">
                 <a
@@ -303,7 +303,7 @@ export default async function Home() {
             </div>
           </CollapsibleSection>
 
-          <CollapsibleSection title="Zeitplan" defaultOpen={true}>
+          <CollapsibleSection title="Zeitplan" defaultOpen={false}>
             <div className="space-y-6">
               <h4 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
                 Ablauf des Abends
@@ -348,7 +348,7 @@ export default async function Home() {
             </div>
           </CollapsibleSection>
 
-          <CollapsibleSection title="Dresscode" defaultOpen={true}>
+          <CollapsibleSection title="Dresscode" defaultOpen={false}>
             <div className="space-y-6">
               <h4 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
                 Elegante Kleidung erwünscht
@@ -379,7 +379,7 @@ export default async function Home() {
             </div>
           </CollapsibleSection>
 
-          <CollapsibleSection title="FAQ" defaultOpen={true}>
+          <CollapsibleSection title="FAQ" defaultOpen={false}>
             <div className="space-y-6">
               <h4 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
                 Häufig gestellte Fragen
