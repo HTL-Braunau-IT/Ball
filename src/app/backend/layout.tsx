@@ -4,9 +4,10 @@ import { useSession, signOut, signIn } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import FloatingActionButtons from "~/components/FloatingActionButtons";
 import { FilteredDataProvider } from "~/contexts/FilteredDataContext";
+import { shouldShowNavigationItem } from "~/config/backendPermissions";
 
 const navigationItems = [
   { name: "Dashboard", href: "/backend" },
@@ -30,6 +31,7 @@ export default function BackendLayout({
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [hasAccess, setHasAccess] = useState(false);
+  const [groupName, setGroupName] = useState<string | null>(null);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,9 +64,11 @@ export default function BackendLayout({
           isCredentialsProvider: boolean;
           hasAccess: boolean;
           provider?: string;
+          groupName?: string | null;
         };
         
         setHasAccess(data.hasAccess);
+        setGroupName(data.groupName ?? null);
         
         // Only show error if user is authenticated via credentials but not a backend user
         // Don't show error for email provider users - they'll just see the login form
@@ -75,6 +79,7 @@ export default function BackendLayout({
         console.error("Error checking backend user:", error);
         setErrorMessage("Error checking authorization. Please try again.");
         setHasAccess(false);
+        setGroupName(null);
       }
       
       setIsChecking(false);
@@ -164,19 +169,26 @@ export default function BackendLayout({
                   <span className="text-[10px] font-bold tracking-widest uppercase text-violet-600">Backend</span>
                 </div>
                 <div className="hidden sm:flex sm:items-center sm:gap-1">
-                  {navigationItems.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={`inline-flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                        pathname === item.href
-                          ? "bg-violet-50 text-violet-700 ring-1 ring-violet-200"
-                          : "text-gray-600 hover:text-violet-700 hover:bg-violet-50"
-                      }`}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                  {navigationItems
+                    .filter((item) => {
+                      // Dashboard is always shown
+                      if (item.name === "Dashboard") return true;
+                      // Filter based on permissions
+                      return shouldShowNavigationItem(groupName, item.name);
+                    })
+                    .map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className={`inline-flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                          pathname === item.href
+                            ? "bg-violet-50 text-violet-700 ring-1 ring-violet-200"
+                            : "text-gray-600 hover:text-violet-700 hover:bg-violet-50"
+                        }`}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
                 </div>
               </div>
               
