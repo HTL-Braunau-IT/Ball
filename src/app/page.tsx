@@ -43,7 +43,7 @@ export default async function Home() {
               alt="HTL Braunau Logo"
               width={200}
               height={80}
-              className="h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
+              className="h-[2.125rem] md:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
             />
           </div>
           <div className="flex items-center">
