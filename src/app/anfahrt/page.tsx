@@ -74,7 +74,7 @@ export default function AnfahrtPage() {
 
           <section className="pb-6">
             <h2 className="text-2xl font-semibold mb-6" style={{ color: "var(--color-bronze)" }}>
-              Anreise mit dem Auto - Parkplätze und Schutteldienst bei Interspaar Braunau 
+              Anreise mit dem Auto - Parkplätze und Schutteldienst bei Interspar Braunau 
             </h2><br />
             <div className="space-y-6">
               <div>
