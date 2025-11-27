@@ -122,7 +122,7 @@ export default async function Home() {
                 DUNE - Ball der Auserwählten
               </h1>
               <p className="text-2xl mb-16" style={{ color: 'var(--color-text-secondary)' }}>
-                Ein eleganter Abend im Zeichen von DUNE
+                Ball der HTL Braunau
               </p>
             </div>
             
