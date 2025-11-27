@@ -82,7 +82,7 @@ export default function AnfahrtPage() {
                 <p className="leading-relaxed mt-4">
                   Unser kostenloser Shuttle-Service bringt Sie bequem vom Interspar-Parkplatz 
                   zur HTL Braunau und wieder zurück. Der Shuttle verkehrt in zwei Zeitfenstern: 
-                  von 18:00 bis 21:00 Uhr für die Anreise und von 00:30 bis 03:30 Uhr für die Rückfahrt.
+                  von <strong>18:00 bis 21:00 Uhr</strong> für die Anreise und von <strong>00:30 bis 03:30 Uhr</strong> für die Rückfahrt.
                 </p>
               </div>
               <div>
