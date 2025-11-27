@@ -48,7 +48,7 @@ export const buyersRouter = createTRPCRouter({
       });
 
       if (!alumniGroup) {
-        throw new Error("Absolventen group not found. Please run seed-buyer-groups script first.");
+        throw new Error("Absolventen-Gruppe nicht gefunden. Bitte kontaktiere einen Administrator.");
       }
 
       // Parse CSV content
@@ -72,7 +72,7 @@ export const buyersRouter = createTRPCRouter({
         // Parse CSV line (email,name)
         const parts = line.split(',').map(p => p.trim());
         if (parts.length < 1) {
-          results.errors.push(`Line ${i + 1}: Invalid format`);
+          results.errors.push(`Zeile ${i + 1}: Ungültiges Format`);
           continue;
         }
 
@@ -80,7 +80,7 @@ export const buyersRouter = createTRPCRouter({
         const name = parts[1] || "";
 
         if (!email?.includes('@')) {
-          results.errors.push(`Line ${i + 1}: Invalid email "${email}"`);
+          results.errors.push(`Zeile ${i + 1}: Ungültige E-Mail-Adresse "${email}"`);
           continue;
         }
 
@@ -122,7 +122,7 @@ export const buyersRouter = createTRPCRouter({
             results.created++;
           }
         } catch (error) {
-          results.errors.push(`Line ${i + 1}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          results.errors.push(`Zeile ${i + 1}: ${error instanceof Error ? error.message : 'Unbekannter Fehler'}`);
         }
       }
 
