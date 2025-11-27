@@ -79,7 +79,7 @@ export default function AnfahrtPage() {
             <div className="space-y-6">
               <div>
                 <h3 className="text-xl font-semibold mb-3">Shuttle-Service:</h3>
-                <p className="leading-relaxed">
+                <p className="leading-relaxed mt-4">
                   Unser kostenloser Shuttle-Service bringt Sie bequem vom Interspar-Parkplatz 
                   zur HTL Braunau und wieder zurück. Der Shuttle verkehrt in zwei Zeitfenstern: 
                   von 18:00 bis 21:00 Uhr für die Anreise und von 00:30 bis 03:30 Uhr für die Rückfahrt.
@@ -87,7 +87,7 @@ export default function AnfahrtPage() {
               </div>
               <div>
                 <h3 className="text-xl font-semibold mb-3">Parkplätze:</h3>
-                <p className="leading-relaxed">
+                <p className="leading-relaxed mt-4">
                   Sie können Ihr Fahrzeug kostenlos auf dem gesamten Interspar-Parkplatz abstellen. 
                   Von dort aus bringt Sie der Shuttle-Service direkt zur Veranstaltung.
                 </p>
