@@ -67,7 +67,7 @@ export default function AnfahrtPage() {
             <h2 className="text-2xl font-semibold mb-6" style={{ color: "var(--color-bronze)" }}>
               Karte
             </h2>
-            <div className="w-full h-96 rounded-lg overflow-hidden border shadow-lg" style={{ borderColor: "var(--color-accent-warm)" }}>
+            <div className="w-full h-96 rounded-lg overflow-hidden border shadow-lg mt-8" style={{ borderColor: "var(--color-accent-warm)" }}>
               <MapComponent />
             </div>
           </section>
