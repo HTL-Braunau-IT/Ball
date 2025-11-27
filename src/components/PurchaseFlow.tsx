@@ -153,8 +153,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                 {shippingDeliveryMethod && (
                   <button
                     onClick={() => handleDeliveryMethodSelect("shipping")}
-                    className="w-full p-6 border-2 rounded-lg text-left hover:border-[var(--color-bronze)] transition-colors"
-                    style={{ borderColor: "var(--color-accent-warm)" }}
+                    className="w-full p-6 border-2 rounded-lg text-left border-[var(--color-accent-warm)] hover:border-[var(--color-bronze)] hover:scale-[1.01] transition-all"
                   >
                     {isMobile ? (
                       <div>
@@ -200,8 +199,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                 ) && (
                   <button
                     onClick={() => handleDeliveryMethodSelect("self-pickup")}
-                    className="w-full p-6 border-2 rounded-lg text-left hover:border-[var(--color-bronze)] transition-colors"
-                    style={{ borderColor: "var(--color-accent-warm)" }}
+                    className="w-full p-6 border-2 rounded-lg text-left border-[var(--color-accent-warm)] hover:border-[var(--color-bronze)] hover:scale-[1.01] transition-all"
                   >
                     {isMobile ? (
                       <div>
