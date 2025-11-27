@@ -178,7 +178,7 @@ function SuccessPageContent() {
         borderColor: "var(--color-accent-warm)",
         background: "var(--color-bg-primary)"
       }}>
-        <div className="flex items-center">
+        <div className="flex items-center gap-8">
           <Link href="/">
             <Image
               src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
@@ -188,6 +188,13 @@ function SuccessPageContent() {
               className="h-16 w-auto"
             />
           </Link>
+          <Image
+            src="/logos/HTL_Braunau_Logo.png"
+            alt="HTL Braunau Logo"
+            width={200}
+            height={80}
+            className="h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
+          />
         </div>
         <div className="flex items-center">
           <Link href="/buyer" className="btn btn-secondary">
