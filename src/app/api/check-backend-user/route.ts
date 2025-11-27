@@ -21,9 +21,10 @@ export async function GET(req: NextRequest) {
     // Check if authenticated via credentials provider
     const isCredentialsProvider = token?.provider === "credentials";
     
-    // Check if user exists in backendUsers table
+    // Check if user exists in backendUsers table with group information
     const backendUser = await db.backendUsers.findUnique({
       where: { email: session.user.email },
+      include: { group: true },
     });
     
     const isBackendUser = !!backendUser;
@@ -31,11 +32,15 @@ export async function GET(req: NextRequest) {
     // User must be BOTH: in backendUsers table AND authenticated via credentials
     const hasAccess = isBackendUser && isCredentialsProvider;
     
+    // Get group name if user has a group
+    const groupName = backendUser?.group?.name ?? null;
+    
     return NextResponse.json({ 
       isBackendUser,
       isCredentialsProvider,
       hasAccess,
-      provider: token?.provider || "unknown"
+      provider: token?.provider || "unknown",
+      groupName,
     });
   } catch (error) {
     console.error("Error checking backend user:", error);

@@ -109,6 +109,7 @@ export default function FloatingActionButtons() {
     enabled: pathname === "/backend/reserves"
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const exportToCSV = useCallback(() => {
     let csvHeaders: string[] = [];
     let csvData: unknown[][] = [];
@@ -203,11 +204,13 @@ export default function FloatingActionButtons() {
   }, [pathname, reservesData, filteredBuyers]);
 
   // Export button only on data pages
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const showExport = pathname === "/backend/reserves" || 
                     pathname === "/backend/tickets" || 
                     pathname === "/backend/buyers";
 
   // Check if we have data to export
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const hasData = (pathname === "/backend/reserves" && reservesData && reservesData.length > 0) ||
                  (pathname === "/backend/buyers" && filteredBuyers && filteredBuyers.length > 0);
 
@@ -236,7 +239,8 @@ export default function FloatingActionButtons() {
           }}
         />
       </button>
-      {showExport && (
+      {/* Export button - functionality kept but display removed for later adjustment */}
+      {/* {showExport && (
         <button
           onClick={exportToCSV}
           disabled={!hasData}
@@ -247,7 +251,7 @@ export default function FloatingActionButtons() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
         </button>
-      )}
+      )} */}
     </div>
   );
 }

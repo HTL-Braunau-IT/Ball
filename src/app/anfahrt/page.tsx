@@ -17,16 +17,23 @@ export default function AnfahrtPage() {
         borderColor: 'var(--color-accent-warm)',
         background: 'var(--color-bg-primary)'
       }}>
-        <div className="flex items-center">
+        <div className="flex items-center gap-8">
           <Link href="/">
             <Image
-              src="/logos/HTL-Ball-2026_Logo_Farbe.png"
+              src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
               alt="HTL Ball 2026 Logo"
               width={200}
               height={80}
               className="h-16 w-auto"
             />
           </Link>
+          <Image
+            src="/logos/HTL_Braunau_Logo.png"
+            alt="HTL Braunau Logo"
+            width={200}
+            height={80}
+            className="h-[2.125rem] md:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
+          />
         </div>
         <div className="flex items-center">
           <Link
@@ -67,27 +74,25 @@ export default function AnfahrtPage() {
             <h2 className="text-2xl font-semibold mb-6" style={{ color: "var(--color-bronze)" }}>
               Karte
             </h2>
-            <div className="w-full h-96 rounded-lg overflow-hidden border shadow-lg" style={{ borderColor: "var(--color-accent-warm)" }}>
+            <div className="w-full h-96 rounded-lg overflow-hidden border shadow-lg mt-8" style={{ borderColor: "var(--color-accent-warm)" }}>
               <MapComponent />
             </div>
           </section>
 
           <section className="pb-6">
             <h2 className="text-2xl font-semibold mb-6" style={{ color: "var(--color-bronze)" }}>
-              Anreise mit dem Auto - Parkplätze und Schutteldienst bei Interspaar Braunau 
+              Anreise mit dem Auto - Parkplätze und Schutteldienst bei Interspar Braunau 
             </h2><br />
             <div className="space-y-6">
               <div>
                 <h3 className="text-xl font-semibold mb-3">Shuttle-Service:</h3>
-                <p className="leading-relaxed">
-                  Unser kostenloser Shuttle-Service bringt Sie bequem vom Interspar-Parkplatz 
-                  zur HTL Braunau und wieder zurück. Der Shuttle verkehrt in zwei Zeitfenstern: 
-                  von 18:00 bis 21:00 Uhr für die Anreise und von 00:30 bis 03:30 Uhr für die Rückfahrt.
+                <p className="leading-relaxed mt-4">
+                  Unser kostenloser Shuttle-Service bringt Sie bequem vom Interspar-Parkplatz zur HTL Braunau und wieder zurück. Der Shuttle verkehrt in zwei Zeitfenstern: von <strong>18:00 bis 21:00 Uhr</strong> für die Anreise und von <strong>00:30 bis 03:30 Uhr</strong> für die Rückfahrt, er fährt im <strong>15min Takt</strong>.
                 </p>
               </div>
               <div>
                 <h3 className="text-xl font-semibold mb-3">Parkplätze:</h3>
-                <p className="leading-relaxed">
+                <p className="leading-relaxed mt-4">
                   Sie können Ihr Fahrzeug kostenlos auf dem gesamten Interspar-Parkplatz abstellen. 
                   Von dort aus bringt Sie der Shuttle-Service direkt zur Veranstaltung.
                 </p>

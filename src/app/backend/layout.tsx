@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import FloatingActionButtons from "~/components/FloatingActionButtons";
 import { FilteredDataProvider } from "~/contexts/FilteredDataContext";
+import { shouldShowNavigationItem } from "~/config/backendPermissions";
 
 const navigationItems = [
   { name: "Dashboard", href: "/backend" },
@@ -30,6 +31,7 @@ export default function BackendLayout({
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [hasAccess, setHasAccess] = useState(false);
+  const [groupName, setGroupName] = useState<string | null>(null);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,19 +64,22 @@ export default function BackendLayout({
           isCredentialsProvider: boolean;
           hasAccess: boolean;
           provider?: string;
+          groupName?: string | null;
         };
         
         setHasAccess(data.hasAccess);
+        setGroupName(data.groupName ?? null);
         
         // Only show error if user is authenticated via credentials but not a backend user
         // Don't show error for email provider users - they'll just see the login form
         if (!data.hasAccess && data.isCredentialsProvider && !data.isBackendUser) {
-          setErrorMessage("You are not authorized. Please login with backend credentials.");
+          setErrorMessage("Du hast keine Berechtigung für diese Seite. Bitte melde dich mit Backend-Anmeldeinformationen an.");
         }
       } catch (error) {
         console.error("Error checking backend user:", error);
-        setErrorMessage("Error checking authorization. Please try again.");
+        setErrorMessage("Fehler bei der Berechtigungsprüfung. Bitte versuche es erneut.");
         setHasAccess(false);
+        setGroupName(null);
       }
       
       setIsChecking(false);
@@ -90,7 +95,7 @@ export default function BackendLayout({
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mx-auto mb-4"></div>
-          <p className="text-gray-600">Checking access...</p>
+          <p className="text-gray-600">Bitte warten...</p>
         </div>
       </div>
     );
@@ -99,53 +104,70 @@ export default function BackendLayout({
   // Show login form if no session or if session exists but user doesn't have access
   if (!session || (session && !hasAccess)) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="max-w-md w-full mx-auto p-8">
-          <h1 className="text-2xl font-bold mb-6 text-center">Backend Login</h1>
-          
-          {errorMessage && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {errorMessage}
+      <div className="min-h-screen backend-layout backend-bg flex items-center justify-center px-4 theme-gold" style={{ background: 'radial-gradient(35% 35% at 20% 30%, rgba(242, 218, 189, 0.60) 0%, rgba(242, 218, 189, 0.38) 22%, rgba(242, 218, 189, 0.00) 60%), radial-gradient(28% 28% at 80% 25%, rgba(230, 190, 140, 0.55) 0%, rgba(230, 190, 140, 0.36) 18%, rgba(230, 190, 140, 0.00) 58%), radial-gradient(30% 30% at 72% 78%, rgba(220, 160, 100, 0.50) 0%, rgba(220, 160, 100, 0.30) 20%, rgba(220, 160, 100, 0.00) 58%), linear-gradient(135deg, #fffaf0 0%, #fdf3e7 45%, #fae8d7 100%)' }}>
+        <div className="max-w-md w-full">
+          <div className="rounded-xl bg-white/40 backdrop-blur-sm shadow-sm ring-1 ring-gray-200 p-8">
+            <div className="text-center mb-6">
+              <div className="flex flex-col justify-center items-center text-gray-600 mb-4">
+                <span className="text-xl font-medium tracking-wide">HTL Ball 2026</span>
+                <span className="text-xs font-bold tracking-widest uppercase" style={{ color: '#A5662F' }}>Backend</span>
+              </div>
+              <h1 className="text-2xl font-bold text-gray-900">Anmeldung</h1>
             </div>
-          )}
-          
-          <form onSubmit={handleSignIn} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">
-                Email Adresse
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Email Adresse"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-2">
-                Passwort
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Passwort"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:opacity-50"
-            >
-              {isLoading ? "Übertrage..." : "Einloggen"}
-            </button>
-          </form>
+            
+            {errorMessage && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-red-800">{errorMessage}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <form onSubmit={handleSignIn} className="space-y-5">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Adresse
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E6C39A] focus:border-[#E6C39A] bg-white/80 backdrop-blur-sm"
+                  placeholder="Email Adresse"
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  Passwort
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E6C39A] focus:border-[#E6C39A] bg-white/80 backdrop-blur-sm"
+                  placeholder="Passwort"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-[#D19A5C] hover:bg-[#B36B2C] text-white py-2.5 px-4 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium shadow-sm hover:shadow-md"
+              >
+                {isLoading ? "Übertrage..." : "Einloggen"}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     );
@@ -164,19 +186,26 @@ export default function BackendLayout({
                   <span className="text-[10px] font-bold tracking-widest uppercase text-violet-600">Backend</span>
                 </div>
                 <div className="hidden sm:flex sm:items-center sm:gap-1">
-                  {navigationItems.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={`inline-flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                        pathname === item.href
-                          ? "bg-violet-50 text-violet-700 ring-1 ring-violet-200"
-                          : "text-gray-600 hover:text-violet-700 hover:bg-violet-50"
-                      }`}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                  {navigationItems
+                    .filter((item) => {
+                      // Dashboard is always shown
+                      if (item.name === "Dashboard") return true;
+                      // Filter based on permissions
+                      return shouldShowNavigationItem(groupName, item.name);
+                    })
+                    .map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className={`inline-flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                          pathname === item.href
+                            ? "bg-violet-50 text-violet-700 ring-1 ring-violet-200"
+                            : "text-gray-600 hover:text-violet-700 hover:bg-violet-50"
+                        }`}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
                 </div>
               </div>
               

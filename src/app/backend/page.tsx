@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "~/server/auth";
 import DashboardStats from "~/components/DashboardStats";
 import SalesKillSwitch from "~/components/SalesKillSwitch";
+import { db } from "~/server/db";
+import { shouldShowCard } from "~/config/backendPermissions";
 import type { CSSProperties, ReactElement } from "react";
 
 type Section = {
@@ -76,10 +78,33 @@ const sections: ReadonlyArray<Section> = [
     },
 ];
 
-export default async function BackendDashboard() {
+type Props = {
+  searchParams?: Promise<{ error?: string }>;
+};
+
+export default async function BackendDashboard(props: Props) {
+    // Next.js 15 requires searchParams to always be a Promise
+    const searchParams = await (props.searchParams ?? Promise.resolve({} as { error?: string }));
     const session = await getServerSession(authOptions);
     const fullName = session?.user?.name ?? session?.user?.email ?? "im Backend";
     const displayName = fullName.includes(' ') ? fullName.split(' ')[0] : fullName;
+
+    // Get user's group
+    let groupName: string | null = null;
+    if (session?.user?.email) {
+      const backendUser = await db.backendUsers.findUnique({
+        where: { email: session.user.email },
+        include: { group: true },
+      });
+      groupName = backendUser?.group?.name ?? null;
+    }
+
+    // Filter sections based on permissions
+    const visibleSections = sections.filter((section) =>
+      shouldShowCard(groupName, section.title)
+    );
+
+    const errorMessage = searchParams?.error;
 
   return (
     <div className="px-4 py-6 sm:px-0">
@@ -91,56 +116,104 @@ export default async function BackendDashboard() {
           Wähle einen Bereich aus, um mit der Verwaltung zu beginnen.
         </p>
       </div>
-      <div className="-mt-2 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {sections.map((section) => (
-          <Link
-            key={section.title}
-            href={section.href}
-            className={`group relative bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 ${section.hoverBg} backend-layout card`}
-            style={{ "--backend-card-hover": section.hoverColor } as CSSProperties}
-          >
-            <div>
-              <span className={`inline-flex p-3 rounded-lg text-white ${section.iconBg}`}>
-                {section.icon}
-              </span>
-            </div>
-            <div className="mt-4">
-              <h3 className={`text-lg font-medium text-gray-900 ${section.titleHover}`}>
-                {section.title}
-              </h3>
-              <p className="mt-2 text-sm text-gray-500">
-                {section.description}
-              </p>
-            </div>
-            <span
-              className="absolute top-4 right-4 text-gray-300 group-hover:text-gray-400"
-              aria-hidden="true"
-            >
-              <svg
-                className="h-5 w-5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </span>
-          </Link>
-        ))}
-      </div>
-      
-      {/* Sales Kill Switch */}
-      <div className="mt-6">
-        <SalesKillSwitch />
-      </div>
 
-      {/* Dashboard Stats Overview */}
-      <div className="-mt-6 py-8">
-        <DashboardStats />
-      </div>      
+      {errorMessage && (
+        <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-red-800">{errorMessage}</p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {groupName === null ? (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-6">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-yellow-800">
+                Keiner Gruppe zugewiesen
+              </h3>
+              <div className="mt-2 text-sm text-yellow-700">
+                <p>
+                  Du wurdest noch keiner Gruppe zugewiesen. Bitte kontaktieren einen Administrator.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : visibleSections.length > 0 ? (
+        <div className="-mt-2 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {visibleSections.map((section) => (
+            <Link
+              key={section.title}
+              href={section.href}
+              className={`group relative bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 ${section.hoverBg} backend-layout card`}
+              style={{ "--backend-card-hover": section.hoverColor } as CSSProperties}
+            >
+              <div>
+                <span className={`inline-flex p-3 rounded-lg text-white ${section.iconBg}`}>
+                  {section.icon}
+                </span>
+              </div>
+              <div className="mt-4">
+                <h3 className={`text-lg font-medium text-gray-900 ${section.titleHover}`}>
+                  {section.title}
+                </h3>
+                <p className="mt-2 text-sm text-gray-500">
+                  {section.description}
+                </p>
+              </div>
+              <span
+                className="absolute top-4 right-4 text-gray-300 group-hover:text-gray-400"
+                aria-hidden="true"
+              >
+                <svg
+                  className="h-5 w-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </span>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
+          <p className="text-gray-600">
+            Keine Bereiche verfügbar.
+          </p>
+        </div>
+      )}
+      
+      {/* Sales Kill Switch - Only for Admin */}
+      {groupName === "Admin" && (
+        <div className="mt-6">
+          <SalesKillSwitch />
+        </div>
+      )}
+
+      {/* Dashboard Stats Overview - Only for Admin */}
+      {groupName === "Admin" && (
+        <div className="-mt-6 py-8">
+          <DashboardStats />
+        </div>
+      )}      
     </div>
   );
 }

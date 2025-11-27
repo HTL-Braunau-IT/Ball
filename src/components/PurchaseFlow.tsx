@@ -153,8 +153,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                 {shippingDeliveryMethod && (
                   <button
                     onClick={() => handleDeliveryMethodSelect("shipping")}
-                    className="w-full p-6 border-2 rounded-lg text-left hover:border-[var(--color-bronze)] transition-colors"
-                    style={{ borderColor: "var(--color-accent-warm)" }}
+                    className="w-full p-6 border-2 rounded-lg text-left border-[var(--color-accent-warm)] hover:border-[var(--color-bronze)] hover:scale-[1.01] transition-all"
                   >
                     {isMobile ? (
                       <div>
@@ -200,8 +199,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                 ) && (
                   <button
                     onClick={() => handleDeliveryMethodSelect("self-pickup")}
-                    className="w-full p-6 border-2 rounded-lg text-left hover:border-[var(--color-bronze)] transition-colors"
-                    style={{ borderColor: "var(--color-accent-warm)" }}
+                    className="w-full p-6 border-2 rounded-lg text-left border-[var(--color-accent-warm)] hover:border-[var(--color-bronze)] hover:scale-[1.01] transition-all"
                   >
                     {isMobile ? (
                       <div>
@@ -837,7 +835,7 @@ function PaymentSummary({
             }}
           />
           <span className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
-            Ich habe die <span className="font-semibold" style={{ color: "var(--color-text-primary)" }}>Allgemeinen Geschäftsbedingungen</span> und die <span className="font-semibold" style={{ color: "var(--color-text-primary)" }}>Datenschutzerklärung</span> gelesen und akzeptiere diese.
+            Mit dem Kauf dieser Karte(n), stimme ich zu, dass am Ballabend Fotos von mir gemacht und veröffentlicht werden dürfen.
           </span>
         </label>
       </div>

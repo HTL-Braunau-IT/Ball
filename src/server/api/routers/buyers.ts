@@ -48,7 +48,7 @@ export const buyersRouter = createTRPCRouter({
       });
 
       if (!alumniGroup) {
-        throw new Error("Absolventen group not found. Please run seed-buyer-groups script first.");
+        throw new Error("Absolventen-Gruppe nicht gefunden. Bitte kontaktiere einen Administrator.");
       }
 
       // Parse CSV content
@@ -69,18 +69,36 @@ export const buyersRouter = createTRPCRouter({
           continue;
         }
 
+        // Check if line contains semicolon (wrong separator)
+        if (line.includes(';') && !line.includes(',')) {
+          results.errors.push(`Datei verwendet Semikolon (;) statt Komma (,) als Trennzeichen. Bitte verwenden Sie Komma als Trennzeichen.`);
+          continue;
+        }
+
+        // Check if line doesn't contain comma (required separator)
+        if (!line.includes(',')) {
+          results.errors.push(`Zeile ${i + 1}: Kein Komma (,) gefunden. Format muss sein: email,name`);
+          continue;
+        }
+
         // Parse CSV line (email,name)
         const parts = line.split(',').map(p => p.trim());
         if (parts.length < 1) {
-          results.errors.push(`Line ${i + 1}: Invalid format`);
+          results.errors.push(`Zeile ${i + 1}: Ungültiges Format`);
           continue;
         }
 
         const email = parts[0];
         const name = parts[1] || "";
 
-        if (!email?.includes('@')) {
-          results.errors.push(`Line ${i + 1}: Invalid email "${email}"`);
+        // Validate email format - must be a valid email and not contain semicolons
+        const emailRegex = /^[^\s@;]+@[^\s@;]+\.[^\s@;]+$/;
+        if (!email || !emailRegex.test(email)) {
+          if (email?.includes(';')) {
+            results.errors.push(`Zeile ${i + 1}: E-Mail-Adresse enthält ein Semikolon (;). Bitte verwenden Sie Komma (,) als Trennzeichen. Gefunden: "${email}"`);
+          } else {
+            results.errors.push(`Zeile ${i + 1}: Ungültige E-Mail-Adresse "${email}"`);
+          }
           continue;
         }
 
@@ -122,7 +140,7 @@ export const buyersRouter = createTRPCRouter({
             results.created++;
           }
         } catch (error) {
-          results.errors.push(`Line ${i + 1}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          results.errors.push(`Zeile ${i + 1}: ${error instanceof Error ? error.message : 'Unbekannter Fehler'}`);
         }
       }
 

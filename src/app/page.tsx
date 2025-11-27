@@ -28,16 +28,23 @@ export default async function Home() {
           borderColor: 'var(--color-accent-warm)',
           background: 'var(--color-bg-primary)'
         }}>
-          <div className="flex items-center">
+          <div className="flex items-center gap-8">
             <Link href="/">
               <Image
-                src="/logos/HTL-Ball-2026_Logo_Farbe.png"
+                src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
                 alt="HTL Ball 2026 Logo"
                 width={200}
                 height={80}
                 className="h-16 w-auto"
               />
             </Link>
+            <Image
+              src="/logos/HTL_Braunau_Logo.png"
+              alt="HTL Braunau Logo"
+              width={200}
+              height={80}
+              className="h-[2.125rem] md:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
+            />
           </div>
           <div className="flex items-center">
             <Link
@@ -119,10 +126,10 @@ export default async function Home() {
           <div className="relative z-10 flex flex-col items-center justify-center w-full">
             <div className="mb-4 md:mb-12">
               <h1 className="text-7xl font-bold mb-6 gradient-text">
-                DUNE - Ball der HTL BRAUNAU
+                DUNE - Ball der Auserwählten
               </h1>
               <p className="text-2xl mb-16" style={{ color: 'var(--color-text-secondary)' }}>
-                Ein eleganter Abend im Zeichen von DUNE
+                Ball der HTL Braunau
               </p>
             </div>
             
@@ -148,7 +155,7 @@ export default async function Home() {
                     ) : (
                       <Countdown 
                         targetDate={TICKET_SALE_DATE ?? new Date().toISOString()}
-                        title="Countdown bis zum Kartenverkauf"
+                        title="Countdown bis zum regulären Kartenverkauf"
                         completedTitle="Kartenverkauf gestartet!"
                         completedMessage="Jetzt können Sie Ihre Karten kaufen"
                         titleClassName="pt-4 md:pt-0"
@@ -192,7 +199,7 @@ export default async function Home() {
 
         {/* Event Information Sections */}
         <section className="max-w-6xl mx-auto px-6 pb-16 pt-12" style={{ background: 'var(--color-bg-primary)' }}>
-          <CollapsibleSection title="Lageplan & Bars" defaultOpen={true}>
+          <CollapsibleSection title="Lageplan & Bars" defaultOpen={false}>
             <div className="space-y-6">
               <div className="mb-6">
                 <a
@@ -303,7 +310,7 @@ export default async function Home() {
             </div>
           </CollapsibleSection>
 
-          <CollapsibleSection title="Zeitplan" defaultOpen={true}>
+          <CollapsibleSection title="Zeitplan" defaultOpen={false}>
             <div className="space-y-6">
               <h4 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
                 Ablauf des Abends
@@ -348,7 +355,7 @@ export default async function Home() {
             </div>
           </CollapsibleSection>
 
-          <CollapsibleSection title="Dresscode" defaultOpen={true}>
+          <CollapsibleSection title="Dresscode" defaultOpen={false}>
             <div className="space-y-6">
               <h4 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
                 Elegante Kleidung erwünscht
@@ -379,7 +386,7 @@ export default async function Home() {
             </div>
           </CollapsibleSection>
 
-          <CollapsibleSection title="FAQ" defaultOpen={true}>
+          <CollapsibleSection title="FAQ" defaultOpen={false}>
             <div className="space-y-6">
               <h4 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)' }}>
                 Häufig gestellte Fragen
@@ -390,7 +397,7 @@ export default async function Home() {
                   <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
                     Wann startet der Kartenverkauf?
                   </h5>
-                  <p>Der Kartenverkauf startet am 20.12.2025 um 24 Uhr. Der Countdown oben zeigt die verbleibende Zeit an. </p>
+                  <p>Der Kartenverkauf startet am 20.12.2025 um 0 Uhr. Der Countdown oben zeigt die verbleibende Zeit an. </p>
                 </div>
                 
                 

@@ -8,24 +8,39 @@ export default function VerifyRequest() {
         borderColor: 'var(--color-accent-warm)',
         background: 'var(--color-bg-primary)'
       }}>
-        <div className="flex items-center">
+        <div className="flex items-center gap-8">
           <Link href="/">
             <Image
-              src="/logos/HTL-Ball-2026_Logo_Farbe.png"
+              src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
               alt="HTL Ball 2026 Logo"
               width={200}
               height={80}
               className="h-16 w-auto"
             />
           </Link>
+          <Image
+            src="/logos/HTL_Braunau_Logo.png"
+            alt="HTL Braunau Logo"
+            width={200}
+            height={80}
+            className="h-[2.125rem] md:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
+          />
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center gap-4">
           <Link
-            href="/"
-            className="btn btn-secondary"
+            href="/buyer"
+            className="btn btn-primary"
           >
-            Zurück zur Startseite
+            Mein Konto
           </Link>
+          <div className="hidden md:block">
+            <Link
+              href="/"
+              className="btn btn-secondary"
+            >
+              Zurück zur Startseite
+            </Link>
+          </div>
         </div>
       </header>
 
