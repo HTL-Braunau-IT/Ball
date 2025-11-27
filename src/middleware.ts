@@ -24,7 +24,7 @@ export async function middleware(req: NextRequest) {
     if (token.provider !== "credentials") {
       const url = new URL("/auth/signin", req.url);
       url.searchParams.set("callbackUrl", req.nextUrl.pathname + req.nextUrl.search);
-      url.searchParams.set("error", "Backend access requires credentials login");
+      url.searchParams.set("error", "Für den Zugriff auf die Backend-Oberfläche musst du dich mit den Backend-Anmeldeinformationen anmelden.");
       return NextResponse.redirect(url);
     }
 
@@ -52,7 +52,7 @@ export async function middleware(req: NextRequest) {
       if (!hasRouteAccess(groupName, routePath)) {
         // Redirect to dashboard with error message
         const url = new URL("/backend", req.url);
-        url.searchParams.set("error", "Sie haben keine Berechtigung für diese Seite.");
+        url.searchParams.set("error", "Du hast keine Berechtigung für diese Seite.");
         return NextResponse.redirect(url);
       }
     }

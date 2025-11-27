@@ -73,11 +73,11 @@ export default function BackendLayout({
         // Only show error if user is authenticated via credentials but not a backend user
         // Don't show error for email provider users - they'll just see the login form
         if (!data.hasAccess && data.isCredentialsProvider && !data.isBackendUser) {
-          setErrorMessage("You are not authorized. Please login with backend credentials.");
+          setErrorMessage("Du hast keine Berechtigung für diese Seite. Bitte melde dich mit Backend-Anmeldeinformationen an.");
         }
       } catch (error) {
         console.error("Error checking backend user:", error);
-        setErrorMessage("Error checking authorization. Please try again.");
+        setErrorMessage("Fehler bei der Berechtigungsprüfung. Bitte versuche es erneut.");
         setHasAccess(false);
         setGroupName(null);
       }

@@ -144,11 +144,11 @@ export default async function BackendDashboard(props: Props) {
             </div>
             <div className="ml-3">
               <h3 className="text-sm font-medium text-yellow-800">
-                Keine Gruppe zugewiesen
+                Keiner Gruppe zugewiesen
               </h3>
               <div className="mt-2 text-sm text-yellow-700">
                 <p>
-                  Sie wurden noch keiner Gruppe zugewiesen. Bitte kontaktieren Sie einen Administrator, um Zugriff zu erhalten.
+                  Du wurdest noch keiner Gruppe zugewiesen. Bitte kontaktieren einen Administrator.
                 </p>
               </div>
             </div>
