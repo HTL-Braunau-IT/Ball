@@ -13,8 +13,10 @@ export default function ImportAlumniPage() {
     skipped: number;
     errors: string[];
   } | null>(null);
+  const [isAlumniTableOpen, setIsAlumniTableOpen] = useState(false);
 
   const importAlumni = api.buyers.importAlumni.useMutation();
+  const { data: alumniData, isLoading: isLoadingAlumni, refetch: refetchAlumni } = api.buyers.getAlumni.useQuery();
 
   // Memoize CSV parsing to avoid recalculating on every render
   const csvLines = useMemo(() => csvContent.split('\n').filter(l => l.trim()), [csvContent]);
@@ -44,6 +46,8 @@ export default function ImportAlumniPage() {
     try {
       const result = await importAlumni.mutateAsync({ csvContent });
       setResults(result);
+      // Refetch alumni data after successful import
+      void refetchAlumni();
     } catch (error) {
       alert(`Fehler beim Import: ${error instanceof Error ? error.message : 'Unbekannter Fehler'}`);
     }
@@ -190,6 +194,85 @@ anna.schmidt@example.com,Anna Schmidt`}
             )}
           </div>
         )}
+
+        {/* Alumni Table Display */}
+        <div className="bg-white/40 backdrop-filter backdrop-blur-sm rounded-lg p-6">
+          <div 
+            className="flex items-center justify-between cursor-pointer"
+            onClick={() => setIsAlumniTableOpen(!isAlumniTableOpen)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setIsAlumniTableOpen(!isAlumniTableOpen);
+              }
+            }}
+          >
+            <h2 className="text-xl font-semibold" style={{ color: "var(--color-text-primary)" }}>
+              Absolventen ({alumniData?.length ?? 0})
+            </h2>
+            <svg
+              className={`w-5 h-5 transition-transform ${isAlumniTableOpen ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              style={{ color: "var(--color-text-primary)" }}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+
+          {isAlumniTableOpen && (
+            <div className="mt-4">
+              {isLoadingAlumni ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="text-gray-600">Lade Absolventen...</div>
+                </div>
+              ) : !alumniData || alumniData.length === 0 ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="text-gray-600">Keine Absolventen gefunden.</div>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                    <thead className="text-left">
+                      <tr className="text-left">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap" style={{ textAlign: 'left' }}>
+                          Name
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap" style={{ textAlign: 'left' }}>
+                          E-Mail
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {alumniData.map((buyer) => (
+                        <tr key={buyer.id} className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-left text-sm font-medium text-gray-900">
+                            <div className="truncate text-left" title={buyer.name}>
+                              {buyer.name || "-"}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 text-left text-sm text-gray-500">
+                            <div className="truncate text-left" title={buyer.email}>
+                              {buyer.email}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

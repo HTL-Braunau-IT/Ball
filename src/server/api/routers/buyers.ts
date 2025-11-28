@@ -34,6 +34,27 @@ export const buyersRouter = createTRPCRouter({
     };
   }),
 
+  // Get all buyers with Absolventen group
+  getAlumni: protectedProcedure.query(async ({ ctx }) => {
+    const alumniGroup = await ctx.db.buyerGroups.findFirst({
+      where: { name: "Absolventen" }
+    });
+
+    if (!alumniGroup) {
+      return [];
+    }
+
+    const buyers = await ctx.db.buyers.findMany({
+      where: { groupId: alumniGroup.id },
+      include: { group: true },
+      orderBy: { email: 'asc' }
+    });
+
+    return buyers.map(({ id, name, email, address, postal, city, country, verified, group }) => ({
+      id, name, email, address, postal, city, country, verified, group
+    }));
+  }),
+
   // Import alumni from CSV
   importAlumni: protectedProcedure
     .input(z.object({
