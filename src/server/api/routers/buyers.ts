@@ -14,8 +14,13 @@ export const buyersRouter = createTRPCRouter({
 
   // Get current user's buyer information including group
   getCurrentUser: protectedProcedure.query(async ({ ctx }) => {
-    const buyer = await ctx.db.buyers.findUnique({
-      where: { email: ctx.session.user.email! },
+    const buyer = await ctx.db.buyers.findFirst({
+      where: {
+        email: {
+          equals: ctx.session.user.email!,
+          mode: 'insensitive',
+        },
+      },
       include: { group: true },
     });
     
@@ -26,7 +31,7 @@ export const buyersRouter = createTRPCRouter({
     return {
       id: buyer.id,
       name: buyer.name,
-      email: buyer.email,
+      email: buyer.email.toLowerCase(), // Always return lowercase for consistency
       group: buyer.group ? {
         id: buyer.group.id,
         name: buyer.group.name,
@@ -146,7 +151,7 @@ export const buyersRouter = createTRPCRouter({
             
             if (needsGroupUpdate || needsNameUpdate || needsEmailUpdate) {
               await ctx.db.buyers.update({
-                where: { id: existingBuyer.id },
+                where: { id: existingBuyer.id }, // Use id instead of email
                 data: { 
                   ...(needsGroupUpdate && { groupId: alumniGroup.id }),
                   ...(needsNameUpdate && { name: name.trim() }),
@@ -158,10 +163,10 @@ export const buyersRouter = createTRPCRouter({
               results.skipped++;
             }
           } else {
-            // Create new buyer
+            // Create new buyer with normalized email
             await ctx.db.buyers.create({
               data: {
-                email,
+                email: normalizedEmail, // Store as lowercase
                 name: name || "",
                 phone: "",
                 address: "",

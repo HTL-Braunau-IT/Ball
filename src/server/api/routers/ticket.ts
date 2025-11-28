@@ -61,8 +61,13 @@ export const ticketRouter = createTRPCRouter({
     }
 
     // Check if user exists in Buyers table to determine their group
-    const buyer = await ctx.db.buyers.findUnique({
-      where: { email: ctx.session.user.email! },
+    const buyer = await ctx.db.buyers.findFirst({
+      where: {
+        email: {
+          equals: ctx.session.user.email!,
+          mode: 'insensitive',
+        },
+      },
       include: { group: true },
     });
 
@@ -165,8 +170,13 @@ export const ticketRouter = createTRPCRouter({
 
   // Get user's purchased tickets
   getUserTickets: protectedProcedure.query(async ({ ctx }) => {
-    const buyer = await ctx.db.buyers.findUnique({
-      where: { email: ctx.session.user.email! },
+    const buyer = await ctx.db.buyers.findFirst({
+      where: {
+        email: {
+          equals: ctx.session.user.email!,
+          mode: 'insensitive',
+        },
+      },
     });
 
     if (!buyer) {
@@ -254,8 +264,13 @@ export const ticketRouter = createTRPCRouter({
       const { deliveryMethod, contactInfo, ticketTypeId, quantity } = input;
 
       // Get buyer's group first to check maxTickets
-      let buyer = await ctx.db.buyers.findUnique({
-        where: { email: ctx.session.user.email! },
+      let buyer = await ctx.db.buyers.findFirst({
+        where: {
+          email: {
+            equals: ctx.session.user.email!,
+            mode: 'insensitive',
+          },
+        },
         include: { group: true },
       });
 
@@ -307,8 +322,13 @@ export const ticketRouter = createTRPCRouter({
       const shippingFeeInCents = deliveryMethod === "shipping" ? (deliveryMethodInfo.surcharge ?? 0) : 0;
 
       // Check if buyer already has paid tickets (prevent multiple purchases)
-      const existingBuyer = await ctx.db.buyers.findUnique({
-        where: { email: ctx.session.user.email! },
+      const existingBuyer = await ctx.db.buyers.findFirst({
+        where: {
+          email: {
+            equals: ctx.session.user.email!,
+            mode: 'insensitive',
+          },
+        },
         include: { tickets: { where: { paid: true } } },
       });
 
@@ -330,7 +350,7 @@ export const ticketRouter = createTRPCRouter({
         buyer = await ctx.db.buyers.create({
           data: {
             name: contactInfo.name,
-            email: ctx.session.user.email!,
+            email: ctx.session.user.email!.toLowerCase(), // Normalize to lowercase when storing
             phone: contactInfo.phone, 
             address: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).address : "",
             postal: deliveryMethod === "shipping" ? (contactInfo as ShippingAddress).postal : 0,
@@ -592,8 +612,13 @@ export const ticketRouter = createTRPCRouter({
       }
 
       // Find buyer with unpaid tickets
-      const buyer = await ctx.db.buyers.findUnique({
-        where: { email: ctx.session.user.email! },
+      const buyer = await ctx.db.buyers.findFirst({
+        where: {
+          email: {
+            equals: ctx.session.user.email!,
+            mode: 'insensitive',
+          },
+        },
         include: {
           tickets: {
             where: { 
