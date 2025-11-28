@@ -109,37 +109,48 @@ export const buyersRouter = createTRPCRouter({
           continue;
         }
 
-        const email = parts[0];
+        const emailRaw = parts[0];
         const name = parts[1] || "";
 
         // Validate email format - must be a valid email and not contain semicolons
         const emailRegex = /^[^\s@;]+@[^\s@;]+\.[^\s@;]+$/;
-        if (!email || !emailRegex.test(email)) {
-          if (email?.includes(';')) {
-            results.errors.push(`Zeile ${i + 1}: E-Mail-Adresse enthält ein Semikolon (;). Bitte verwenden Sie Komma (,) als Trennzeichen. Gefunden: "${email}"`);
+        if (!emailRaw || !emailRegex.test(emailRaw)) {
+          if (emailRaw?.includes(';')) {
+            results.errors.push(`Zeile ${i + 1}: E-Mail-Adresse enthält ein Semikolon (;). Bitte verwenden Sie Komma (,) als Trennzeichen. Gefunden: "${emailRaw}"`);
           } else {
-            results.errors.push(`Zeile ${i + 1}: Ungültige E-Mail-Adresse "${email}"`);
+            results.errors.push(`Zeile ${i + 1}: Ungültige E-Mail-Adresse "${emailRaw}"`);
           }
           continue;
         }
 
+        // Normalize email to lowercase (emails are case-insensitive)
+        const email = emailRaw.toLowerCase();
+
         try {
-          // Check if buyer already exists
-          const existingBuyer = await ctx.db.buyers.findUnique({
-            where: { email }
+          // Check if buyer already exists (case-insensitive search)
+          const existingBuyer = await ctx.db.buyers.findFirst({
+            where: {
+              email: {
+                equals: email,
+                mode: 'insensitive',
+              }
+            }
           });
 
           if (existingBuyer) {
             // Update existing buyer: always update name if provided, and update group if needed
+            // Also normalize email to lowercase to prevent case-sensitivity issues
             const needsGroupUpdate = existingBuyer.groupId !== alumniGroup.id;
             const needsNameUpdate = name && name.trim() && name !== existingBuyer.name;
+            const needsEmailUpdate = existingBuyer.email.toLowerCase() !== email;
             
-            if (needsGroupUpdate || needsNameUpdate) {
+            if (needsGroupUpdate || needsNameUpdate || needsEmailUpdate) {
               await ctx.db.buyers.update({
-                where: { email },
+                where: { id: existingBuyer.id },
                 data: { 
                   ...(needsGroupUpdate && { groupId: alumniGroup.id }),
                   ...(needsNameUpdate && { name: name.trim() }),
+                  ...(needsEmailUpdate && { email }), // Normalize email to lowercase
                 }
               });
               results.updated++;
