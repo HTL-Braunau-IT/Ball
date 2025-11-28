@@ -130,13 +130,16 @@ export const buyersRouter = createTRPCRouter({
           });
 
           if (existingBuyer) {
-            // Update existing buyer to Absolventen group if not already
-            if (existingBuyer.groupId !== alumniGroup.id) {
+            // Update existing buyer: always update name if provided, and update group if needed
+            const needsGroupUpdate = existingBuyer.groupId !== alumniGroup.id;
+            const needsNameUpdate = name && name.trim() && name !== existingBuyer.name;
+            
+            if (needsGroupUpdate || needsNameUpdate) {
               await ctx.db.buyers.update({
                 where: { email },
                 data: { 
-                  groupId: alumniGroup.id,
-                  name: name || existingBuyer.name,
+                  ...(needsGroupUpdate && { groupId: alumniGroup.id }),
+                  ...(needsNameUpdate && { name: name.trim() }),
                 }
               });
               results.updated++;
