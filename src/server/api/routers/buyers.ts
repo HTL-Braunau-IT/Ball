@@ -39,6 +39,27 @@ export const buyersRouter = createTRPCRouter({
     };
   }),
 
+  // Get all buyers with Absolventen group
+  getAlumni: protectedProcedure.query(async ({ ctx }) => {
+    const alumniGroup = await ctx.db.buyerGroups.findFirst({
+      where: { name: "Absolventen" }
+    });
+
+    if (!alumniGroup) {
+      return [];
+    }
+
+    const buyers = await ctx.db.buyers.findMany({
+      where: { groupId: alumniGroup.id },
+      include: { group: true },
+      orderBy: { id: 'asc' }
+    });
+
+    return buyers.map(({ id, name, email, address, postal, city, country, verified, group }) => ({
+      id, name, email, address, postal, city, country, verified, group
+    }));
+  }),
+
   // Import alumni from CSV
   importAlumni: protectedProcedure
     .input(z.object({
@@ -93,42 +114,48 @@ export const buyersRouter = createTRPCRouter({
           continue;
         }
 
-        const email = parts[0];
+        const emailRaw = parts[0];
         const name = parts[1] || "";
 
         // Validate email format - must be a valid email and not contain semicolons
         const emailRegex = /^[^\s@;]+@[^\s@;]+\.[^\s@;]+$/;
-        if (!email || !emailRegex.test(email)) {
-          if (email?.includes(';')) {
-            results.errors.push(`Zeile ${i + 1}: E-Mail-Adresse enthält ein Semikolon (;). Bitte verwenden Sie Komma (,) als Trennzeichen. Gefunden: "${email}"`);
+        if (!emailRaw || !emailRegex.test(emailRaw)) {
+          if (emailRaw?.includes(';')) {
+            results.errors.push(`Zeile ${i + 1}: E-Mail-Adresse enthält ein Semikolon (;). Bitte verwenden Sie Komma (,) als Trennzeichen. Gefunden: "${emailRaw}"`);
           } else {
-            results.errors.push(`Zeile ${i + 1}: Ungültige E-Mail-Adresse "${email}"`);
+            results.errors.push(`Zeile ${i + 1}: Ungültige E-Mail-Adresse "${emailRaw}"`);
           }
           continue;
         }
 
+        // Normalize email to lowercase (emails are case-insensitive)
+        const email = emailRaw.toLowerCase();
+
         try {
-          // Normalize email to lowercase
-          const normalizedEmail = email.toLowerCase();
-          
-          // Check if buyer already exists (case-insensitive)
+          // Check if buyer already exists (case-insensitive search)
           const existingBuyer = await ctx.db.buyers.findFirst({
             where: {
               email: {
-                equals: normalizedEmail,
+                equals: email,
                 mode: 'insensitive',
-              },
-            },
+              }
+            }
           });
 
           if (existingBuyer) {
-            // Update existing buyer to Absolventen group if not already
-            if (existingBuyer.groupId !== alumniGroup.id) {
+            // Update existing buyer: always update name if provided, and update group if needed
+            // Also normalize email to lowercase to prevent case-sensitivity issues
+            const needsGroupUpdate = existingBuyer.groupId !== alumniGroup.id;
+            const needsNameUpdate = name?.trim() && name !== existingBuyer.name;
+            const needsEmailUpdate = existingBuyer.email.toLowerCase() !== email;
+            
+            if (needsGroupUpdate || needsNameUpdate || needsEmailUpdate) {
               await ctx.db.buyers.update({
                 where: { id: existingBuyer.id }, // Use id instead of email
                 data: { 
-                  groupId: alumniGroup.id,
-                  name: name || existingBuyer.name,
+                  ...(needsGroupUpdate && { groupId: alumniGroup.id }),
+                  ...(needsNameUpdate && { name: name.trim() }),
+                  ...(needsEmailUpdate && { email }), // Normalize email to lowercase
                 }
               });
               results.updated++;
@@ -136,10 +163,10 @@ export const buyersRouter = createTRPCRouter({
               results.skipped++;
             }
           } else {
-            // Create new buyer with normalized email
+            // Create new buyer
             await ctx.db.buyers.create({
               data: {
-                email: normalizedEmail, // Store as lowercase
+                email, // Already normalized to lowercase
                 name: name || "",
                 phone: "",
                 address: "",
