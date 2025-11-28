@@ -141,7 +141,7 @@ export const buyersRouter = createTRPCRouter({
             // Update existing buyer: always update name if provided, and update group if needed
             // Also normalize email to lowercase to prevent case-sensitivity issues
             const needsGroupUpdate = existingBuyer.groupId !== alumniGroup.id;
-            const needsNameUpdate = name && name.trim() && name !== existingBuyer.name;
+            const needsNameUpdate = name?.trim() && name !== existingBuyer.name;
             const needsEmailUpdate = existingBuyer.email.toLowerCase() !== email;
             
             if (needsGroupUpdate || needsNameUpdate || needsEmailUpdate) {
