@@ -14,8 +14,13 @@ export const buyersRouter = createTRPCRouter({
 
   // Get current user's buyer information including group
   getCurrentUser: protectedProcedure.query(async ({ ctx }) => {
-    const buyer = await ctx.db.buyers.findUnique({
-      where: { email: ctx.session.user.email! },
+    const buyer = await ctx.db.buyers.findFirst({
+      where: {
+        email: {
+          equals: ctx.session.user.email!,
+          mode: 'insensitive',
+        },
+      },
       include: { group: true },
     });
     
@@ -26,7 +31,7 @@ export const buyersRouter = createTRPCRouter({
     return {
       id: buyer.id,
       name: buyer.name,
-      email: buyer.email,
+      email: buyer.email.toLowerCase(), // Always return lowercase for consistency
       group: buyer.group ? {
         id: buyer.group.id,
         name: buyer.group.name,
@@ -103,16 +108,24 @@ export const buyersRouter = createTRPCRouter({
         }
 
         try {
-          // Check if buyer already exists
-          const existingBuyer = await ctx.db.buyers.findUnique({
-            where: { email }
+          // Normalize email to lowercase
+          const normalizedEmail = email.toLowerCase();
+          
+          // Check if buyer already exists (case-insensitive)
+          const existingBuyer = await ctx.db.buyers.findFirst({
+            where: {
+              email: {
+                equals: normalizedEmail,
+                mode: 'insensitive',
+              },
+            },
           });
 
           if (existingBuyer) {
             // Update existing buyer to Absolventen group if not already
             if (existingBuyer.groupId !== alumniGroup.id) {
               await ctx.db.buyers.update({
-                where: { email },
+                where: { id: existingBuyer.id }, // Use id instead of email
                 data: { 
                   groupId: alumniGroup.id,
                   name: name || existingBuyer.name,
@@ -123,10 +136,10 @@ export const buyersRouter = createTRPCRouter({
               results.skipped++;
             }
           } else {
-            // Create new buyer
+            // Create new buyer with normalized email
             await ctx.db.buyers.create({
               data: {
-                email,
+                email: normalizedEmail, // Store as lowercase
                 name: name || "",
                 phone: "",
                 address: "",
