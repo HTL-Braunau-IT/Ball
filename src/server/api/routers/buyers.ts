@@ -163,10 +163,10 @@ export const buyersRouter = createTRPCRouter({
               results.skipped++;
             }
           } else {
-            // Create new buyer with normalized email
+            // Create new buyer
             await ctx.db.buyers.create({
               data: {
-                email: normalizedEmail, // Store as lowercase
+                email, // Already normalized to lowercase
                 name: name || "",
                 phone: "",
                 address: "",
