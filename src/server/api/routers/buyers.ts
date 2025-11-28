@@ -47,7 +47,7 @@ export const buyersRouter = createTRPCRouter({
     const buyers = await ctx.db.buyers.findMany({
       where: { groupId: alumniGroup.id },
       include: { group: true },
-      orderBy: { email: 'asc' }
+      orderBy: { id: 'asc' }
     });
 
     return buyers.map(({ id, name, email, address, postal, city, country, verified, group }) => ({
