@@ -438,7 +438,7 @@ export default async function Home() {
                   <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
                   Ist der Eintritt nur mit Karte möglich? 
                   </h5>
-                  <p>Zugang nur mit im Vorfeld gekaufter Karte möglich. Es gibt keine Abendkasse</p>
+                  <p>Zugang nur mit im Vorfeld gekaufter Karte möglich. Es gibt keine Abendkasse.</p>
                 </div>
           </div>
         </div>
