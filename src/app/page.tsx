@@ -128,9 +128,12 @@ export default async function Home() {
               <h1 className="text-7xl font-bold mb-6 gradient-text">
                 DUNE - Ball der Auserwählten
               </h1>
-              <p className="text-2xl mb-16" style={{ color: 'var(--color-text-secondary)' }}>
+              <p className="text-2xl mb-2" style={{ color: 'var(--color-text-secondary)' }}>
                 Ball der HTL Braunau
               </p>
+              <h2 className="-mb-10" style={{ color: 'var(--color-text-secondary)', fontSize: '1rem' }}>
+                16.01.2026
+              </h2>
             </div>
             
             {/* Countdown or Sale Active */}
