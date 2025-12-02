@@ -57,7 +57,7 @@ export default function DashboardStats() {
                 <table className="min-w-full backend-layout table">
                     <thead>
                         <tr>
-                            <th colSpan={3} className="px-4 py-3 text-center text-base font-semibold text-gray-800 border-r border-gray-300 !bg-white/50">Karten</th>
+                            <th colSpan={2} className="px-4 py-3 min-w-80 text-center text-base font-semibold text-gray-800 border-r border-gray-300 !bg-white/50">Karten</th>
                             <th className="px-4 py-3 text-center text-base font-semibold text-gray-800 border-l border-r border-gray-300 !bg-white/50">Käufer</th>
                             <th colSpan={2} className="px-4 py-3 text-center text-base font-semibold text-gray-800 border-l border-gray-300 !bg-white/50">Umsatz</th>
                         </tr>
@@ -72,6 +72,7 @@ export default function DashboardStats() {
                                 <div className="text-xl font-bold text-orange-600">{totalSold}</div>
                                 <div className="text-sm text-gray-600">Verkauft</div>
                             </td>
+                            
                             {/* Verbleibend deprecated */}
                             <td className="px-4 py-2 text-center border-l border-r border-gray-300">
                                 <div className="text-xl font-bold text-purple-600">{totalBuyers}</div>

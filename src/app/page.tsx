@@ -184,7 +184,7 @@ export default async function Home() {
                           </div>
                         ) : (
                           <Countdown 
-                            targetDate="2025-12-02T20:00:00"
+                            targetDate={ALUMNI_TICKET_SALE_DATE ?? new Date().toISOString()}
                             title="Countdown bis zum Absolventen Vorverkauf"
                             completedTitle="Vorverkauf gestartet!"
                             completedMessage=""
