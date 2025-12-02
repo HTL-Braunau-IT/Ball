@@ -448,7 +448,8 @@ export default async function Home() {
                   <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
                   Welche Abholtermine für Karten gibt es?
                   </h5>
-                  <p>Es gibt zwei Abholmöglichkeiten: am <b>09.01.2026</b> von <b>17:00</b> bis <b>19:00</b> Uhr oder am <b>15.01.2026</b> von <b>17:00</b> bis <b>19:00</b> Uhr</p>
+                  <p>Es gibt zwei Abholmöglichkeiten: am <b>09.01.2026</b> von <b>17:00</b> bis <b>19:00</b> Uhr oder am <b>15.01.2026</b> von <b>17:00</b> bis <b>19:00</b> Uhr
+                  <br />Abholung am <Link href="/anfahrt" className="text-gold-light hover:underline" style={{ color: 'var(--color-gold-light)' }}>Veranstaltungsort</Link> in der Aula.</p>
                 </div>
           </div>
         </div>
