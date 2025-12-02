@@ -80,7 +80,7 @@ export default function DSGVOPage() {
               <br />
               Telefon: +43 (0) 7722 83600
               <br />
-              E-Mail: office@htl-braunau.at
+              E-Mail: ballkomitee@htl-braunau.at
             </p>
           </section>
 
@@ -218,11 +218,11 @@ export default function DSGVOPage() {
             <p className="leading-relaxed">
               Um Ihre Rechte auszuüben, wenden Sie sich bitte an:{" "}
               <a
-                href="mailto:office@htl-braunau.at"
+                href="mailto:ballkomitee@htl-braunau.at"
                 className="underline"
                 style={{ color: "var(--color-gold-light)" }}
               >
-                office@htl-braunau.at
+                ballkomitee@htl-braunau.at
               </a>
             </p>
           </section>
@@ -276,11 +276,11 @@ export default function DSGVOPage() {
               <br />
               E-Mail:{" "}
               <a
-                href="mailto:office@htl-braunau.at"
+                href="mailto:ballkomitee@htl-braunau.at"
                 className="underline"
                 style={{ color: "var(--color-gold-light)" }}
               >
-                office@htl-braunau.at
+                ballkomitee@htl-braunau.at
               </a>
             </p>
           </section>

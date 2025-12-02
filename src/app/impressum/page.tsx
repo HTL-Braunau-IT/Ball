@@ -69,7 +69,7 @@ export default function ImpressumPage() {
             <p className="leading-relaxed">
               <strong>Telefon:</strong> +43 (0) 7722 83600
               <br />
-              <strong>E-Mail:</strong> office@htl-braunau.at
+              <strong>E-Mail:</strong> ballkomitee@htl-braunau.at
               <br />
               <strong>Website:</strong> www.htl-braunau.at
             </p>

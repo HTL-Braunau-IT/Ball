@@ -286,13 +286,13 @@ function SuccessPageContent() {
               <ul className="space-y-2" style={{ color: "var(--color-text-secondary)" }}>
                 <li>• Bewahren Sie Ihren Abholcode sicher auf</li>
                 <li>• Bringen Sie einen gültigen Ausweis zur Abholung mit</li>
-                <li>• Bei Fragen wenden Sie sich an: ball@htl-braunau.at</li>
+                <li>• Bei Fragen wenden Sie sich an: ballkomitee@htl-braunau.at</li>
               </ul>
             ) : (
               <ul className="space-y-2" style={{ color: "var(--color-text-secondary)" }}>
                 <li>• Ihre Karten werden in den nächsten Tagen versendet</li>
                 <li>• Sie erhalten eine Versandbestätigung per E-Mail</li>
-                <li>• Bei Fragen wenden Sie sich an: ball@htl-braunau.at</li>
+                <li>• Bei Fragen wenden Sie sich an: ballkomitee@htl-braunau.at</li>
               </ul>
             )}
             </div>

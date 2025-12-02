@@ -115,7 +115,7 @@ export const authOptions: NextAuthOptions = {
                 </p>
                 <p style="margin: 0; font-size: 14px; color: #666;">
                   Bei Fragen oder Problemen wenden Sie sich gerne an uns:<br>
-                  <a href="mailto:ball@htl-braunau.at" style="color: #c17a3a; text-decoration: none;">ball@htl-braunau.at</a>
+                  <a href="mailto:ballkomitee@htl-braunau.at" style="color: #c17a3a; text-decoration: none;">ballkomitee@htl-braunau.at</a>
                 </p>
               </div>
               
