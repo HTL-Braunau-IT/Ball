@@ -109,7 +109,6 @@ export default function FloatingActionButtons() {
     enabled: pathname === "/backend/reserves"
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const exportToCSV = useCallback(() => {
     let csvHeaders: string[] = [];
     let csvData: unknown[][] = [];
@@ -159,26 +158,52 @@ export default function FloatingActionButtons() {
       csvHeaders = [
         'ID',
         'Name',
+        'Karten',
+        'Abholcode',
+        'Liefermethode',
         'E-Mail',
         'Adresse',
         'PLZ',
         'Bundesland',
         'Land',
-        'Verifiziert',
-        'Gruppe'
+        'Status'
       ];
 
-      csvData = filteredBuyers.map((buyer) => [
-        buyer.id,
-        buyer.name,
-        buyer.email,
-        buyer.address,
-        buyer.postal,
-        buyer.city,
-        buyer.country,
-        buyer.verified ? "Ja" : "Nein",
-        buyer.group?.name ?? "-"
-      ]);
+      csvData = filteredBuyers.map((buyer) => {
+        // Calculate status based on tickets (if available)
+        // TypeScript doesn't know about tickets in the type, but they exist in runtime
+        const buyerWithTickets = buyer as typeof buyer & { tickets?: Array<{ sent?: boolean | null; delivery?: string | null; code?: string | null }> };
+        const firstTicket = buyerWithTickets.tickets?.[0];
+        const isSent = firstTicket?.sent === true;
+        const delivery = (firstTicket?.delivery ?? "").toLowerCase();
+        const isShipping = delivery.includes('versand') || delivery.includes('shipping');
+        const isPickup = delivery.includes('abholung') || delivery.includes('pickup');
+        
+        let status = "Nicht erledigt";
+        if (isSent) {
+          if (isShipping) {
+            status = "Versendet";
+          } else if (isPickup) {
+            status = "Abgeholt";
+          } else {
+            status = "Erledigt";
+          }
+        }
+
+        return [
+          buyer.id,
+          buyer.name,
+          buyerWithTickets.tickets?.length ?? 0,
+          firstTicket?.code ?? "-",
+          firstTicket?.delivery ?? "-",
+          buyer.email,
+          buyer.address,
+          buyer.postal,
+          buyer.city,
+          buyer.country,
+          status
+        ];
+      });
 
       filename = `buyers_export_${new Date().toISOString().split('T')[0]}.csv`;
     }
@@ -203,16 +228,11 @@ export default function FloatingActionButtons() {
     document.body.removeChild(link);
   }, [pathname, reservesData, filteredBuyers]);
 
-  // Export button only on data pages
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const showExport = pathname === "/backend/reserves" || 
-                    pathname === "/backend/tickets" || 
-                    pathname === "/backend/buyers";
+  // Export button only on buyers page
+  const showExport = pathname === "/backend/buyers";
 
   // Check if we have data to export
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const hasData = (pathname === "/backend/reserves" && reservesData && reservesData.length > 0) ||
-                 (pathname === "/backend/buyers" && filteredBuyers && filteredBuyers.length > 0);
+  const hasData = pathname === "/backend/buyers" && filteredBuyers && filteredBuyers.length > 0;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
@@ -239,8 +259,8 @@ export default function FloatingActionButtons() {
           }}
         />
       </button>
-      {/* Export button - functionality kept but display removed for later adjustment */}
-      {/* {showExport && (
+      {/* Export button - only for buyers page */}
+      {showExport && (
         <button
           onClick={exportToCSV}
           disabled={!hasData}
@@ -251,7 +271,7 @@ export default function FloatingActionButtons() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
         </button>
-      )} */}
+      )}
     </div>
   );
 }
