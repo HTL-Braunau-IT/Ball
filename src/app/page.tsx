@@ -184,7 +184,7 @@ export default async function Home() {
                           </div>
                         ) : (
                           <Countdown 
-                            targetDate="2025-12-03T20:00:00"
+                            targetDate="2025-12-02T20:00:00"
                             title="Countdown bis zum Absolventen Vorverkauf"
                             completedTitle="Vorverkauf gestartet!"
                             completedMessage=""
