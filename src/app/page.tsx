@@ -170,7 +170,7 @@ export default async function Home() {
                   {ALUMNI_TICKET_SALE_DATE && (
                     <>
                       <div className="flex-1">
-                        {true ? (
+                        {hasAlumniTicketSaleStarted ? (
                           <div className="countdown-box-completed text-center">
                             <h3 className="countdown-title" style={{ color: 'var(--color-gold-light)' }}>
                               Vorverkauf ist gestartet!
@@ -240,9 +240,11 @@ export default async function Home() {
                     </h5>
                     <p className="mb-4">Rockbar und Bierbar</p>
                     <div className="mb-4">
-                      <img
+                      <Image
                         src="/lageplaene/keller/rockbar_bierbar.png"
                         alt="Lageplan Keller"
+                        width={800}
+                        height={600}
                         style={{ width: '30%', height: 'auto' }}
                         className="rounded-lg"
                       />
@@ -255,9 +257,11 @@ export default async function Home() {
                     </h5>
                     <p className="mb-4">Aulabar und Bottle-Bar</p>
                     <div className="mb-4">
-                      <img
+                      <Image
                         src="/lageplaene/erdgeschoss/aulabar_bottlebar.png"
                         alt="Lageplan Erdgeschoss"
+                        width={800}
+                        height={600}
                         style={{ width: '90%', height: 'auto' }}
                         className="rounded-lg"
                       />
@@ -270,9 +274,11 @@ export default async function Home() {
                     </h5>
                     <p className="mb-4">Wein & Sekt, Laborbar und Absolventenbar</p>
                     <div className="mb-4">
-                      <img
+                      <Image
                         src="/lageplaene/1_stock/weinsekt_laborbar_absolventenbar.png"
                         alt="Lageplan 1. Stock"
+                        width={800}
+                        height={600}
                         style={{ width: '90%', height: 'auto' }}
                         className="rounded-lg"
                       />
@@ -285,9 +291,11 @@ export default async function Home() {
                     </h5>
                     <p className="mb-4">CuBar und Bluesbar</p>
                     <div className="mb-4">
-                      <img
+                      <Image
                         src="/lageplaene/2_stock/cubar_bluesbar.png"
                         alt="Lageplan 2. Stock"
+                        width={800}
+                        height={600}
                         style={{ width: '90%', height: 'auto' }}
                         className="rounded-lg"
                       />
@@ -300,9 +308,11 @@ export default async function Home() {
                     </h5>
                     <p className="mb-4">Mottobar 1, Mottobar 2 und Mottobar 3</p>
                     <div className="mb-4">
-                      <img
+                      <Image
                         src="/lageplaene/3_stock/mottobar1_2_3.png"
                         alt="Lageplan 3. Stock"
+                        width={800}
+                        height={600}
                         style={{ width: '90%', height: 'auto' }}
                         className="rounded-lg"
                       />
