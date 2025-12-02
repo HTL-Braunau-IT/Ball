@@ -453,6 +453,30 @@ export default async function Home() {
           </div>
         </div>
           </CollapsibleSection>
+
+          <div className="mt-12">
+            <h4 className="text-xl font-semibold mb-6 text-center" style={{ color: 'var(--color-gold-light)' }}>
+              Unsere Hauptsponsoren
+            </h4>
+            <div className="flex flex-wrap items-center justify-center gap-8 p-8">
+              <Image
+                src="/sponsors/bur.png"
+                alt="Sponsor 1"
+                width={200}
+                height={100}
+                className="h-auto object-contain"
+                style={{ maxWidth: '300px' }}
+              />
+              <Image
+                src="/sponsors/ginzinger.png"
+                alt="Sponsor 2"
+                width={300}
+                height={150}
+                className="h-auto object-contain"
+                style={{ maxWidth: '300px' }}
+              />
+            </div>
+          </div>
         </section>
       </main>
     </HydrateClient>
