@@ -443,6 +443,13 @@ export default async function Home() {
                   </h5>
                   <p>Zugang nur mit im Vorfeld gekaufter Karte möglich. Es gibt keine Abendkasse.</p>
                 </div>
+
+                <div>
+                  <h5 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-bronze)' }}>
+                  Welche Abholtermine für Karten gibt es?
+                  </h5>
+                  <p>Es gibt zwei Abholmöglichkeiten: am <b>09.01.2026</b> von <b>17:00</b> bis <b>19:00</b> Uhr oder am <b>15.01.2026</b> von <b>17:00</b> bis <b>19:00</b> Uhr</p>
+                </div>
           </div>
         </div>
           </CollapsibleSection>
