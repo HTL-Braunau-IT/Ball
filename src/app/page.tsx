@@ -170,7 +170,7 @@ export default async function Home() {
                   {ALUMNI_TICKET_SALE_DATE && (
                     <>
                       <div className="flex-1">
-                        {hasAlumniTicketSaleStarted ? (
+                        {true ? (
                           <div className="countdown-box-completed text-center">
                             <h3 className="countdown-title" style={{ color: 'var(--color-gold-light)' }}>
                               Vorverkauf ist gestartet!
