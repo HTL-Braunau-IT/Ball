@@ -43,7 +43,6 @@ export default function DashboardStats() {
 
     const totalAvailable = data.reduce((sum, reserve) => sum + reserve.amount, 0);
     const totalSold = data.reduce((sum, reserve) => sum + (reserve.soldTickets?.filter(t => t.paid === true).length || 0), 0);
-    const totalRemaining = totalAvailable - totalSold;
     const totalPotentialRevenue = data.reduce((sum, reserve) => sum + (reserve.amount * reserve.price), 0);
     const totalActualRevenue = data.reduce((sum, reserve) => {
         const soldRevenue = reserve.soldTickets?.filter(t => t.paid === true).reduce((ticketSum, ticket) => {
@@ -72,7 +71,8 @@ export default function DashboardStats() {
                             <td className="px-4 py-2 text-center border-l border-r border-gray-300">
                                 <div className="text-xl font-bold text-orange-600">{totalSold}</div>
                                 <div className="text-sm text-gray-600">Verkauft</div>
-                            </td>//Verbleibend deprecated
+                            </td>
+                            {/* Verbleibend deprecated */}
                             <td className="px-4 py-2 text-center border-l border-r border-gray-300">
                                 <div className="text-xl font-bold text-purple-600">{totalBuyers}</div>
                                 <div className="text-sm text-gray-600">Anzahl</div>
