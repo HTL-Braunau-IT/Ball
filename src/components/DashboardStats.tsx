@@ -30,11 +30,11 @@ export default function DashboardStats() {
     }
 
     // Calculate summary statistics
-    // Count unique buyers from all sold tickets
+    // Count unique buyers from all sold tickets who have paid
     const allBuyers = new Set<number>();
     data.forEach(reserve => {
         reserve.soldTickets?.forEach(ticket => {
-            if (ticket.buyerId) {
+            if (ticket.buyerId && ticket.paid === true) {
                 allBuyers.add(ticket.buyerId);
             }
         });
