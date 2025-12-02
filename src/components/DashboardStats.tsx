@@ -72,11 +72,7 @@ export default function DashboardStats() {
                             <td className="px-4 py-2 text-center border-l border-r border-gray-300">
                                 <div className="text-xl font-bold text-orange-600">{totalSold}</div>
                                 <div className="text-sm text-gray-600">Verkauft</div>
-                            </td>
-                            <td className="px-4 py-2 text-center border-l border-r border-gray-300">
-                                <div className="text-xl font-bold text-teal-600">{totalRemaining}</div>
-                                <div className="text-sm text-gray-600">Verbleibend</div>
-                            </td>
+                            </td>//Verbleibend deprecated
                             <td className="px-4 py-2 text-center border-l border-r border-gray-300">
                                 <div className="text-xl font-bold text-purple-600">{totalBuyers}</div>
                                 <div className="text-sm text-gray-600">Anzahl</div>
