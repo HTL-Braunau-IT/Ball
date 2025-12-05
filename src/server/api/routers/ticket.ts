@@ -386,6 +386,9 @@ export const ticketRouter = createTRPCRouter({
       // All tickets in the same purchase share the same code
       const pickupCode = generatePickupCode();
 
+      const shippingFeeSplit = shippingFeeInCents / quantity;
+      const ticketReservePriceinCents = ticketReserve.price * 100;
+
       // Create sold tickets records (one per quantity)
       await ctx.db.soldTickets.createMany({
         data: Array.from({ length: quantity }, () => ({
@@ -396,7 +399,7 @@ export const ticketRouter = createTRPCRouter({
           transref: "", // Will be updated after payment
           buyerId: buyer.id,
           reserveId: ticketReserve.id,
-          soldPrice: ticketReserve.price + shippingFeeInCents,
+          soldPrice: ticketReservePriceinCents + shippingFeeSplit,
         })),
       });
 

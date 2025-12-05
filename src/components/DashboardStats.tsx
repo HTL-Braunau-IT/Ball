@@ -46,7 +46,7 @@ export default function DashboardStats() {
     const totalPotentialRevenue = data.reduce((sum, reserve) => sum + (reserve.amount * reserve.price), 0);
     const totalActualRevenue = data.reduce((sum, reserve) => {
         const soldRevenue = reserve.soldTickets?.filter(t => t.paid === true).reduce((ticketSum, ticket) => {
-            return ticketSum + (ticket.soldPrice || reserve.price);
+            return ticketSum + ((ticket.soldPrice || reserve.price) / 100);
         }, 0) || 0;
         return sum + soldRevenue;
     }, 0);
