@@ -846,7 +846,10 @@ export default function BuyerPage() {
           
           <div className="mt-6 p-4 rounded-lg" style={{ background: 'var(--color-bg-secondary)' }}>
             <p className="text-sm text-center" style={{ color: 'var(--color-text-muted)' }}>
-              Wir senden Ihnen einen Magic Link zur Anmeldung. Überprüfen Sie Ihr E-Mail-Postfach.
+              Wir senden Ihnen einen Link zur Anmeldung. Überprüfen Sie Ihr E-Mail-Postfach.
+            </p>
+            <p className="text-sm text-center" style={{ color: 'var(--color-text-muted)' }}>
+              <strong>Wichtig:</strong> Der Link kann nur einmal verwendet werden. Für einen erneute Anmeldung benötigen Sie einen neuen Link.
             </p>
           </div>
         </div>

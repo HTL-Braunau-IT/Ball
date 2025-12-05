@@ -111,7 +111,7 @@ export const authOptions: NextAuthOptions = {
               
               <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee;">
                 <p style="margin: 0 0 8px 0; font-size: 14px; color: #666;">
-                  <strong>Wichtiger Hinweis:</strong> Dieser Anmeldungslink ist 24 Stunden gültig.
+                  <strong>Wichtiger Hinweis:</strong> Dieser Anmeldungslink ist 24 Stunden gültig und kann nur einmal verwendet werden.
                 </p>
                 <p style="margin: 0; font-size: 14px; color: #666;">
                   Bei Fragen oder Problemen wenden Sie sich gerne an uns:<br>
