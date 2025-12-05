@@ -849,7 +849,7 @@ export default function BuyerPage() {
               Wir senden Ihnen einen Link zur Anmeldung. Überprüfen Sie Ihr E-Mail-Postfach.
             </p>
             <p className="text-sm text-center" style={{ color: 'var(--color-text-muted)' }}>
-              <strong>Wichtig:</strong> Der Link kann nur einmal verwendet werden. Für einen erneute Anmeldung benötigen Sie einen neuen Link.
+              <strong>Wichtig:</strong> Der Link kann nur einmal verwendet werden. Für eine erneute Anmeldung benötigen Sie einen neuen Link.
             </p>
           </div>
         </div>
