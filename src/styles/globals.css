@@ -461,7 +461,6 @@ h4 {
 .countdown-box-completed:hover {
   border-color: var(--color-bronze);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px) scale(1.01);
 }
 
 .countdown-box::before {
