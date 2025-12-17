@@ -138,7 +138,7 @@ export default async function Home() {
             
             {/* Countdown or Sale Active */}
             {salesEnabled && (
-                <div className="w-full max-w-2xl">
+                <div className={`w-full ${hasTicketSaleStarted && hasAlumniTicketSaleStarted ? 'max-w-xl' : 'max-w-2xl'}`}>
                 <div className="flex flex-col md:flex-row gap-8 items-center justify-center">
 
                   {/* Regular Ticket Sale Countdown */}
@@ -167,7 +167,7 @@ export default async function Home() {
                   </div>
                   
                   {/* Alumni Ticket Sale Countdown */}
-                  {ALUMNI_TICKET_SALE_DATE && (
+                  {ALUMNI_TICKET_SALE_DATE && !hasTicketSaleStarted && (
                     <>
                       <div className="flex-1">
                         {hasAlumniTicketSaleStarted ? (
