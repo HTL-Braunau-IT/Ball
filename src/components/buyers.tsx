@@ -513,11 +513,11 @@ export default function Buyers() {
                                 {buyer.name}
                             </td>
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
-                                        <div>{buyer.tickets?.length ?? 0}</div>
+                                        <div>{buyer.tickets?.filter(ticket => ticket.paid === true).length ?? 0}</div>
                             </td>
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
                                         <div>
-                                            {buyer.tickets[0]?.code ?? '-'}
+                                            {buyer.tickets?.find(ticket => ticket.paid === true)?.code ?? '-'}
                                         </div>
                             </td>
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
