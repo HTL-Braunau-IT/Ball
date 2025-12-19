@@ -517,7 +517,7 @@ export default function Buyers() {
                             </td>
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
                                         <div>
-                                            {buyer.tickets[0]?.code ?? '-'}
+                                            {buyer.tickets?.find(ticket => ticket.paid === true)?.code ?? '-'}
                                         </div>
                             </td>
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
