@@ -544,18 +544,14 @@ export const ticketRouter = createTRPCRouter({
         throw new Error("Failed to retrieve updated ticket");
       }
 
-      // Update ticket contingent (only if not already processed)
+      // Update ticket contingent - use the ACTUAL reserve that was used, not buyer's group
       const quantity = parseInt(session.metadata?.quantity ?? "1");
-      await ctx.db.ticketReserves.updateMany({
-        where: {
-          type: {
-            some: {
-              buyers: {
-                some: { id: buyerId },
-              },
-            },
-          },
-        },
+          
+      // Get the reserve ID from the actual ticket that was sold
+      const reserveId = soldTicket.reserveId;
+          
+      await ctx.db.ticketReserves.update({
+        where: { id: reserveId },
         data: {
           amount: {
             decrement: quantity,
