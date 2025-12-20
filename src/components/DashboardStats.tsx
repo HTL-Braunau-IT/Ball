@@ -79,7 +79,7 @@ export default function DashboardStats() {
                                 <div className="text-sm text-gray-600">Anzahl</div>
                             </td>
                             <td className="px-4 py-2 text-center border-l border-r border-gray-300">
-                                <div className="text-xl font-bold text-emerald-600">€{totalActualRevenue}</div>
+                                <div className="text-xl font-bold text-emerald-600">€{Math.ceil(totalActualRevenue)}</div>
                                 <div className="text-sm text-gray-600">Aktuell</div>
                             </td>
                             <td className="px-4 py-2 text-center border-l border-gray-300">
