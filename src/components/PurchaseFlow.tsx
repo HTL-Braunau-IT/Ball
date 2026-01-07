@@ -136,7 +136,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
           <h2 className="text-2xl font-semibold gradient-text text-center" style={{ marginBottom: '2rem' }}>
             Versandart wählen
           </h2>
-          
+
           {!availableTicket?.deliveryMethods || availableTicket.deliveryMethods.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-red-600 mb-4">
@@ -323,7 +323,9 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                   </button>
                 )}
               </div>
-
+              <p className="text-sm pt-4 -mb-2">
+                <strong>Hinweis:</strong> Aufgrund der Lieferzeit für Karten, die per Post versendet werden, ist eine Bestellung ab sofort nur noch mit Abholung möglich.
+              </p>
               <div className="flex gap-4 mt-6">
                 <button onClick={() => setCurrentStep(1)} className="btn btn-secondary flex-1">
                   Zurück
