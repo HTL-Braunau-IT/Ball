@@ -220,11 +220,13 @@ export const buyersRouter = createTRPCRouter({
         throw new Error("All tickets already marked as sent");
       }
 
+      // Unneeded check as for right now - keep for future reference
+      // 
       // Only update paid tickets
-      const unpaidTickets = buyer.tickets.filter(ticket => !ticket.paid);
-      if (unpaidTickets.length > 0) {
-        throw new Error("Cannot mark unpaid tickets as sent");
-      }
+      // const unpaidTickets = buyer.tickets.filter(ticket => !ticket.paid);
+      // if (unpaidTickets.length > 0) {
+      //   throw new Error("Cannot mark unpaid tickets as sent");
+      // }
 
       // Get the delivery method from the first ticket (all tickets in a purchase share the same delivery method)
       const firstTicket = buyer.tickets[0];

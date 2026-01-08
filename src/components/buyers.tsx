@@ -546,7 +546,8 @@ export default function Buyers() {
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 text-center h-10">
                                         <div className="flex items-center justify-center h-full">
                                         {(() => {
-                                            const firstTicket = buyer.tickets[0];
+                                            const firstPaidTicket = buyer.tickets.filter(ticket => ticket.paid)
+                                            const firstTicket = firstPaidTicket[0];
                                             if (!firstTicket) return <span>-</span>;
                                             
                                             const isSent = firstTicket.sent === true;
