@@ -643,7 +643,7 @@ export default function Buyers() {
                             <button
                                 onClick={() => setItemsPerPage(10000)}
                                 className={`px-2 py-0.5 text-xs rounded-md ${
-                                    itemsPerPage >= dataLength
+                                    itemsPerPage === 10000 || (itemsPerPage >= dataLength && ![20, 50, 100, 500].includes(itemsPerPage))
                                         ? 'bg-violet-50 text-violet-700 ring-1 ring-violet-200'
                                         : 'bg-white/80 text-gray-700 hover:bg-gray-100'
                                 }`}
