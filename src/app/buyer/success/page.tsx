@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { api } from "~/trpc/react";
 import Link from "next/link";
-import Image from "next/image";
+import BrandMark from "~/components/BrandMark";
 
 function SuccessPageContent() {
   const searchParams = useSearchParams();
@@ -37,28 +37,8 @@ function SuccessPageContent() {
   if (!sessionId) {
     return (
       <main className="min-h-screen" style={{ background: "var(--color-bg-primary)" }}>
-        <header className="flex items-center justify-between p-6 border-b" style={{ 
-          borderColor: "var(--color-accent-warm)",
-          background: "var(--color-bg-primary)"
-        }}>
-          <div className="flex items-center gap-8">
-            <Link href="/">
-              <Image
-                src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
-                alt="HTL Ball 2026 Logo"
-                width={200}
-                height={80}
-                className="h-16 w-auto"
-              />
-            </Link>
-            <Image
-              src="/logos/HTL_Braunau_Logo.png"
-              alt="HTL Braunau Logo"
-              width={200}
-              height={80}
-              className="h-[2.125rem] md:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
-            />
-          </div>
+        <header className="site-header site-header-full">
+          <BrandMark />
         </header>
 
         <section className="max-w-2xl mx-auto px-6 py-12">
@@ -81,28 +61,8 @@ function SuccessPageContent() {
   if (confirmPayment.isPending) {
     return (
       <main className="min-h-screen" style={{ background: "var(--color-bg-primary)" }}>
-        <header className="flex items-center justify-between p-6 border-b" style={{ 
-          borderColor: "var(--color-accent-warm)",
-          background: "var(--color-bg-primary)"
-        }}>
-          <div className="flex items-center gap-8">
-            <Link href="/">
-              <Image
-                src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
-                alt="HTL Ball 2026 Logo"
-                width={200}
-                height={80}
-                className="h-16 w-auto"
-              />
-            </Link>
-            <Image
-              src="/logos/HTL_Braunau_Logo.png"
-              alt="HTL Braunau Logo"
-              width={200}
-              height={80}
-              className="h-[2.125rem] md:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
-            />
-          </div>
+        <header className="site-header site-header-full">
+          <BrandMark />
         </header>
 
         <section className="max-w-2xl mx-auto px-6 py-12">
@@ -124,28 +84,8 @@ function SuccessPageContent() {
   if (confirmPayment.error) {
     return (
       <main className="min-h-screen" style={{ background: "var(--color-bg-primary)" }}>
-        <header className="flex items-center justify-between p-6 border-b" style={{ 
-          borderColor: "var(--color-accent-warm)",
-          background: "var(--color-bg-primary)"
-        }}>
-          <div className="flex items-center gap-8">
-            <Link href="/">
-              <Image
-                src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
-                alt="HTL Ball 2026 Logo"
-                width={200}
-                height={80}
-                className="h-16 w-auto"
-              />
-            </Link>
-            <Image
-              src="/logos/HTL_Braunau_Logo.png"
-              alt="HTL Braunau Logo"
-              width={200}
-              height={80}
-              className="h-[2.125rem] md:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
-            />
-          </div>
+        <header className="site-header site-header-full">
+          <BrandMark />
         </header>
 
         <section className="max-w-2xl mx-auto px-6 py-12">
@@ -174,28 +114,8 @@ function SuccessPageContent() {
 
   return (
     <main className="min-h-screen" style={{ background: "var(--color-bg-primary)" }}>
-      <header className="flex items-center justify-between p-6 border-b" style={{ 
-        borderColor: "var(--color-accent-warm)",
-        background: "var(--color-bg-primary)"
-      }}>
-        <div className="flex items-center gap-8">
-          <Link href="/">
-            <Image
-              src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
-              alt="HTL Ball 2026 Logo"
-              width={200}
-              height={80}
-              className="h-16 w-auto"
-            />
-          </Link>
-          <Image
-            src="/logos/HTL_Braunau_Logo.png"
-            alt="HTL Braunau Logo"
-            width={200}
-            height={80}
-            className="h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
-          />
-        </div>
+      <header className="site-header site-header-full">
+        <BrandMark />
         <div className="flex items-center">
           <Link href="/buyer" className="btn btn-secondary">
             Zurück zum Dashboard
@@ -208,7 +128,7 @@ function SuccessPageContent() {
           {/* Success Icon */}
           <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" 
                style={{ background: "var(--color-success)" }}>
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-8 h-8" style={{ color: "var(--n-on-amber)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
@@ -316,28 +236,8 @@ export default function SuccessPage() {
   return (
     <Suspense fallback={
       <main className="min-h-screen" style={{ background: "var(--color-bg-primary)" }}>
-        <header className="flex items-center justify-between p-6 border-b" style={{ 
-          borderColor: "var(--color-accent-warm)",
-          background: "var(--color-bg-primary)"
-        }}>
-          <div className="flex items-center gap-8">
-            <Link href="/">
-              <Image
-                src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
-                alt="HTL Ball 2026 Logo"
-                width={200}
-                height={80}
-                className="h-16 w-auto"
-              />
-            </Link>
-            <Image
-              src="/logos/HTL_Braunau_Logo.png"
-              alt="HTL Braunau Logo"
-              width={200}
-              height={80}
-              className="h-[2.125rem] md:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
-            />
-          </div>
+        <header className="site-header site-header-full">
+          <BrandMark />
         </header>
         <section className="max-w-2xl mx-auto px-6 py-12">
           <div className="card text-center">

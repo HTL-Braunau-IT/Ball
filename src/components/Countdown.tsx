@@ -7,8 +7,6 @@ interface CountdownProps {
   title: string;
   completedTitle: string;
   completedMessage: string;
-  noContainer?: boolean;
-  titleClassName?: string;
 }
 
 interface TimeLeft {
@@ -18,13 +16,13 @@ interface TimeLeft {
   seconds: number;
 }
 
-export default function Countdown({ 
-  targetDate, 
+const pad = (n: number) => String(n).padStart(2, "0");
+
+export default function Countdown({
+  targetDate,
   title,
   completedTitle,
   completedMessage,
-  noContainer = false,
-  titleClassName = ""
 }: CountdownProps) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isComplete, setIsComplete] = useState(false);
@@ -75,46 +73,33 @@ export default function Countdown({
     return () => clearInterval(timer);
   }, [targetDate, isComplete]);
 
-  const countdownContent = isComplete ? (
-    <div className="text-center">
-      <h2 className="text-4xl font-bold gradient-text mb-4">
-        {completedTitle}
-      </h2>
-      <p className="text-lg" style={{ color: 'var(--color-text-secondary)' }}>
-        {completedMessage}
-      </p>
-    </div>
-  ) : (
-    <>
-      <div className={`countdown-title ${titleClassName}`}>{title}</div>
-      <div className="countdown-grid">
-        <div className="countdown-item">
-          <div className="countdown-number">{timeLeft.days}</div>
-          <div className="countdown-label">Tage</div>
-        </div>
-        <div className="countdown-item">
-          <div className="countdown-number">{timeLeft.hours}</div>
-          <div className="countdown-label">Stunden</div>
-        </div>
-        <div className="countdown-item">
-          <div className="countdown-number">{timeLeft.minutes}</div>
-          <div className="countdown-label">Minuten</div>
-        </div>
-        <div className="countdown-item">
-          <div className="countdown-number">{timeLeft.seconds}</div>
-          <div className="countdown-label">Sekunden</div>
-        </div>
+  if (isComplete) {
+    return (
+      <div className="cd-card">
+        <span className="n-eyebrow">{completedTitle}</span>
+        {completedMessage && <p className="cd-live-text">{completedMessage}</p>}
       </div>
-    </>
-  );
-
-  if (noContainer) {
-    return <div className="countdown-box">{countdownContent}</div>;
+    );
   }
 
+  const units = [
+    { value: timeLeft.days, label: "Tage" },
+    { value: timeLeft.hours, label: "Stunden" },
+    { value: timeLeft.minutes, label: "Minuten" },
+    { value: timeLeft.seconds, label: "Sekunden" },
+  ];
+
   return (
-    <div className="countdown-container">
-      <div className="countdown-box">{countdownContent}</div>
+    <div className="cd-card" role="timer" aria-label={title}>
+      <span className="n-eyebrow">{title}</span>
+      <div className="cd-grid">
+        {units.map((unit) => (
+          <div key={unit.label} className="cd-unit">
+            <span className="cd-value">{pad(unit.value)}</span>
+            <span className="cd-unit-label">{unit.label}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

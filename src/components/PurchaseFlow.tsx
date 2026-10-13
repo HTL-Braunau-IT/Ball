@@ -8,6 +8,8 @@ import { env } from "~/env";
 
 type DeliveryMethod = "shipping" | "self-pickup";
 
+const STEP_LABELS = ["Anzahl", "Versandart", "Kontaktdaten", "Zusammenfassung"];
+
 interface PurchaseFlowProps {
   onComplete: () => void;
   onCancel: () => void;
@@ -92,29 +94,19 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
 
   return (
     <div className="max-w-2xl mx-auto">
-      {/* Progress Bar */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          {Array.from({ length: totalSteps }, (_, i) => (
-            <div
-              key={i + 1}
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                i + 1 <= currentStep
-                  ? "bg-gradient-to-r from-[var(--color-gold-light)] to-[var(--color-gold-dark)] text-white"
-                  : "bg-gray-200 text-gray-500"
-              }`}
-            >
-              {i + 1}
-            </div>
-          ))}
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div
-            className="bg-gradient-to-r from-[var(--color-gold-light)] to-[var(--color-gold-dark)] h-2 rounded-full transition-all duration-300"
-            style={{ width: `${(currentStep / totalSteps) * 100}%` }}
-          />
-        </div>
-      </div>
+      {/* Progress */}
+      <ol className="flow-steps" aria-label="Fortschritt">
+        {STEP_LABELS.slice(0, totalSteps).map((label, i) => (
+          <li
+            key={label}
+            className={`flow-step ${i + 1 < currentStep ? "is-done" : i + 1 === currentStep ? "is-current" : ""}`}
+            aria-current={i + 1 === currentStep ? "step" : undefined}
+          >
+            <span className="flow-step-num">{String(i + 1).padStart(2, "0")}</span>
+            <span className="flow-step-label">{label}</span>
+          </li>
+        ))}
+      </ol>
 
       {/* Step 1: Quantity Selection */}
       {currentStep === 1 && (
@@ -139,7 +131,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
 
           {!availableTicket?.deliveryMethods || availableTicket.deliveryMethods.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-red-600 mb-4">
+              <p className="mb-4" style={{ color: "var(--color-error)" }}>
                 Keine Liefermethoden verfügbar.
               </p>
               <button onClick={() => setCurrentStep(1)} className="btn btn-secondary">
@@ -153,7 +145,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                 {shippingDeliveryMethod && (
                   <button
                     onClick={() => handleDeliveryMethodSelect("shipping")}
-                    className="w-full p-6 border-2 rounded-lg text-left border-[var(--color-accent-warm)] hover:border-[var(--color-bronze)] hover:scale-[1.01] transition-all"
+                    className="pick-card w-full p-6 text-left"
                   >
                     {isMobile ? (
                       <div>
@@ -199,7 +191,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
                 ) && (
                   <button
                     onClick={() => handleDeliveryMethodSelect("self-pickup")}
-                    className="w-full p-6 border-2 rounded-lg text-left border-[var(--color-accent-warm)] hover:border-[var(--color-bronze)] hover:scale-[1.01] transition-all"
+                    className="pick-card w-full p-6 text-left"
                   >
                     {isMobile ? (
                       <div>
@@ -362,7 +354,7 @@ export default function PurchaseFlow({ onComplete: _onComplete, onCancel }: Purc
 
       {/* Error Display */}
       {errors.general && (
-        <div className="mt-4 p-4 rounded-lg" style={{ background: "var(--color-error)", color: "white" }}>
+        <div className="mt-4 p-4 rounded" style={{ background: "var(--color-error)", color: "var(--n-on-amber)" }}>
           {errors.general}
         </div>
       )}
@@ -587,7 +579,7 @@ function QuantitySelection({
       <div className="card text-center">
         <div className="mb-4">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: "var(--color-error)" }}>
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-8 h-8" style={{ color: "var(--n-on-amber)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
@@ -628,29 +620,13 @@ function QuantitySelection({
               key={qty}
               onClick={() => !isDisabled && onQuantitySelect(qty)}
               disabled={isDisabled}
-              className={`p-6 border-2 rounded-lg transition-all ${
-                isSelected
-                  ? "border-[var(--color-gold-light)] bg-[var(--color-bg-accent)]"
-                  : isDisabled
-                  ? "opacity-50 cursor-not-allowed border-gray-300"
-                  : "border-[var(--color-accent-warm)] hover:border-[var(--color-bronze)] hover:shadow-lg hover:scale-[1.02]"
-              }`}
-              style={{
-                boxShadow: isSelected ? '0 4px 12px rgba(193, 122, 58, 0.25)' : '0 2px 8px rgba(0, 0, 0, 0.04)'
-              }}
+              className={`pick-card p-6 ${isSelected ? "is-selected" : ""}`}
             >
               {isMobile ? (
                 <div className="flex flex-col items-center">
                   {/* Icon */}
-                  <div className="flex items-center justify-center w-16 h-16 rounded-xl mb-2" style={{ 
-                    background: isDisabled 
-                      ? 'linear-gradient(135deg, #e5e7eb, #9ca3af)'
-                      : 'linear-gradient(135deg, var(--color-gold-light), var(--color-bronze))',
-                    boxShadow: isDisabled 
-                      ? '0 2px 6px rgba(0, 0, 0, 0.1)'
-                      : '0 4px 12px rgba(193, 122, 58, 0.25)'
-                  }}>
-                    <span className="text-2xl font-bold text-white">{qty}</span>
+                  <div className="flex items-center justify-center w-16 h-16 rounded-xl mb-2" style={{ border: '1px solid var(--n-amber)' }}>
+                    <span className="cd-value" style={{ fontSize: '2rem', color: 'var(--n-amber)' }}>{qty}</span>
                   </div>
                   
                   {/* Price */}
@@ -673,15 +649,8 @@ function QuantitySelection({
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 flex-1">
                       {/* Icon display similar to OrderCard */}
-                      <div className="flex items-center justify-center w-16 h-16 rounded-xl flex-shrink-0" style={{ 
-                        background: isDisabled 
-                          ? 'linear-gradient(135deg, #e5e7eb, #9ca3af)'
-                          : 'linear-gradient(135deg, var(--color-gold-light), var(--color-bronze))',
-                        boxShadow: isDisabled 
-                          ? '0 2px 6px rgba(0, 0, 0, 0.1)'
-                          : '0 4px 12px rgba(193, 122, 58, 0.25)'
-                      }}>
-                        <span className="text-2xl font-bold text-white">{qty}</span>
+                      <div className="flex items-center justify-center w-16 h-16 rounded-xl flex-shrink-0" style={{ border: '1px solid var(--n-amber)' }}>
+                        <span className="cd-value" style={{ fontSize: '2rem', color: 'var(--n-amber)' }}>{qty}</span>
                       </div>
                       
                       {/* Label */}
@@ -756,20 +725,7 @@ function PaymentSummary({
   isLoading: boolean;
 }) {
   const [hasReadTerms, setHasReadTerms] = useState(false);
-  const [isMobile, setIsMobile] = useState(true);
-  
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    if (typeof window !== 'undefined') {
-      checkMobile();
-      window.addEventListener('resize', checkMobile);
-      return () => window.removeEventListener('resize', checkMobile);
-    }
-  }, []);
-  
+
   const shippingAddress = deliveryMethod === "shipping" && contactInfo && "address" in contactInfo 
     ? contactInfo 
     : null;
@@ -777,9 +733,7 @@ function PaymentSummary({
   return (
     <div className="card">
       <h2 className="text-2xl font-semibold gradient-text text-center" style={{ 
-        marginBottom: '2rem',
-        letterSpacing: isMobile ? '0.04em' : '0.08em'
-      }}>
+        marginBottom: '2rem'}}>
         Bestellübersicht
       </h2>
 

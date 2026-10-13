@@ -58,27 +58,14 @@ export const authOptions: NextAuthOptions = {
       from: process.env.EMAIL_FROM,
       async sendVerificationRequest({ url, identifier, provider }) {
         const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-        const logoUrl = `${baseUrl}/logos/HTL-Ball-2026_Logo_Farbe_transparent.png`;
+        const logoUrl = `${baseUrl}/logos/Ball-2027_Logo_white.png`;
         
         // Professional email with nice button and elaborate text
         const html = `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f6f3;">
-            <div style="background: transparent; color: #c17a3a; padding: 25px; margin-bottom: 20px; text-align: center;">
-              <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
-                <tr>
-                  <td style="vertical-align: middle; text-align: center; padding-right: 20px;">
-                    <img src="${logoUrl}" alt="HTL Ball 2026 Logo" style="max-width: 120px; height: auto; display: block;" />
-                  </td>
-                  <td style="vertical-align: middle; width: 1px; background-color: #c17a3a; padding: 0;">
-                    <div style="width: 1px; height: 80px; background-color: #c17a3a;"></div>
-                  </td>
-                  <td style="vertical-align: middle; text-align: left; padding-left: 20px;">
-                    <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 2px; color: #c17a3a;">HTL BRAUNAU</h1>
-                    <p style="margin: 8px 0 0 0; font-size: 16px; font-weight: 600; letter-spacing: 1px; color: #c17a3a;">Ball der Auserwählten 2026</p>
-                  </td>
-                </tr>
-              </table>
-            </div>
+            <div style="background-color: #000000; padding: 28px 20px; text-align: center; border-radius: 8px 8px 0 0;">
+            <img src="${logoUrl}" alt="Ball der HTL Braunau 2027 – Prison Break – Raus in die Freiheit" width="240" style="width: 240px; max-width: 100%; height: auto; display: inline-block; border: 0;" />
+          </div>
             
             <div style="background: white; padding: 20px 35px 35px 35px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
               <p style="margin-bottom: 20px; line-height: 1.6; color: #444; font-size: 16px;">
@@ -86,8 +73,8 @@ export const authOptions: NextAuthOptions = {
               </p>
               
               <p style="margin-bottom: 20px; line-height: 1.6; color: #444; font-size: 16px;">
-                wir freuen uns sehr über Ihr Interesse am <strong style="color: #c17a3a;">HTL Ball 2026 - Ball der Auserwählten</strong>. 
-                Dieser elegante Abend im Zeichen von DUNE verspricht ein unvergessliches Erlebnis voller Magie und Eleganz.
+                wir freuen uns sehr über Ihr Interesse am <strong style="color: #a05d25;">Ball der HTL Braunau 2027 – Prison Break</strong>. 
+                Unter dem Motto „Prison Break – Raus in die Freiheit“ erwartet Sie am 15. Jänner 2027 ein unvergesslicher Abend.
               </p>
               
               <p style="margin-bottom: 25px; line-height: 1.6; color: #444; font-size: 16px;">
@@ -101,11 +88,11 @@ export const authOptions: NextAuthOptions = {
                 </a>
               </div>
               
-              <div style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 6px; border-left: 4px solid #c17a3a; font-size: 14px;">
+              <div style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 6px; border-left: 4px solid #a05d25; font-size: 14px;">
                 <p style="margin: 0 0 12px 0; font-weight: 600; color: #333;"><strong>Falls der Button nicht funktioniert:</strong></p>
                 <p style="margin: 0; word-break: break-all; color: #666;">
                   Kopieren Sie diesen Link in Ihren Browser:<br>
-                  <a href="${url}" style="color: #c17a3a; text-decoration: underline;">${url}</a>
+                  <a href="${url}" style="color: #a05d25; text-decoration: underline;">${url}</a>
                 </p>
               </div>
               
@@ -115,7 +102,7 @@ export const authOptions: NextAuthOptions = {
                 </p>
                 <p style="margin: 0; font-size: 14px; color: #666;">
                   Bei Fragen oder Problemen wenden Sie sich gerne an uns:<br>
-                  <a href="mailto:ballkomitee@htl-braunau.at" style="color: #c17a3a; text-decoration: none;">ballkomitee@htl-braunau.at</a>
+                  <a href="mailto:ballkomitee@htl-braunau.at" style="color: #a05d25; text-decoration: none;">ballkomitee@htl-braunau.at</a>
                 </p>
               </div>
               
@@ -140,7 +127,7 @@ export const authOptions: NextAuthOptions = {
           
           await graphClient.api(`/users/${fromEmail}/sendMail`).post({
             message: {
-              subject: "HTL Ball 2026 - Anmeldung für den Ball der Auserwählten",
+              subject: "Ball der HTL Braunau 2027 - Anmeldung",
               body: {
                 contentType: 'HTML',
                 content: html,

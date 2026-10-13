@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import BrandMark from "~/components/BrandMark";
 import dynamic from "next/dynamic";
 
 // Dynamically import the map component to avoid SSR issues
@@ -13,28 +13,8 @@ export default function AnfahrtPage() {
   return (
     <main className="min-h-screen" style={{ background: "var(--color-bg-primary)" }}>
       {/* Header */}
-      <header className="flex items-center justify-between p-6 border-b" style={{ 
-        borderColor: 'var(--color-accent-warm)',
-        background: 'var(--color-bg-primary)'
-      }}>
-        <div className="flex items-center gap-8">
-          <Link href="/">
-            <Image
-              src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
-              alt="HTL Ball 2026 Logo"
-              width={200}
-              height={80}
-              className="h-16 w-auto"
-            />
-          </Link>
-          <Image
-            src="/logos/HTL_Braunau_Logo.png"
-            alt="HTL Braunau Logo"
-            width={200}
-            height={80}
-            className="h-[2.125rem] md:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
-          />
-        </div>
+      <header className="site-header site-header-full">
+        <BrandMark />
         <div className="flex items-center">
           <Link
             href="/buyer"

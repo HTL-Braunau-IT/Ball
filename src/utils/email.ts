@@ -52,7 +52,7 @@ export async function sendConfirmationEmail(data: EmailData): Promise<void> {
 
   if (deliveryMethod.toLowerCase().includes('versand') || deliveryMethod.toLowerCase().includes('shipping')) {
     // Shipping confirmation email
-    subject = `HTL Ball 2026 - Bestätigung Ihrer Karten-Bestellung (Versand)`;
+    subject = `Ball der HTL Braunau 2027 - Bestätigung Ihrer Karten-Bestellung (Versand)`;
     const baseUrl = env.NEXTAUTH_URL || 'http://localhost:3000';
     console.log(`[Email] Using baseUrl for shipping confirmation: ${baseUrl}`);
     htmlContent = generateShippingEmailHTML({
@@ -65,7 +65,7 @@ export async function sendConfirmationEmail(data: EmailData): Promise<void> {
     });
   } else {
     // Self-pickup confirmation email
-    subject = `HTL Ball 2026 - Bestätigung Ihrer Karten-Bestellung (Abholung)`;
+    subject = `Ball der HTL Braunau 2027 - Bestätigung Ihrer Karten-Bestellung (Abholung)`;
     const baseUrl = env.NEXTAUTH_URL || 'http://localhost:3000';
     console.log(`[Email] Using baseUrl for pickup email: ${baseUrl}`);
     htmlContent = generatePickupEmailHTML({
@@ -114,7 +114,7 @@ export async function sendConfirmationEmail(data: EmailData): Promise<void> {
 export async function sendShippingNotificationEmail(data: ShippingNotificationData): Promise<void> {
   const { to, name, code, address } = data;
 
-  const subject = `HTL Ball 2026 - Ihre Karten sind unterwegs!`;
+  const subject = `Ball der HTL Braunau 2027 - Ihre Karten sind unterwegs!`;
   const baseUrl = env.NEXTAUTH_URL || 'http://localhost:3000';
   console.log(`[Email] Using baseUrl for shipping notification: ${baseUrl}`);
   const htmlContent = generateShippingNotificationHTML({ name, code, address, baseUrl });
@@ -155,7 +155,7 @@ export async function sendShippingNotificationEmail(data: ShippingNotificationDa
 export async function sendPickupNotificationEmail(data: PickupNotificationData): Promise<void> {
   const { to, name, code } = data;
 
-  const subject = `HTL Ball 2026 - Ihre Karten wurden abgeholt!`;
+  const subject = `Ball der HTL Braunau 2027 - Ihre Karten wurden abgeholt!`;
   const baseUrl = env.NEXTAUTH_URL || 'http://localhost:3000';
   console.log(`[Email] Using baseUrl for pickup notification: ${baseUrl}`);
   const htmlContent = generatePickupNotificationHTML({ name, code, baseUrl });
@@ -207,33 +207,20 @@ export function generateShippingEmailHTML(data: {
   baseUrl?: string;
 }): string {
   const baseUrl = data.baseUrl || (typeof process !== 'undefined' && process.env?.NEXTAUTH_URL) || 'http://localhost:3000';
-  const logoUrl = `${baseUrl}/logos/HTL-Ball-2026_Logo_Farbe_transparent.png`;
+  const logoUrl = `${baseUrl}/logos/Ball-2027_Logo_white.png`;
   
   return `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
-      <title>HTL Ball 2026 - Karten Bestätigung</title>
+      <title>Ball der HTL Braunau 2027 - Karten Bestätigung</title>
     </head>
     <body>
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; background-color: #f8f6f3;">
-        <div style="color: #c17a3a; padding: 15px; margin-bottom: 15px; text-align: center;">
-          <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
-            <tr>
-              <td style="vertical-align: middle; text-align: center; padding-right: 20px;">
-                <img src="${logoUrl}" alt="HTL Ball 2026 Logo" style="max-width: 120px; height: auto; display: block;" />
-              </td>
-              <td style="vertical-align: middle; width: 1px; background-color: #c17a3a; padding: 0;">
-                <div style="width: 1px; height: 80px; background-color: #c17a3a;"></div>
-              </td>
-              <td style="vertical-align: middle; text-align: left; padding-left: 20px;">
-                <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 2px; color: #c17a3a;">HTL BRAUNAU</h1>
-                <p style="margin: 8px 0 0 0; font-size: 16px; font-weight: 600; letter-spacing: 1px; color: #c17a3a;">Ball der Auserwählten 2026</p>
-              </td>
-            </tr>
-          </table>
-        </div>
+        <div style="background-color: #000000; padding: 28px 20px; text-align: center; border-radius: 8px 8px 0 0;">
+            <img src="${logoUrl}" alt="Ball der HTL Braunau 2027 – Prison Break – Raus in die Freiheit" width="240" style="width: 240px; max-width: 100%; height: auto; display: inline-block; border: 0;" />
+          </div>
         
         <div style="background: white; padding: 20px 25px 25px 25px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
           <p style="margin-bottom: 15px; line-height: 1.6; color: #444; font-size: 16px;">
@@ -247,7 +234,7 @@ export function generateShippingEmailHTML(data: {
           <div style="margin: 18px 0;">
             <h3 style="margin: 0 0 12px 0; color: #333; font-size: 18px;">Bestelldetails</h3>
             <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Anzahl:</strong> ${data.quantity} Karte(n)</p>
-            <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Gesamtpreis:</strong> <span style="color: #c17a3a; font-weight: bold;">€${data.totalPrice}</span></p>
+            <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Gesamtpreis:</strong> <span style="color: #a05d25; font-weight: bold;">€${data.totalPrice}</span></p>
             <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Lieferart:</strong> Versand</p>
           </div>
           
@@ -268,7 +255,7 @@ export function generateShippingEmailHTML(data: {
           
           <p style="margin-top: 15px; line-height: 1.6; color: #444; font-size: 16px;">
             Mit freundlichen Grüßen,<br>
-            <strong style="color: #c17a3a;">Das HTL Ball 2026 Team</strong>
+            <strong style="color: #a05d25;">Das Team des HTL Balls 2027</strong>
           </p>
           
           <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
@@ -292,33 +279,20 @@ export function generatePickupEmailHTML(data: {
   baseUrl?: string;
 }): string {
   const baseUrl = data.baseUrl || (typeof process !== 'undefined' && process.env?.NEXTAUTH_URL) || 'http://localhost:3000';
-  const logoUrl = `${baseUrl}/logos/HTL-Ball-2026_Logo_Farbe_transparent.png`;
+  const logoUrl = `${baseUrl}/logos/Ball-2027_Logo_white.png`;
   
   return `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
-      <title>HTL Ball 2026 - Karten Bestätigung</title>
+      <title>Ball der HTL Braunau 2027 - Karten Bestätigung</title>
     </head>
     <body>
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; background-color: #f8f6f3;">
-        <div style="color: #c17a3a; padding: 15px; margin-bottom: 15px; text-align: center;">
-          <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
-            <tr>
-              <td style="vertical-align: middle; text-align: center; padding-right: 20px;">
-                <img src="${logoUrl}" alt="HTL Ball 2026 Logo" style="max-width: 120px; height: auto; display: block;" />
-              </td>
-              <td style="vertical-align: middle; width: 1px; background-color: #c17a3a; padding: 0;">
-                <div style="width: 1px; height: 80px; background-color: #c17a3a;"></div>
-              </td>
-              <td style="vertical-align: middle; text-align: left; padding-left: 20px;">
-                <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 2px; color: #c17a3a;">HTL BRAUNAU</h1>
-                <p style="margin: 8px 0 0 0; font-size: 16px; font-weight: 600; letter-spacing: 1px; color: #c17a3a;">Ball der Auserwählten 2026</p>
-              </td>
-            </tr>
-          </table>
-        </div>
+        <div style="background-color: #000000; padding: 28px 20px; text-align: center; border-radius: 8px 8px 0 0;">
+            <img src="${logoUrl}" alt="Ball der HTL Braunau 2027 – Prison Break – Raus in die Freiheit" width="240" style="width: 240px; max-width: 100%; height: auto; display: inline-block; border: 0;" />
+          </div>
         
         <div style="background: white; padding: 20px 25px 25px 25px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
           <p style="margin-bottom: 15px; line-height: 1.6; color: #444; font-size: 16px;">
@@ -332,13 +306,13 @@ export function generatePickupEmailHTML(data: {
           <div style="margin: 18px 0;">
             <h3 style="margin: 0 0 12px 0; color: #333; font-size: 18px;">Bestelldetails</h3>
             <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Anzahl:</strong> ${data.quantity} Karte(n)</p>
-            <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Gesamtpreis:</strong> <span style="color: #c17a3a; font-weight: bold;">€${data.totalPrice}</span></p>
+            <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Gesamtpreis:</strong> <span style="color: #a05d25; font-weight: bold;">€${data.totalPrice}</span></p>
             <p style="margin: 3px 0; color: #444; font-size: 16px;"><strong>Abholart:</strong> Selbstabholung</p>
           </div>
           
           <div style="padding: 18px; margin: 18px 0; text-align: center;">
             <h3 style="margin: 0 0 12px 0; color: #333; font-size: 18px;">Ihr Abholcode</h3>
-            <div style="font-size: 28px; font-weight: bold; color: #c17a3a; letter-spacing: 3px; font-family: monospace; margin: 12px 0;">${data.pickupCode}</div>
+            <div style="font-size: 28px; font-weight: bold; color: #a05d25; letter-spacing: 3px; font-family: monospace; margin: 12px 0;">${data.pickupCode}</div>
             <p style="margin: 12px 0 0 0; color: #444; font-size: 16px; font-weight: 600;">Bewahren Sie diesen Code gut auf!</p>
           </div>
           
@@ -357,7 +331,7 @@ export function generatePickupEmailHTML(data: {
           
           <p style="margin-top: 15px; line-height: 1.6; color: #444; font-size: 16px;">
             Mit freundlichen Grüßen,<br>
-            <strong style="color: #c17a3a;">Das HTL Ball 2026 Team</strong>
+            <strong style="color: #a05d25;">Das Team des HTL Balls 2027</strong>
           </p>
           
           <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
@@ -384,33 +358,20 @@ export function generateShippingNotificationHTML(data: {
   baseUrl?: string;
 }): string {
   const baseUrl = data.baseUrl || (typeof process !== 'undefined' && process.env?.NEXTAUTH_URL) || 'http://localhost:3000';
-  const logoUrl = `${baseUrl}/logos/HTL-Ball-2026_Logo_Farbe_transparent.png`;
+  const logoUrl = `${baseUrl}/logos/Ball-2027_Logo_white.png`;
   
   return `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
-      <title>HTL Ball 2026 - Ihre Karten sind unterwegs!</title>
+      <title>Ball der HTL Braunau 2027 - Ihre Karten sind unterwegs!</title>
     </head>
     <body>
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; background-color: #f8f6f3;">
-        <div style="color: #c17a3a; padding: 15px; margin-bottom: 15px; text-align: center;">
-          <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
-            <tr>
-              <td style="vertical-align: middle; text-align: center; padding-right: 20px;">
-                <img src="${logoUrl}" alt="HTL Ball 2026 Logo" style="max-width: 120px; height: auto; display: block;" />
-              </td>
-              <td style="vertical-align: middle; width: 1px; background-color: #c17a3a; padding: 0;">
-                <div style="width: 1px; height: 80px; background-color: #c17a3a;"></div>
-              </td>
-              <td style="vertical-align: middle; text-align: left; padding-left: 20px;">
-                <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 2px; color: #c17a3a;">HTL BRAUNAU</h1>
-                <p style="margin: 8px 0 0 0; font-size: 16px; font-weight: 600; letter-spacing: 1px; color: #c17a3a;">Ball der Auserwählten 2026</p>
-              </td>
-            </tr>
-          </table>
-        </div>
+        <div style="background-color: #000000; padding: 28px 20px; text-align: center; border-radius: 8px 8px 0 0;">
+            <img src="${logoUrl}" alt="Ball der HTL Braunau 2027 – Prison Break – Raus in die Freiheit" width="240" style="width: 240px; max-width: 100%; height: auto; display: inline-block; border: 0;" />
+          </div>
         
         <div style="background: white; padding: 20px 25px 25px 25px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
           <p style="margin-bottom: 15px; line-height: 1.6; color: #444; font-size: 16px;">
@@ -418,7 +379,7 @@ export function generateShippingNotificationHTML(data: {
           </p>
           
           <p style="margin-bottom: 15px; line-height: 1.6; color: #444; font-size: 16px;">
-            Gute Nachrichten! Ihre Karten für den HTL Ball 2026 wurden erfolgreich versendet und sind bereits auf dem Weg zu Ihnen!
+            Gute Nachrichten! Ihre Karten für den Ball der HTL Braunau 2027 wurden erfolgreich versendet und sind bereits auf dem Weg zu Ihnen!
           </p>
           
           <div style="margin: 18px 0;">
@@ -438,12 +399,12 @@ export function generateShippingNotificationHTML(data: {
           </p>
           
           <p style="margin-top: 15px; line-height: 1.6; color: #444; font-size: 16px;">
-            Wir freuen uns, Sie am HTL Ball 2026 - Ball der Auserwählten begrüßen zu dürfen!
+            Wir freuen uns, Sie am Ball der HTL Braunau 2027 – Prison Break begrüßen zu dürfen!
           </p>
           
           <p style="margin-top: 15px; line-height: 1.6; color: #444; font-size: 16px;">
             Mit freundlichen Grüßen,<br>
-            <strong style="color: #c17a3a;">Das HTL Ball 2026 Team</strong>
+            <strong style="color: #a05d25;">Das Team des HTL Balls 2027</strong>
           </p>
           
           <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
@@ -464,33 +425,20 @@ export function generatePickupNotificationHTML(data: {
   baseUrl?: string;
 }): string {
   const baseUrl = data.baseUrl || (typeof process !== 'undefined' && process.env?.NEXTAUTH_URL) || 'http://localhost:3000';
-  const logoUrl = `${baseUrl}/logos/HTL-Ball-2026_Logo_Farbe_transparent.png`;
+  const logoUrl = `${baseUrl}/logos/Ball-2027_Logo_white.png`;
   
   return `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
-      <title>HTL Ball 2026 - Ihre Karten wurden abgeholt!</title>
+      <title>Ball der HTL Braunau 2027 - Ihre Karten wurden abgeholt!</title>
     </head>
     <body>
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 15px; background-color: #f8f6f3;">
-        <div style="color: #c17a3a; padding: 15px; margin-bottom: 15px; text-align: center;">
-          <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
-            <tr>
-              <td style="vertical-align: middle; text-align: center; padding-right: 20px;">
-                <img src="${logoUrl}" alt="HTL Ball 2026 Logo" style="max-width: 120px; height: auto; display: block;" />
-              </td>
-              <td style="vertical-align: middle; width: 1px; background-color: #c17a3a; padding: 0;">
-                <div style="width: 1px; height: 80px; background-color: #c17a3a;"></div>
-              </td>
-              <td style="vertical-align: middle; text-align: left; padding-left: 20px;">
-                <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 2px; color: #c17a3a;">HTL BRAUNAU</h1>
-                <p style="margin: 8px 0 0 0; font-size: 16px; font-weight: 600; letter-spacing: 1px; color: #c17a3a;">Ball der Auserwählten 2026</p>
-              </td>
-            </tr>
-          </table>
-        </div>
+        <div style="background-color: #000000; padding: 28px 20px; text-align: center; border-radius: 8px 8px 0 0;">
+            <img src="${logoUrl}" alt="Ball der HTL Braunau 2027 – Prison Break – Raus in die Freiheit" width="240" style="width: 240px; max-width: 100%; height: auto; display: inline-block; border: 0;" />
+          </div>
         
         <div style="background: white; padding: 20px 25px 25px 25px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
           <p style="margin-bottom: 15px; line-height: 1.6; color: #444; font-size: 16px;">
@@ -498,7 +446,7 @@ export function generatePickupNotificationHTML(data: {
           </p>
           
           <p style="margin-bottom: 15px; line-height: 1.6; color: #444; font-size: 16px;">
-              Gute Nachrichten! Ihre Karten für den HTL Ball 2026 wurden erfolgreich abgeholt!
+              Gute Nachrichten! Ihre Karten für den Ball der HTL Braunau 2027 wurden erfolgreich abgeholt!
           </p>
           
           <div style="margin: 18px 0;">
@@ -508,11 +456,11 @@ export function generatePickupNotificationHTML(data: {
           
           <div style="padding: 18px; margin: 18px 0; text-align: center;">
             <h3 style="margin: 0 0 12px 0; color: #333; font-size: 18px;">Abholcode</h3>
-            <div style="font-size: 28px; font-weight: bold; color: #c17a3a; letter-spacing: 3px; font-family: monospace; margin: 12px 0;">${data.code}</div>
+            <div style="font-size: 28px; font-weight: bold; color: #a05d25; letter-spacing: 3px; font-family: monospace; margin: 12px 0;">${data.code}</div>
           </div>
           
           <p style="margin-top: 18px; line-height: 1.6; color: #444; font-size: 16px;">
-            Wir freuen uns, Sie am HTL Ball 2026 - Ball der Auserwählten begrüßen zu dürfen!
+            Wir freuen uns, Sie am Ball der HTL Braunau 2027 – Prison Break begrüßen zu dürfen!
           </p>
           
           <p style="margin-top: 15px; line-height: 1.6; color: #444; font-size: 16px;">
@@ -521,7 +469,7 @@ export function generatePickupNotificationHTML(data: {
           
           <p style="margin-top: 15px; line-height: 1.6; color: #444; font-size: 16px;">
             Mit freundlichen Grüßen,<br>
-            <strong style="color: #c17a3a;">Das HTL Ball 2026 Team</strong>
+            <strong style="color: #a05d25;">Das Team des HTL Balls 2027</strong>
           </p>
           
           <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">

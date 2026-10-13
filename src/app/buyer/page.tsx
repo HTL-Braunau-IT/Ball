@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
+import BrandMark from "~/components/BrandMark";
 import { env } from "~/env";
 import PurchaseFlow from "~/components/PurchaseFlow";
 import { api } from "~/trpc/react";
@@ -58,10 +58,9 @@ function OrderCard({ orderTickets, isMobile }: { orderTickets: Array<{
             <div>
               <div className="inline-flex items-center gap-3 mb-3">
                 <div className="flex items-center justify-center w-16 h-16 rounded-xl flex-shrink-0" style={{ 
-                  background: 'linear-gradient(135deg, var(--color-gold-light), var(--color-bronze))',
-                  boxShadow: '0 4px 12px rgba(193, 122, 58, 0.25)'
+                  border: '1px solid var(--n-amber)'
                 }}>
-                  <span className="text-2xl font-bold text-white">{ticketCount}</span>
+                  <span className="cd-value" style={{ fontSize: '2rem', color: 'var(--n-amber)' }}>{ticketCount}</span>
                 </div>
                 <div className="flex flex-col justify-center">
                   <p className="text-xs uppercase tracking-widest font-medium leading-tight" style={{ color: 'var(--color-text-muted)', letterSpacing: '0.15em' }}>
@@ -73,12 +72,12 @@ function OrderCard({ orderTickets, isMobile }: { orderTickets: Array<{
                 </div>
               </div>
               {/* Status Badge */}
-              <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+              <div className={`n-badge ${
                 firstTicket.paid 
-                  ? 'bg-green-50 text-green-700 border border-green-200' 
-                  : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-              }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
-                <span className="text-sm">{firstTicket.paid ? '✓' : '⏳'}</span>
+                  ? 'n-badge-ok' 
+                  : 'n-badge-wait'
+              }`}>
+                <span aria-hidden="true">●</span>
                 <span>{firstTicket.paid ? 'Bezahlt' : 'Ausstehend'}</span>
               </div>
             </div>
@@ -88,10 +87,9 @@ function OrderCard({ orderTickets, isMobile }: { orderTickets: Array<{
               <div className="flex-1">
                 <div className="inline-flex items-center gap-3">
                   <div className="flex items-center justify-center w-16 h-16 rounded-xl flex-shrink-0" style={{ 
-                    background: 'linear-gradient(135deg, var(--color-gold-light), var(--color-bronze))',
-                    boxShadow: '0 4px 12px rgba(193, 122, 58, 0.25)'
+                    border: '1px solid var(--n-amber)'
                   }}>
-                    <span className="text-2xl font-bold text-white">{ticketCount}</span>
+                    <span className="cd-value" style={{ fontSize: '2rem', color: 'var(--n-amber)' }}>{ticketCount}</span>
                   </div>
                   <div className="flex flex-col justify-center">
                     <p className="text-xs uppercase tracking-widest font-medium leading-tight" style={{ color: 'var(--color-text-muted)', letterSpacing: '0.15em' }}>
@@ -106,12 +104,12 @@ function OrderCard({ orderTickets, isMobile }: { orderTickets: Array<{
               
               {/* Status Badge */}
               <div className="flex-shrink-0">
-                <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                <div className={`n-badge ${
                   firstTicket.paid 
-                    ? 'bg-green-50 text-green-700 border border-green-200' 
-                    : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
-                  <span className="text-sm">{firstTicket.paid ? '✓' : '⏳'}</span>
+                    ? 'n-badge-ok' 
+                    : 'n-badge-wait'
+                }`}>
+                  <span aria-hidden="true">●</span>
                   <span>{firstTicket.paid ? 'Bezahlt' : 'Ausstehend'}</span>
                 </div>
               </div>
@@ -123,29 +121,28 @@ function OrderCard({ orderTickets, isMobile }: { orderTickets: Array<{
         {isMobile ? (
           <div className="pb-4 mb-4 border-b" style={{ borderColor: 'var(--color-accent-warm)' }}>
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-sm" style={{ color: 'var(--color-gold-light)' }}>📦</span>
-              <p className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                            <p className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                 {firstTicket.delivery}
               </p>
             </div>
             {/* Status badge for delivery methods */}
             <div className="mb-2">
               {firstTicket.delivery.toLowerCase().includes('versand') ? (
-                <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                <div className={`n-badge ${
                   firstTicket.sent 
-                    ? 'bg-green-50 text-green-700 border border-green-200' 
-                    : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
-                  <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
+                    ? 'n-badge-ok' 
+                    : 'n-badge-wait'
+                }`}>
+                  <span aria-hidden="true">●</span>
                   <span>{firstTicket.sent ? 'Versendet' : 'Wird vorbereitet'}</span>
                 </div>
               ) : (
-                <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                <div className={`n-badge ${
                   firstTicket.sent 
-                    ? 'bg-green-50 text-green-700 border border-green-200' 
-                    : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
-                  <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
+                    ? 'n-badge-ok' 
+                    : 'n-badge-wait'
+                }`}>
+                  <span aria-hidden="true">●</span>
                   <span>{firstTicket.sent ? 'Bereit zur Abholung' : 'Wird vorbereitet'}</span>
                 </div>
               )}
@@ -164,8 +161,7 @@ function OrderCard({ orderTickets, isMobile }: { orderTickets: Array<{
           <div className="flex items-start justify-between pb-4 mb-4 border-b" style={{ borderColor: 'var(--color-accent-warm)' }}>
             <div className="flex-1 pr-4">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm" style={{ color: 'var(--color-gold-light)' }}>📦</span>
-                <p className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                                <p className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                   {firstTicket.delivery}
                 </p>
               </div>
@@ -182,21 +178,21 @@ function OrderCard({ orderTickets, isMobile }: { orderTickets: Array<{
             {/* Status badge for delivery methods */}
             <div className="flex-shrink-0">
               {firstTicket.delivery.toLowerCase().includes('versand') ? (
-                <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                <div className={`n-badge ${
                   firstTicket.sent 
-                    ? 'bg-green-50 text-green-700 border border-green-200' 
-                    : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
-                  <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
+                    ? 'n-badge-ok' 
+                    : 'n-badge-wait'
+                }`}>
+                  <span aria-hidden="true">●</span>
                   <span>{firstTicket.sent ? 'Versendet' : 'Wird vorbereitet'}</span>
                 </div>
               ) : (
-                <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${
+                <div className={`n-badge ${
                   firstTicket.sent 
-                    ? 'bg-green-50 text-green-700 border border-green-200' 
-                    : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                }`} style={{ boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
-                  <span className="text-sm">{firstTicket.sent ? '✓' : '⏳'}</span>
+                    ? 'n-badge-ok' 
+                    : 'n-badge-wait'
+                }`}>
+                  <span aria-hidden="true">●</span>
                   <span>{firstTicket.sent ? 'Bereit zur Abholung' : 'Wird vorbereitet'}</span>
                 </div>
               )}
@@ -440,28 +436,8 @@ export default function BuyerPage() {
   if (status === "loading") {
     return (
       <main className="min-h-screen" style={{ background: 'var(--color-bg-primary)' }}>
-        <header className="flex items-center justify-between p-6 border-b" style={{ 
-          borderColor: 'var(--color-accent-warm)',
-          background: 'var(--color-bg-primary)'
-        }}>
-          <div className="flex items-center gap-8">
-            <Link href="/">
-              <Image
-                src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
-                alt="HTL Ball 2026 Logo"
-                width={200}
-                height={80}
-                className="h-16 w-auto"
-              />
-            </Link>
-            <Image
-              src="/logos/HTL_Braunau_Logo.png"
-              alt="HTL Braunau Logo"
-              width={200}
-              height={80}
-              className="h-[2.125rem] md:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
-            />
-          </div>
+        <header className="site-header site-header-full">
+          <BrandMark />
           <div className="flex items-center">
             {!isMobile && (
               <Link
@@ -489,28 +465,8 @@ export default function BuyerPage() {
     if (showPurchaseFlow) {
       return (
         <main className="min-h-screen" style={{ background: 'var(--color-bg-primary)' }}>
-          <header className="flex items-center justify-between p-6 border-b" style={{ 
-            borderColor: 'var(--color-accent-warm)',
-            background: 'var(--color-bg-primary)'
-          }}>
-            <div className="flex items-center gap-8">
-              <Link href="/">
-                <Image
-                  src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
-                  alt="HTL Ball 2026 Logo"
-                  width={200}
-                  height={80}
-                  className="h-16 w-auto"
-                />
-              </Link>
-              <Image
-                src="/logos/HTL_Braunau_Logo.png"
-                alt="HTL Braunau Logo"
-                width={200}
-                height={80}
-                className="h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
-              />
-            </div>
+          <header className="site-header site-header-full">
+            <BrandMark />
             <div className="flex items-center gap-4">
               {!isMobile && (
                 <button
@@ -541,28 +497,8 @@ export default function BuyerPage() {
 
     return (
       <main className="min-h-screen" style={{ background: 'var(--color-bg-primary)' }}>
-        <header className="flex items-center justify-between p-6 border-b" style={{ 
-          borderColor: 'var(--color-accent-warm)',
-          background: 'var(--color-bg-primary)'
-        }}>
-          <div className="flex items-center gap-8">
-            <Link href="/">
-              <Image
-                src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
-                alt="HTL Ball 2026 Logo"
-                width={200}
-                height={80}
-                className="h-16 w-auto"
-              />
-            </Link>
-            <Image
-              src="/logos/HTL_Braunau_Logo.png"
-              alt="HTL Braunau Logo"
-              width={200}
-              height={80}
-              className="h-[2.125rem] md:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
-            />
-          </div>
+        <header className="site-header site-header-full">
+          <BrandMark />
           <div className="flex items-center gap-4">
             {!isMobile && (
               <Link
@@ -597,7 +533,7 @@ export default function BuyerPage() {
             
             {/* Show cancellation message if payment was cancelled */}
             {cancelled && (
-              <div className="mb-6 p-4 rounded-lg" style={{ background: 'var(--color-warning)', color: 'white' }}>
+              <div className="mb-6 p-4 rounded-lg" style={{ background: 'var(--color-warning)', color: 'var(--n-on-amber)' }}>
                 <p className="text-center">
                   Die Zahlung wurde abgebrochen. Sie können jederzeit erneut versuchen, Karten zu kaufen.
                 </p>
@@ -721,11 +657,11 @@ export default function BuyerPage() {
               }}>
                 {hasTicketSaleStarted ? (
                   <div className="text-center">
-                    <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)', letterSpacing: isMobile ? '0.04em' : '0.08em' }}>
+                    <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-gold-light)'}}>
                       Kartenverkauf ist gestartet!
                     </h2>
                     <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-                      Sichern Sie sich jetzt Ihre Karten für einen unvergesslichen Abend im DUNE-Stil!
+                      Sichern Sie sich jetzt Ihre Karten für den Ball der HTL Braunau 2027 – raus in die Freiheit!
                     </p>
                     <button 
                       onClick={() => setShowPurchaseFlow(true)}
@@ -737,18 +673,16 @@ export default function BuyerPage() {
                 ) : (
                   <>
                     <h2 className="text-2xl font-semibold mb-4" style={{ 
-                      color: 'var(--color-gold-light)',
-                      letterSpacing: isMobile ? '0.04em' : '0.08em'
-                    }}>
+                      color: 'var(--color-gold-light)'}}>
                       Kartenverkauf startet bald
                     </h2>
                     {currentUser?.group?.name === "Absolventen" ? (
                       <p className="text-base px-1" style={{ color: 'var(--color-text-secondary)' }}>
-                        Der Absolventen Kartenverkauf für den HTL Ball 2026 startet am {env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE) : 'bald'}.
+                        Der Absolventen Kartenverkauf für den Ball der HTL Braunau 2027 startet am {env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_ALUMNI_TICKET_SALE_DATE) : 'bald'}.
                       </p>
                     ) : (
                       <p className="text-base px-1" style={{ color: 'var(--color-text-secondary)' }}>
-                        Der öffentliche Kartenverkauf für den HTL Ball 2026 startet am {env.NEXT_PUBLIC_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_TICKET_SALE_DATE) : 'bald'}.
+                        Der öffentliche Kartenverkauf für den Ball der HTL Braunau 2027 startet am {env.NEXT_PUBLIC_TICKET_SALE_DATE ? formatDateForDisplay(env.NEXT_PUBLIC_TICKET_SALE_DATE) : 'bald'}.
                       </p>
                     )}
                   </>
@@ -763,28 +697,8 @@ export default function BuyerPage() {
 
   return (
     <main className="min-h-screen relative" style={{ background: 'var(--color-bg-primary)' }}>
-      <header className="flex items-center justify-between p-6 border-b" style={{ 
-        borderColor: 'var(--color-accent-warm)',
-        background: 'var(--color-bg-primary)'
-      }}>
-        <div className="flex items-center gap-8">
-          <Link href="/">
-            <Image
-              src="/logos/HTL-Ball-2026_Logo_Farbe_notext.png"
-              alt="HTL Ball 2026 Logo"
-              width={200}
-              height={80}
-              className="h-16 w-auto"
-            />
-          </Link>
-          <Image
-            src="/logos/HTL_Braunau_Logo.png"
-            alt="HTL Braunau Logo"
-            width={200}
-            height={80}
-            className="h-[2.125rem] md:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity"
-          />
-        </div>
+      <header className="site-header site-header-full">
+        <BrandMark />
         <div className="flex items-center gap-4">
           <Link
             href="/buyer"
@@ -860,11 +774,11 @@ export default function BuyerPage() {
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center"
           style={{ 
-            background: 'rgba(248, 246, 243, 0.8)',
+            background: 'rgba(0, 0, 0, 0.75)',
             backdropFilter: 'blur(4px)'
           }}
         >
-          <div className="bg-white p-8 rounded-lg shadow-lg border" style={{ borderColor: 'var(--color-accent-warm)' }}>
+          <div className="p-8 rounded border" style={{ background: 'var(--n-surface)', borderColor: 'var(--color-accent-warm)' }}>
             <div className="flex flex-col items-center space-y-4">
               {/* Spinner */}
               <div 
